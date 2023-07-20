@@ -338,5 +338,6 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('save/holiday', [MasterHolidayController::class, 'storeHoliday']); 
     Route::post('delete/holiday', [MasterHolidayController::class, 'deleteHoliday']);
     Route::get('billing/providers/holidays/{providerId}',[BillingProviderController::class, 'billingProviderHolidayList']);
-
+    Route::post('billing/save/holiday', [BillingProviderController::class, 'storeBillingProviderHolidays']);
+    Route::post('billing/delete/holiday', [BillingProviderController::class, 'deleteBillingProviderHolidays']);
 });

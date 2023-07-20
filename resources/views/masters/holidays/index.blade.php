@@ -12,7 +12,7 @@
                 <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                     <li class="breadcrumb-item">
                     @can('CompanyType-create')
-                        <a class="btn btn-success text-white" id="myBtn"  data-toggle="modal" data-target="#addModal"> Add Holiday </a>
+                        <a class="btn btn-primary text-white" id="myBtn"  data-toggle="modal" data-target="#addModal"> Add Holiday </a>
                     @endcan
                     </li>
                 </ol>

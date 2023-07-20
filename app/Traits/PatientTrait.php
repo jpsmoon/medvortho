@@ -3,7 +3,7 @@ namespace App\Traits;
 
 use App\Models\Patient;
 use DateTime;
-use App\Models\{BillingProviderRecurrence, AppointmentReason, PatientAppointment, ZipCityState, ProviderBillingTemplateServiceItem, ProviderBillingTemplate }; 
+use App\Models\{BillingProviderHoliday, BillingProviderRecurrence, AppointmentReason, PatientAppointment, ZipCityState, ProviderBillingTemplateServiceItem, ProviderBillingTemplate }; 
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Auth; 
@@ -294,6 +294,30 @@ trait PatientTrait
             $recurrence->description = $request->description;
             $recurrence->save();
            
+        } 
+    }
+    public function saveBillingProviderHoliday($request){ 
+        $checkHoliday = BillingProviderHoliday::where('id', $request->bp_holiday_id)->first();
+        if($checkHoliday){
+            $checkHoliday->holiday_id = $request->holiday_id;
+            $checkHoliday->billing_provider_id = $request->provider_id;
+            $checkHoliday->location_id = $request->holiday_location_id;
+            $checkHoliday->created_by = Auth::user()->id; 
+            $checkHoliday->holiday_end_time = $request->holiday_end_time;
+            $checkHoliday->holiday_start_time	 = $request->holiday_start_time; 
+            $checkHoliday->description = $request->description;
+            $checkHoliday->update();
+        }
+        else{
+                $newHoliday = new BillingProviderHoliday();
+                $newHoliday->holiday_id = $request->holiday_id;
+                $newHoliday->billing_provider_id = $request->provider_id;
+                $newHoliday->location_id = $request->holiday_location_id;
+                $newHoliday->created_by = Auth::user()->id; 
+                $newHoliday->holiday_end_time = $request->holiday_end_time;
+                $newHoliday->holiday_start_time	 = $request->holiday_start_time; 
+                $newHoliday->description = $request->description;
+                $newHoliday->save();  
         } 
     }
 }

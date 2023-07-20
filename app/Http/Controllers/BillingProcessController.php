@@ -15,8 +15,7 @@ class BillingProcessController extends Controller
     {
         $billingproviders = $this->getActiveData(new BillingProvider(), 'name');
         $countries = $this->getActiveData(new Country(), 'country_name');
-        $states = $this->getActiveData(new State(), 'state_name');
-
+        $states = $this->getActiveData(new State(), 'state_name'); 
         $diagnoses =  $diagnoses = $this->getDiagnosisCode();
         $service_codes = $this->getActiveData(new Service_code(), 'place_of_service_name');
         $render_providers = $this->getRenderProvdierDD(new Health_provider());
