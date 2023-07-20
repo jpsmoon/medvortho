@@ -1,0 +1,475 @@
+<?php
+namespace App\Http\Controllers;
+use Carbon\Carbon;
+use Toastr;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
+
+use App\Models\{City,State, BillReferingOrderProvider,BillingProvider, Taxonomy_code, User,BillPlaceService, PlaceOfServiceCode,PlaceOfServices, MasterPlaceOfService};
+class BillingProviderController extends Controller
+{
+    public function index()
+    {
+        $states = State::where('is_active', 1)->orderBy('state_name')->get();
+        $billingproviders = BillingProvider::withTrashed()->paginate(15);      //
+
+        $i =  (request()->input('page', 1) - 1) * 5;
+        //var_dump($billingproviders); die();
+        return view('masters.billingproviders.index', compact('states', 'billingproviders', 'i'));
+    }
+
+    public function create()
+    {
+        $masterData = $this->showStateCityCountry();
+
+        $states = $masterData['states'];
+        $id = Auth::user()->id;
+        
+        $users = User::where('id', '!=' , $id)->orderBy('name')->get();
+        return view('masters.billingproviders.create', compact('states','users'));
+    }
+
+    public function store(Request $request)
+    {
+        request()->validate(['injury_state_id' => 'required', 'bill_type' => 'required', 'provider_type' => 'required', 'tax_id' => 'required', 'npi' => 'required', 'name' => 'required', 'contact_no' => 'required', 'address_line1' => 'required', 'city_id' => 'required', 'state_id' => 'required', 'zipcode' => 'required']);
+
+        $billing_providers = new BillingProvider();
+        $billing_providers->injury_state_id = $request->injury_state_id;
+        $billing_providers->bill_type = $request->bill_type;
+        $billing_providers->provider_type = $request->provider_type;
+        $billing_providers->npi = $request->npi;
+        $billing_providers->tax_id = $request->tax_id;
+        $billing_providers->npi = $request->npi;
+        $billing_providers->name = $request->name;
+        $billing_providers->nick_name = $request->nick_name;
+        $billing_providers->contact_no = $request->contact_no;
+        $billing_providers->fax_no = $request->fax_no;
+        $billing_providers->address_line1 = $request->address_line1;
+        $billing_providers->address_line2 = $request->address_line2;
+        $billing_providers->state_id = $request->state_id;
+        $billing_providers->city_id = $request->city_id;
+        $billing_providers->zipcode = $request->zipcode;
+        $billing_providers->dol_no = $request->dol_no;
+        $billing_providers->payto_address_line1 = $request->payto_address_line1;
+        $billing_providers->payto_address_line2 = $request->payto_address_line2;
+        $billing_providers->payto_state_id = $request->payto_state_id;
+        $billing_providers->payto_city_id = $request->payto_city_id;
+        $billing_providers->payto_zipcode = $request->payto_zipcode;
+        $billing_providers->save();
+
+        // return redirect()->route('billingproviders.index')->with('success','Billing Provider created successfully.');
+
+        $message= 'Billing Provider created successfully.';
+        $toastr_title=trans('messages.toastr_success');
+        Toastr::success($message,'',["positionClass" => "toast-top-center"]);
+        return redirect('billingproviders.index');
+    }
+
+    public function show(BillingProvider $billingprovider) { }
+
+    public function edit(BillingProvider $billingprovider)
+    {
+        $masterData = $this->showStateCityCountry();
+
+        $states = $masterData['states'];
+
+        $cities = $payto_cities = array();
+        // if($billingprovider->state_id){
+        //     $cities = City::where('is_active', 1)->where('state_id', $billingprovider->state_id)->orderBy('city_name')->get();
+        // }
+        // if($billingprovider->payto_state_id){
+        //     $payto_cities = City::where('is_active', 1)->where('state_id', $billingprovider->payto_state_id)->orderBy('city_name')->get();
+        // }
+        return view('masters.billingproviders.edit', compact('billingprovider', 'states', 'cities', 'payto_cities'));
+    }
+
+    public function update(Request $request, BillingProvider $billingprovider)
+    {
+        request()->validate(['injury_state_id' => 'required', 'bill_type' => 'required', 'provider_type' => 'required', 'tax_id' => 'required', 'npi' => 'required', 'name' => 'required', 'contact_no' => 'required', 'address_line1' => 'required', 'city_id' => 'required', 'state_id' => 'required', 'zipcode' => 'required']);
+
+        $updateArr = array(
+            'injury_state_id' => $request->injury_state_id,
+            'bill_type' => $request->bill_type,
+            'provider_type' => $request->provider_type,
+            'npi' => $request->npi,
+            'tax_id' => $request->tax_id,
+            'name' => $request->name,
+            'nick_name' => $request->nick_name,
+            'contact_no' => $request->contact_no,
+            'fax_no' => $request->fax_no,
+            'address_line1' => $request->address_line1,
+            'address_line2' => $request->address_line2,
+            'state_id' => $request->state_id,
+            'city_id' => $request->city_id,
+            'zipcode' => $request->zipcode,
+            'dol_no' => $request->dol_no,
+            'payto_address_line1' => $request->payto_address_line1,
+            'payto_address_line2' => $request->payto_address_line2,
+            'payto_state_id' => $request->payto_state_id,
+            'payto_city_id' => $request->payto_city_id,
+            'payto_zipcode' => $request->payto_zipcode
+        );
+
+        BillingProvider::where("id", $billingprovider->id)->update($updateArr);
+        return redirect()->route('billingproviders.index')
+                        ->with('success','Billing Provider updated successfully');
+    }
+
+    public function destroy(BillingProvider $billingprovider)
+    {
+        BillingProvider::where("id", $billingprovider->id)->update(['is_active' => '0']);
+        $billingprovider->delete();
+        Session::flash('success', 'Data blocked successfully!');
+        return response()->json(
+          [
+            'success' => 1,
+            'message' => 'Data blocked successfully'
+          ]
+        );
+    }
+
+    public function restore(Request $request)
+    {
+        BillingProvider::withTrashed()->find($request->id)->restore();
+        BillingProvider::where("id", $request->id)->update(['is_active' => '1']);
+        Session::flash('success', 'Data restore successfully!');
+        return response()->json(
+          [
+            'success' => 1,
+            'message' => 'Data restore successfully'
+          ]
+        );
+    }
+
+    public function getReferingOrderProvider(Request $request)
+    {
+        $type = $request->type;
+        $data =  BillReferingOrderProvider::with('state','taxonomyCode')->where('is_active',1)->where('type',$type)->get();
+        return response()->json($data);
+    }
+    public function billingRendering(Request $request)
+    {
+        $id = $request->id;
+        $rendering = BillReferingOrderProvider::with('state','taxonomyCode')->where('type',1)->where('billing_provider_id',$id)->orderBy('id', 'desc')->get();
+        
+        $bRenderings = (count($rendering) > 0 ) ? $rendering : [];
+        return view('billingprocess.billRendering.index',compact('bRenderings','id'));
+    }
+    public function createBillingRendering(Request $request)
+    {
+        // echo "<pre>";
+        // print_r($request->all());exit;
+        $providerId = $request->providerId;
+        $id = $request->id;
+        $taxonomy_codes = Taxonomy_code::where('is_active', 1)->orderBy('name')->orderBy('code')->get();
+        $render = BillReferingOrderProvider::with('state','taxonomyCode')->where('billing_provider_id',$providerId);
+        if($id != null){
+            $render->where('id',$id);
+        }
+        $bRenderings =   $render->first();
+
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+        return view('billingprocess.billRendering.create',compact('bRenderings','providerId','id','states','taxonomy_codes'));
+    }
+    
+    public function storeBillRender(Request $request)
+    {
+        try {
+            // request()->validate(['first_name' => 'required', 'dob' => 'required', 'ssn_no' => 'required',
+            //     'gender' => 'required', 'address_line1' => 'required',
+            //     'state_id' => 'required']);
+                $id = ($request->renderProviderId) ? $request->renderProviderId : null;
+                $this->storeBillReferringProvider($request,$id);
+                if($id != null){
+                    $message= 'Bill referring provider updated successfully';
+                }
+                else{
+                    $message= 'Bill referring provider created successfully';
+                }
+                
+                $toastr_title=trans('messages.toastr_success');
+                Toastr::success($message,'',["positionClass" => "toast-top-center"]);
+
+            return redirect('billing/referring/' . $request->billingProviderId);
+            } catch (\Exception $e) {
+                $message= $e->getMessage();
+                $toastr_title=trans('messages.toastr_error');
+                Toastr::error($message,'',["positionClass" => "toast-top-center"]);
+                return redirect()->back();
+            }
+    }
+    public function viewBillingRendering(Request $request)
+    {
+        $id = $request->id;
+
+        $bRenderings = BillReferingOrderProvider::with('state','taxonomyCode')->where('id',$id)->orderBy('id', 'desc')->first();
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+
+        return view('billingprocess.billRendering.show',compact('bRenderings','id','states'));
+    }
+    
+    public function viewBillingReferring(Request $request)
+    {
+        $id = $request->id;
+        //echo $id; exit;
+        $bReferrings = BillReferingOrderProvider::where('type', "!=", null)->where('billing_provider_id',$id)->orderBy('id', 'desc')->first();
+       
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+
+        return view('billingprocess.billReffering.show',compact('bReferrings','id','states'));
+    }
+    
+    public function viewBillingProvider(Request $request){
+        $id = $request->id;
+        $billingProviders = BillingProvider::where('id',$id)->orderBy('id', 'desc')->first();
+        return view('billingprocess.setting.show',compact('billingProviders'));
+    }
+    public function eitBillingProvider(Request $request){
+        $id = $request->id;
+        $billingprovider = BillingProvider::where('id',$id)->first();
+        $masterData = $this->showStateCityCountry();
+        $states = $masterData['states'];
+        $userId = Auth::user()->id;
+        $users = User::where('id', '!=' , $userId)->orderBy('name')->get();
+       // dd($billingprovider);exit;
+       $editUsers = [];
+       if(strpos($billingprovider->professional_user_with_access, ',') !== FALSE) {
+        $editUsers = explode(',',$billingprovider->professional_user_with_access);
+       }
+        return view('masters.billingproviders.edit',compact('billingprovider','id','states','users','editUsers'));
+    }
+    public function storeBillingProvider(Request $request)
+    {
+        //dd($request->all());exit;
+        request()->validate(['injury_state_id' => 'required']);
+        try {
+            $this->storeBillProviderProvider($request);
+            if(!$request->providerId){
+                $message= 'Bill provider created successfully';
+            }
+            else{
+                $message= 'Bill provider updated successfully';
+            }
+           
+            $toastr_title=trans('messages.toastr_success');
+            Toastr::success($message,'',["positionClass" => "toast-top-center"]);
+            return redirect('/billingproviders');
+        } catch (\Exception $e) {
+            $message= $e->getMessage();
+            $toastr_title=trans('messages.toastr_error');
+            Toastr::error($message,'',["positionClass" => "toast-top-center"]);
+            return redirect()->back();
+        }
+}
+public function placesOfServices(Request $request)
+    {
+        $providerId = $request->providerId;
+        $id = null;
+        $placeOfService = MasterPlaceOfService::where('billing_provider_id',$providerId)->orderBy('id', 'desc')->get();
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+
+        return view('billingprocess.placesService.index',compact('placeOfService','id','states','providerId'));
+    }
+
+    public function storeBillOfServices(Request $request)
+    {
+        try {
+                $id = ($request->placeOfServiceId) ? $request->placeOfServiceId : null;
+                $this->storeBillPlaceOfService($request,$id);
+                if($id != null){
+                    $message= 'Bill place of services updated successfully';
+                }
+                else{
+                    $message= 'Bill place of services created successfully';
+                }
+                
+                $toastr_title=trans('messages.toastr_success');
+                Toastr::success($message,'',["positionClass" => "toast-top-center"]);
+
+            return redirect('places-of-service/' . $request->billingProviderId);
+            } catch (\Exception $e) {
+                $message= $e->getMessage();
+                $toastr_title=trans('messages.toastr_error');
+                Toastr::error($message,'',["positionClass" => "toast-top-center"]);
+                return redirect()->back();
+            }
+    }
+
+    public function addRfaRequestingPhysicians(Request $request)
+    {
+        $providerId = $request->providerId;
+        $id = null;
+        $bPlaceService = MasterPlaceOfService::where('billing_provider_id',$providerId)->orderBy('id', 'desc')->first();
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+        $placeOfServiceCOde = PlaceOfServiceCode::where('status',1)->get();
+        return view('billingprocess.rfaSettings/requestingPhysicians.create',compact('bPlaceService','providerId','id','states','placeOfServiceCOde'));
+    }
+    
+     public function addRfaPracticeLocations(Request $request)
+    {
+        $providerId = $request->providerId;
+        $id = null;
+        $bPlaceService = MasterPlaceOfService::where('billing_provider_id',$providerId)->orderBy('id', 'desc')->first();
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+        $placeOfServiceCOde = PlaceOfServiceCode::where('status',1)->get();
+        return view('billingprocess.rfaSettings/practiceLocations.create',compact('bPlaceService','providerId','id','states','placeOfServiceCOde'));
+    }
+    
+    public function viewPlacesOfServices(Request $request)
+    {
+        $id = $request->serviceId;
+        $placeOfService = MasterPlaceOfService::with('placeOfServiceCode')->where('id',$id)->orderBy('id', 'desc')->first();
+       // dd($placeOfService);
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+
+        return view('billingprocess.placesService.show',compact('placeOfService','id','states'));
+    }
+    
+    public function addPlacesOfServices(Request $request)
+    {
+        $providerId = $request->providerId;
+        $id = $request->id;
+        $title = 'Add Place of Service';
+        if($id != null){
+            $title = 'Edit Place of Service'; 
+        }
+        $placeService = MasterPlaceOfService::with('placeOfServiceCode')->where('billing_provider_id',$providerId);
+        if($id != null){
+            $placeService = $placeService->where('id',$id);
+        }
+        $placeService = $placeService->orderBy('id', 'desc');
+        $bPlaceService =  $placeService->first();
+
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+        $placeOfServiceCOde = PlaceOfServiceCode::where('status',1)->get();
+        return view('billingprocess.placesService.create',compact('title','bPlaceService','providerId','id','states','placeOfServiceCOde'));
+    } 
+    
+     public function addPracticeContact(Request $request)
+    {
+        $providerId = $request->providerId;
+        $id = $request->id;
+        $title = 'Add Place of Service';
+        if($id != null){
+            $title = 'Edit Place of Service'; 
+        }
+        $placeService = MasterPlaceOfService::with('placeOfServiceCode')->where('billing_provider_id',$providerId);
+        if($id != null){
+            $placeService = $placeService->where('id',$id);
+        }
+        $placeService = $placeService->orderBy('id', 'desc');
+        $bPlaceService =  $placeService->first();
+
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+        $placeOfServiceCOde = PlaceOfServiceCode::where('status',1)->get();
+        return view('billingprocess.rfaSettings.practiceContacts.create',compact('title','bPlaceService','providerId','id','states','placeOfServiceCOde'));
+    } 
+    
+     public function addRfaTemplate(Request $request)
+    {
+        $providerId = $request->providerId;
+        $id = $request->id;
+        $title = 'Add Place of Service';
+        if($id != null){
+            $title = 'Edit Place of Service'; 
+        }
+        $placeService = MasterPlaceOfService::with('placeOfServiceCode')->where('billing_provider_id',$providerId);
+        if($id != null){
+            $placeService = $placeService->where('id',$id);
+        }
+        $placeService = $placeService->orderBy('id', 'desc');
+        $bPlaceService =  $placeService->first();
+
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+        $placeOfServiceCOde = PlaceOfServiceCode::where('status',1)->get();
+        return view('billingprocess.rfaSettings.rfaTemplates.create',compact('title','bPlaceService','providerId','id','states','placeOfServiceCOde'));
+    } 
+    
+    
+    public function storePhysicianSetting(Request $request)
+    {
+        
+        
+    }
+    
+    public function billingReferring(Request $request)
+    {
+        $id = $request->id;
+        $rendering = BillReferingOrderProvider::with('state','taxonomyCode')->where('billing_provider_id',$id)->where('type',"!=", 1)->orderBy('id', 'desc')->get();
+        $bRenderings = (count($rendering) > 0 ) ? $rendering : [];
+        return view('billingprocess.billReffering.index',compact('bRenderings','id'));
+    }
+    public function createBillingReferring(Request $request)
+    {
+        $providerId = $request->providerId; 
+        $bRenderings = [];
+        $id = $request->id;
+        $taxonomy_codes = Taxonomy_code::where('is_active', 1)->orderBy('name')->orderBy('code')->get();
+        if($id != null){
+            $bRenderings = BillReferingOrderProvider::with('state','taxonomyCode')->where('id',$id)->where('billing_provider_id',$providerId)->first();
+        }
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+        return view('billingprocess.billReffering.create',compact('bRenderings','providerId','id','states','taxonomy_codes'));
+    }
+    public function viewBillingCharge(Request $request)
+    {
+        $providerId = $request->providerId; 
+        $id = $request->id;
+        $bRenderings = [];
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+        return view('billingprocess.charges.index',compact('id','states','bRenderings'));
+    }
+
+    public function createBillingCharge(Request $request)
+    {
+        $id =  $request->id;
+        $providerId = $request->providerId; 
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+        return view('billingprocess.charges.create',compact('id','providerId','states'));
+    }
+    public function billingProvidersSetting(Request $request)
+    {
+        $id =  $request->id;
+        $bRenderings = [];
+        return view('billingprocess.setting.index', compact('id','bRenderings'));
+    }
+    public function requestingPhysicians(Request $request)
+    {
+        $bRenderings = [];
+        $id =  $request->id;
+        if($id != null){
+            $bRenderings = BillReferingOrderProvider::with('state','taxonomyCode')->where('id',$id)->where('billing_provider_id',$providerId)->first();
+        }
+
+        return view('billingprocess.rfaSettings.requestingPhysicians.index', compact('id','bRenderings'));
+    }
+    
+}
