@@ -1,0 +1,140 @@
+#modalDivOnMobile {
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    width:70%;
+    height:18em;
+    margin-top: -9em; /*set to a negative number 1/2 of your height*/
+    margin-left: -15em; /*set to a negative number 1/2 of your width*/
+    border: 1px solid #ccc;
+    background-color: #f3f3f3;
+}
+
+        .pull-left 
+        {
+        margin-bottom: 15px;
+        }
+        
+        .modal-body
+        {
+        position: relative;
+        -webkit-box-flex: 1;
+        -ms-flex: 1 1 auto;
+        flex: 1 1 auto;
+        padding: 1rem;
+        background-color: #fffcfc;
+        }
+        
+        .form-control
+        {
+        padding: 0.30rem ! important;
+        /*height: 34px;*/
+        /*padding: 6px 12px;*/
+        /*font-size: 14px;*/
+        /*line-height: 1.42857143;*/
+        }
+        .btn-Font 
+        { font-size:18px;}
+        
+       /* .btn-danger, */
+       /* {*/
+       /* color: #fff;*/
+       /* background-color: #081e5b!important;*/
+       /* border-color: #292727!important;*/
+       /* }*/
+        
+       /* .btn-danger:hover, .btn-danger:focus, .btn-danger:active, .btn-danger.active, .open>.dropdown-toggle.btn-danger */
+       /* {*/
+       /*color: #fff;*/
+       /* background-color: #081e5b!important;*/
+       /* border-color: #292727!important;*/
+       /* }*/
+       
+       .btn-primary
+       {
+        color: #fff;
+        background-color: #007bff;
+        border-color: #007bff;
+        }
+
+        
+.modal-header{ background-color:#081e5b; 
+    color:#fff;
+}
+#mycontactForm .modal-dialog {
+    
+    margin: 8.75rem auto;
+}
+/*#mycontactForm .modal-header {*/
+/*background:#ccc;*/
+
+/*}*/
+#mycontactForm .form-control {
+    padding: .175rem .75rem;
+    }
+    
+    .h2 {
+    font-size: 55px;
+    font-weight: 600;
+    transform: rotate(-90deg);
+    position: absolute;
+    right: -80px;
+    top: 235px;
+    color: #003259;
+    white-space: nowrap;
+}
+
+.right-heading
+{
+    font-size: 55px;
+    font-weight: 600;
+    transform: rotate(-270deg);
+    position: absolute;
+    right: -150px;
+    top: 235px;
+    color: #003259;
+    white-space: nowrap;
+}
+
+.modal-content
+{
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: 100%;
+    margin-left: 0px;
+    pointer-events: auto;
+    background-color: #fffcfc !important;
+    background-clip: padding-box;
+    border: 1pxsolidrgba(0,0,0,.2);
+    border-radius: 0.3rem;
+    outline: 0;
+}
+
+p {
+    padding: 0;
+    margin: 0 0 10px 0;
+    font-size: 17px;
+}
+
+.col-xl-11
+{
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.modal-title
+{
+ color: #ffffff;
+}
+ul.a {
+  list-style-position: outside;
+}
