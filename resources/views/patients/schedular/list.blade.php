@@ -2,11 +2,108 @@
 @section('content')
 
 <style>
+@import url(https://fonts.googleapis.com/css?family=Audiowide);
  .table td, .table th {
     border-bottom: 1px solid #E3EBF3;
     padding: 0.25rem 0.25rem;
-}   
-    
+}  
+ 
+ 
+.toolTipDiv *, *:before, *:after {
+    box-sizing: inherit;
+} 
+.toolTipDiv span {
+    color: #e91e63;
+    font-family: monospace;
+    white-space: nowrap;
+}
+
+.toolTipDiv span:after {
+    font-family: Arial, sans-serif;
+    text-align: left;
+    white-space: normal;
+}
+
+.toolTipDiv span:focus {
+    outline: none;
+}
+ 
+
+/*== start of code for tooltips ==*/
+.tool {
+    cursor: help;
+    position: relative;
+    top:5px;
+}
+
+
+/*== common styles for both parts of tool tip ==*/
+.tool::before,
+.tool::after {
+    left: 50%;
+    opacity: 0;
+    position: absolute;
+    z-index: -100;
+}
+
+.tool:hover::before,
+.tool:focus::before,
+.tool:hover::after,
+.tool:focus::after {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    z-index: 100; 
+}
+
+
+/*== pointer tip ==*/
+.tool::before {
+    border-style: solid;
+    border-width: 1em 0.75em 0 0.75em;
+    border-radius:4%;
+    border-color: #3E474F transparent transparent transparent;
+    bottom: 100%;
+    content: "";
+    margin-left: -0.5em;
+    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26), opacity .65s .5s;
+    transform:  scale(.6) translateY(-90%);
+} 
+
+.tool:hover::before,
+.tool:focus::before {
+    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26) .2s;
+}
+
+
+/*== speech bubble ==*/
+.tool::after {
+    background: #3E474F;
+    border-radius: .25em;
+    bottom: 178%;
+    color: #EDEFF0;
+    content: attr(data-tip);
+    line-height: 1.2;
+    margin-left: -8.75em;
+    padding: 1em;
+    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26) .2s;
+    transform:  scale(.6) translateY(50%);  
+    width: 17.5em;
+}
+
+.tool:hover::after,
+.tool:focus::after  {
+    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26);
+}
+
+@media (max-width: 760px) {
+  .tool::after { 
+        font-size: .75em;
+        margin-left: -5em;
+        width: 10em; 
+  }
+}
+
+
 </style>
 
 <!-- START: Breadcrumbs-->
@@ -62,29 +159,43 @@
                         </span>
                         @endif
                         </div>
-                        <div class="col-md-2 mt-2" id="keywordDiv">
-                            <select name="providerId" id="providerId" class="form-control">
-                                <option value=''>-Select Provider-</option>
-                                @foreach ($providers as $provider)
-                                    <option value="{{$provider->id }}" {{ ($srcProvider == $provider->id) ? 'selected' : ''}}>{{$provider->professional_provider_name }}</option>
+                        
+                        <div class="col-md-2 mt-2" id="renderingDiv">
+                            <select name="renderingProviderId" id="renderingProviderId" class="form-control">
+                                <option value=''>-Select Rendering Provider-</option>
+                                @foreach ($renderProviders as $renProvider)
+                                    <option value="{{$renProvider->id }}" {{ ($srcRendering == $renProvider->id) ? 'selected' : ''}}>{{$renProvider->referring_provider_first_name }}</option>
                                 @endforeach
                             </select>
-                            @if($errors->has('providerId'))
-                        <span class="invalid-feedback" style="display:block" role="alert">
-                            <strong>{{ $errors->first('providerId') }}</strong>
-                        </span>
-                        @endif
+                            @if($errors->has('renderingProviderId'))
+                                <span class="invalid-feedback" style="display:block" role="alert">
+                                    <strong>{{ $errors->first('renderingProviderId') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                        <div class="col-md-2 mt-2" id="locationDiv">
+                            <select name="locationId" id="locationId" class="form-control">
+                                <option value=''>-Select Location-</option>
+                                @foreach ($locations as $location)
+                                    <option value="{{$location->id }}" {{ ($srcLocation == $location->id) ? 'selected' : ''}}>{{$location->nick_name }}</option>
+                                @endforeach
+                            </select>
+                            @if($errors->has('locationId'))
+                                <span class="invalid-feedback" style="display:block" role="alert">
+                                    <strong>{{ $errors->first('locationId') }}</strong>
+                                </span>
+                            @endif
                         </div>
                         <div class="col-md-2 mt-2" id="datepickerDiv">
                          <input value="{{$durationDate}}" placeholder="Choose date"   autocomplete="off"  type="text" id="duration_date" name="duration_date" class="form-control" maxlength="100">
-                        <i class="icon-calendar"></i>  
-                        @if($errors->has('duration_date'))
-                        <span class="invalid-feedback" style="display:block" role="alert">
-                            <strong>{{ $errors->first('duration_date') }}</strong>
-                        </span>
-                        @endif
+                            <i class="icon-calendar"></i>  
+                            @if($errors->has('duration_date'))
+                                <span class="invalid-feedback" style="display:block" role="alert">
+                                    <strong>{{ $errors->first('duration_date') }}</strong>
+                                </span>
+                            @endif
                         </div>
-                         <div class="col-md-2 mt-2" id="resaonDiv">
+                         <div class="col-md-1 mt-2" id="resaonDiv">
                              <select name="appointment_meeting_Type" class="form-control">
                                 <option value=''>-Select Meeting Type-</option>
                                 @foreach ($meetingTypes as $meetingT)
@@ -123,6 +234,7 @@
                                         <th scope="col">Visit Date</th>
                                         <th scope="col">Visit Time</th>
                                         <th scope="col">Patient Name</th>
+                                        <th scope="col">Patient Phone</th>
                                         <th scope="col">Provider Name</th>
                                         <th scope="col">Visit Type</th>
                                         <th scope="col">Visit Status</th>
@@ -140,7 +252,14 @@
                                                              </a></td>
                                                     <td>{{ ($appountment->appointment_date) ? date('m-d-Y', strtotime($appountment->appointment_date)) : ''}}</td>
                                                     <td>{{ ($appountment->appointment_time) ? $appountment->appointment_time : ''}}</td>
-                                                    <td><a class="" href="{{url('/patients/view',$appountment->getPatient->id)}}">{{($appountment->getPatient) ? $appountment->getPatient->first_name : ''}} {{($appountment->getPatient) ? $appountment->getPatient->mi : ''}} {{($appountment->getPatient) ? $appountment->getPatient->last_name : ''}} </a></td>
+                                                    <td class="toolTipDiv"><a class="" href="{{url('/patients/view',$appountment->getPatient->id)}}">{{($appountment->getPatient) ? $appountment->getPatient->first_name : ''}} {{($appountment->getPatient) ? $appountment->getPatient->mi : ''}} {{($appountment->getPatient) ? $appountment->getPatient->last_name : ''}} </a> 
+                                                        @if($appountment->is_interpreter == 'on')
+                                                            <span class="tool" data-tip="For this appointment need interpreter" tabindex="1"> 
+                                                                <i class="fa fa-info-circle fa-larger "></i>
+                                                            </span> 
+                                                        @endif
+                                                     </td>
+                                                    <td>{{($appountment->getPatient && $appountment->getPatient->contact_no) ? $appountment->getPatient->contact_no : ''}}</td>
                                                     <td>{{ ($appountment->getBillingProvider) ? $appountment->getBillingProvider->professional_provider_name : ''}}</td>
                                                     
                                                     <td>{{ $testPatientClass->getMeetingType($appountment->meeting_type)}}</td>
