@@ -392,6 +392,15 @@
                                     </span>
                                     @endif
                                 </div>
+                                <div class="form-group col-md-3">
+                                    <label for="appointment_interpreter"></label>
+                                    <input type="checkbox" class="largerCheckbox" name="is_interpreter"> <span style="vertical-align:top"> Interpreter</span>
+                                    @if($errors->has('is_interpreter'))
+                                    <span class="invalid-feedback" style="display:block" role="alert">
+                                        <strong>{{ $errors->first('is_interpreter') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-12">

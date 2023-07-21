@@ -4,7 +4,7 @@ use App\Http\Controllers\{HomeController, RoleController, ProductController, Bil
     ClaimAdministratorController,BillingProviderController,HealthProviderController, MedicalProviderController, BillingLetterController,
     TaxonomyCodeController,  DiagnosisCodeController,  ServiceCodeController, CompanyTypeController, ClaimStatusController,
     PayerTypeController, CountryController, StateController, CityController, TaskController, StatusController, UserTaskController,
-    BillingCustomSettingController, UserInviteController, MasterHolidayController
+    BillingCustomSettingController, UserInviteController, MasterHolidayController, MasterCrudController
 };
 /*
 |--------------------------------------------------------------------------
@@ -338,5 +338,10 @@ Route::group(['middleware' => ['auth']], function() {
     Route::post('save/holiday', [MasterHolidayController::class, 'storeHoliday']); 
     Route::post('delete/holiday', [MasterHolidayController::class, 'deleteHoliday']);
     Route::get('billing/providers/holidays/{providerId}',[BillingProviderController::class, 'billingProviderHolidayList']);
+    Route::post('billing/save/holiday', [BillingProviderController::class, 'storeBillingProviderHolidays']);
+    Route::post('billing/delete/holiday', [BillingProviderController::class, 'deleteBillingProviderHolidays']);
 
+    Route::get('document/reprt/type',[MasterCrudController::class, 'reprtTypeList']);
+    Route::post('save/reprt/type', [MasterCrudController::class, 'storeReportType']); 
+    Route::post('delete/reprt/type', [MasterCrudController::class, 'deleteReportType']);
 });

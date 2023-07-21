@@ -42,8 +42,7 @@ class PatientController extends Controller
             if(count($providersId) > 0){
                 $patients = Patient::with('getBillingProvider')->whereIn('billing_provider_id', $providersId)->orderBy('created_at', 'desc')->get(); 
             }
-        }
-        
+        } 
         return view('patients.index', compact('patients'));
     }
 
@@ -164,6 +163,7 @@ class PatientController extends Controller
                     $checkApoint->case_id= $request->appointment_case;
                     $checkApoint->authorised= $request->appointment_authorization;
                     $checkApoint->appointment_addition_info = $request->appointment_additionInfo;
+                    $checkApoint->is_interpreter= $request->is_interpreter;
     
                     $checkApoint->update();
                     return  $this->redirectToRoute('/patient/create/schedular', "Patient appointment updated successfully", 'success', ["positionClass" => "toast-top-center"]);
@@ -184,7 +184,7 @@ class PatientController extends Controller
                     $pAppoint->case_id= $request->appointment_case;
                     $pAppoint->authorised= $request->appointment_authorization;
                     $pAppoint->appointment_addition_info = $request->appointment_additionInfo;
-    
+                    $pAppoint->is_interpreter= $request->is_interpreter;
                     // $pAppoint->arrival_time  = $request->patientId;
                     // $pAppoint->notes  = $request->patientId;
                     $pAppoint->save();
@@ -936,9 +936,7 @@ class PatientController extends Controller
     {
         // echo  "<pre>";
         // print_r($request->id);exit;
-        //echo "###".$request->pid."==".$request->id;exit; 
-        
-        try {
+         try {
             $head = 'Add '; $documents = []; $id= null; $providerId = null;
             if(isset($request->id)){
                 $head = 'Update ';
@@ -986,13 +984,12 @@ class PatientController extends Controller
        //dd($request->all());exit;
        
        try {
-        DB::beginTransaction();
-       $id=  $this->storeTepInjuryDocuments($request);
-        DB::commit();
-        if($request){
-           return $id;
-        }
-       // 
+            DB::beginTransaction();
+            $id=  $this->storeTepInjuryDocuments($request);
+            DB::commit();
+            if($request){
+                return $id;
+            }
         } catch (\Exception $e) {
            DB::rollback(); 
             return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
@@ -1046,23 +1043,25 @@ class PatientController extends Controller
         $meetingTypes = $this->patientModel->getMeetingType();
         $billStatus = $this->patientModel->getBillStatus();
         $statuss = Status::where("is_active", '1')->get(); 
-        $providerIds = [];
+        $providerIds = []; $renderProviders = []; $locations = []; $srcRendering = ''; $srcLocation= '';
         foreach (Auth::user()->getUserBillingProviders as $usBilling){
-        $providerIds[] = $usBilling->provider_id;
-        }
-        $providers = BillingProvider::whereIn('id', $providerIds)->get();
+            $providerIds[] = $usBilling->provider_id;
+             
+        } 
+        $renderProviders = BillReferingOrderProvider::where('type',4)->whereIn('billing_provider_id',$providerIds)->orderBy('id', 'desc')->get(); 
+        $locations = MasterPlaceOfService::whereIn('billing_provider_id', $providerIds)->orderBy('id', 'desc')->get();
         
          $rules = array(
                 'keyword' => 'required_without_all:duration_date,appointment_meeting_Type',
                 'duration_date' => 'required_without_all:keyword,appointment_meeting_Type',
                 'appointment_meeting_Type' => 'required_without_all:keyword,duration_date',
             ); 
-        if(empty($request->keyword) && empty($request->providerId) && empty($request->duration_date) && empty($request->appointment_meeting_Type) ){
+        if(empty($request->keyword)  && empty($request->locationId) && empty($request->renderingProviderId) && empty($request->duration_date) && empty($request->appointment_meeting_Type) ){
             $patientAppointment = PatientAppointment::with('getPatient','getBillingProvider', 'getResaons');
             $patientAppointment =  $patientAppointment->where('appointment_date', $newAppoint);
             $patientAppointment =  $patientAppointment->orderBy('appointment_date', 'desc')->get();
         }  
-         elseif(!empty($request->keyword) || !empty($request->providerId) || !empty($request->duration_date) || !empty($request->appointment_meeting_Type) ){
+         elseif(!empty($request->keyword) || !empty($request->locationId) || !empty($request->renderingProviderId) || !empty($request->duration_date) || !empty($request->appointment_meeting_Type) ){
              $patientAppointment = PatientAppointment::with('getPatient','getBillingProvider', 'getResaons');
              
              if(!empty($request->keyword)){
@@ -1074,9 +1073,13 @@ class PatientController extends Controller
                     $r->orWhere('last_name','LIKE', "%$value%");
                 }); 
             }
-            if(!empty($request->providerId)){
-                 $srcProvider = $request->providerId;
-                $patientAppointment =  $patientAppointment->where('billing_provider_id', $request->providerId);
+            if(!empty($request->locationId)){ 
+                $srcLocation = $request->locationId;
+                $patientAppointment =  $patientAppointment->where('location', $request->locationId);
+            }
+            if(!empty($request->renderingProviderId)){ 
+                $srcRendering = $request->renderingProviderId;
+                $patientAppointment =  $patientAppointment->where('rendering_provider_id', $request->renderingProviderId);
             }
             if(!empty($request->duration_date)){ 
                 $durationDate =  $request->duration_date; 
@@ -1094,7 +1097,7 @@ class PatientController extends Controller
             $patientAppointment =  $patientAppointment->orderBy('appointment_date', 'desc')->get();
          }
             
-        return view('patients.schedular.list', compact( ['srcProvider','providers', 'patientAppointment', 'appointMents', 'meetingTypes', 'billStatus', 'searchKey', 'durationDate', 'meetingType','statuss'])); 
+        return view('patients.schedular.list', compact( ['srcLocation', 'srcRendering', 'locations', 'renderProviders', 'srcProvider',  'patientAppointment', 'appointMents', 'meetingTypes', 'billStatus', 'searchKey', 'durationDate', 'meetingType','statuss'])); 
     }
     function appointmentStatus(Request $request){
         $appointment = PatientAppointment::where('id', $request->appointMentId)->first();

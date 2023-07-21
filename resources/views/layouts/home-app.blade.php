@@ -534,6 +534,7 @@
                         <li><a class="dropdown-item" href="{{ route('claimadministrators.index') }}" data-toggle="dropdown">Claim Administrator</a></li>
                         <li><a class="dropdown-item" href="{{ route('taxonomycodes.index') }}" data-toggle="dropdown">Taxonomy Codes</a></li>
                         <li><a class="dropdown-item" href="{{ url('/master/holidays') }}" data-toggle="dropdown">Holidays</a></li>
+                        <li><a class="dropdown-item" href="{{ url('/document/reprt/type') }}" data-toggle="dropdown">Reporting Type</a></li>
                     </ul>
                 </li>
 

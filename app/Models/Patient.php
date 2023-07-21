@@ -110,55 +110,38 @@ class Patient extends Model
      }
 
      public static function boot()
-    {
+        {
+            parent::boot();
+            // function called when object is creating        
+            self::created(function($model){
+                $patientNumber='P'.$model->id.date('y').date('m').date('d');
+                $model->patient_no = $patientNumber;
+                $model->update();
+                if($model){
+                    //$this->addGlobalAllLog('PATIENT_ADD','App\Patient','Created Patient', $model->id);
+                    $history = new MasterDataLog();
+                    $history->type = 'PATIENT_ADD';
+                    $history->created_by = Auth::user()->id;
+                    $history->data_id = $model->id;
+                    $history->model_name = 'App\Patient';
+                    $history->description = 'Created Patient';
+                    $history->save();
+
+                }
+            });
+            self::updating(function ($model) {
+                //dd('test for update');
+            // $this->addGlobalAllLog('PATIENT_UPDATE','App\Patient','Updated Patient', $model->id);
+            $history = new MasterDataLog();
+                    $history->type = 'PATIENT_UPDATE';
+                    $history->created_by = Auth::user()->id;
+                    $history->data_id = $model->id;
+                    $history->model_name = 'App\Patient';
+                    $history->description = 'Updated Patient';
+                    $history->save();
+            });
         
-        parent::boot();
-        // function called when object is creating
-        // self::creating(function ($model) {
-        //     $patientNumber='P0000'.$model->id.date('Y').date('m').date('d');
-        //     $model->patient_no = $patientNumber;
-        //     $model->update();
-        //     if($model){
-        //         //$this->addGlobalAllLog('PATIENT_ADD','App\Patient','Created Patient', $model->id);
-        //         $history = new MasterDataLog();
-        //         $history->type = 'PATIENT_ADD';
-        //         $history->created_by = Auth::user()->id;
-        //         $history->data_id = $model->id;
-        //         $history->model_name = 'App\Patient';
-        //         $history->description = 'Created Patient';
-        //         $history->save();
-
-        //     }
-        // });
-        self::created(function($model){
-            $patientNumber='P'.$model->id.date('y').date('m').date('d');
-            $model->patient_no = $patientNumber;
-            $model->update();
-            if($model){
-                //$this->addGlobalAllLog('PATIENT_ADD','App\Patient','Created Patient', $model->id);
-                $history = new MasterDataLog();
-                $history->type = 'PATIENT_ADD';
-                $history->created_by = Auth::user()->id;
-                $history->data_id = $model->id;
-                $history->model_name = 'App\Patient';
-                $history->description = 'Created Patient';
-                $history->save();
-
-            }
-        });
-        self::updating(function ($model) {
-            //dd('test for update');
-           // $this->addGlobalAllLog('PATIENT_UPDATE','App\Patient','Updated Patient', $model->id);
-           $history = new MasterDataLog();
-                $history->type = 'PATIENT_UPDATE';
-                $history->created_by = Auth::user()->id;
-                $history->data_id = $model->id;
-                $history->model_name = 'App\Patient';
-                $history->description = 'Updated Patient';
-                $history->save();
-        });
-       
-    }
+        }
     //appointements
     public function getAppointments()
      {

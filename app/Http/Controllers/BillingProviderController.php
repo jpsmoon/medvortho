@@ -947,7 +947,43 @@ public function placesOfServices(Request $request)
     { 
         $providerId = $request->providerId;
         $holidays = MasterHoliday::where('is_active', 1)->get(); 
+        $placeOfServices = MasterPlaceOfService::where('billing_provider_id',$providerId)->orderBy('id', 'desc')->get();
         $providerHolidays = BillingProviderHoliday::where('billing_provider_id', $providerId)->where('is_active', 1)->get(); 
-        return view('billingprocess.providerHolidays.index', compact( 'providerHolidays', 'providerId', 'holidays')); 
+        return view('billingprocess.providerHolidays.index', compact(['providerHolidays', 'providerId', 'holidays', 'placeOfServices'])); 
+    }
+    public function storeBillingProviderHolidays(Request $request)
+    {
+       try {
+             $isFoundHoliday = BillingProviderHoliday::where('holiday_id', $request->holiday_id)->where('location_id', $request->holiday_location_id)->first();
+            if($isFoundHoliday){
+                return  $this->redirectToRoute('/billing/providers/holidays/'.$request->provider_id, 'This Holiday already exist!', 'error', ["positionClass" => "toast-top-center"]);
+            }
+            else{
+                DB::beginTransaction();
+                    $this->saveBillingProviderHoliday($request);
+                DB::commit();
+                $msg = 'Holiday added successfully';
+                if(isset($request->resaon_id)){
+                    $msg = 'Holiday updated successfully';
+                }
+            return  $this->redirectToRoute('/billing/providers/holidays/'.$request->provider_id, $msg, 'success', ["positionClass" => "toast-top-center"]);
+            } 
+        } catch (\Exception $e) {
+             DB::rollback(); 
+            return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
+        }
+    }
+    public function deleteBillingProviderHolidays(Request $request)
+    {
+       try {
+            DB::beginTransaction();
+             $this->deleteRow(new BillingProviderHoliday(), $request->id); 
+            DB::commit();
+           $msg = 'Holiday deleted successfully'; 
+           return  $this->redirectToRoute('/billing/providers/holidays/'.$request->provider_id, $msg, 'success', ["positionClass" => "toast-top-center"]);
+        } catch (\Exception $e) {
+             DB::rollback(); 
+            return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
+        }
     }
 }
