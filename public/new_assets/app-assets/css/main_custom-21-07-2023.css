@@ -181,7 +181,7 @@ border:1px solid rgba(33,40,50,.125)!important;
 /*home css end here*/
 /*billing provider css end here*/
 .customBoxHeight{
-    min-height:calc(100vh - 220px);
+    height:100vh;
 }
 .heading-background {
      background: #2a3f54;
@@ -200,128 +200,6 @@ background: linear-gradient(to right,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
 }
 .sub-header{
     padding:12px 0!important;
-}
-.custom-billing-box{
-    background: #2a3f54;
-background: -moz-linear-gradient(left,  #2a3f54 5%, #2a3f54 56%, #476d8e 100%);
-background: -webkit-linear-gradient(left,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
-background: linear-gradient(to right,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
-     font-family: 'Figtree', sans-serif!important;
-     -webkit-box-shadow: 0 3px 6px rgba(0,0,0,0.5)!important;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.5)!important;
-    border:0px solid rgba(33,40,50,.125)!important;
-    border-radius: 0.35rem;
-}
-.row-background {
-    border:1px solid rgba(33,40,50,.125)!important;
-    background-color: #fff;
-}
-.innerbox {
-background: #ffffff;
-background: -moz-linear-gradient(top,  #ffffff 8%, #f3f3f3 100%);
-background: -webkit-linear-gradient(top,  #ffffff 8%,#f3f3f3 100%);
-background: linear-gradient(to bottom,  #ffffff 8%,#f3f3f3 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f3f3f3',GradientType=0 );
-
-    font-family: 'Figtree', sans-serif!important;
-      -webkit-box-shadow: 0 3px 6px rgba(0,0,0,.05)!important;
-    box-shadow: 0 3px 6px rgba(0,0,0,.05)!important;
-    border:1px solid rgba(33,40,50,.125)!important;
-    border-radius: 0.35rem;
-    min-height:210px;
-    } 
-    .billin-icon{
-        text-align:center;
-        padding:15px 0 10px;
-    }
-     .billin-icon i{
-         font-size:18px;
-     }
-.custom-billing-box .text-success {
-    color:#3B74DA!important;
-}
-.custom-billing-box .text-success:hover{
-     color:#3BAFDA!important;
-}
-
-.boxControl{
-    padding-left:30px!important; padding-right:30px!important;
-}
-
-.headLeft{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-.btn-primary {
-    border-color:#3BAFDA!important;
-    font-family: 'Figtree', sans-serif!important;
-    
-}
-.btn-primary:hover {
-    border-color:#2a3f54!important;
-    background-color:#3BAFDA!important;
-    color: #FFF!important;
-}
-.steps, .step .activestep {
-    color: #fff !important;
-    height: 80px!important;
-    background: #2a3f54;
-background: -moz-linear-gradient(left,  #2a3f54 5%, #2a3f54 56%, #476d8e 100%);
-background: -webkit-linear-gradient(left,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
-background: linear-gradient(to right,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
-     padding-top: 0px; 
-    border-left: 2px solid #2a3f54!important;
-    border-right: 2px solid #2a3f54!important;
-    border-top: 2px solid #2a3f54 !important;
-    border-bottom: 2px solid #2a3f54 !important;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    margin-right: 10px;
-     border:0px solid rgba(33,40,50,.125)!important;
-    border-radius: 0.35rem; 
-}
-.activestep{
-    position:relative;
-}
-.activestep:after{
-  position: absolute;
-  bottom: -10px;
-  left:50%;
-  margin-left: -10px;
-  content:"";
-  display:block;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid #2a3f54 ; 
-}
-.otherStep, .resetActive, .otherStep, .step .col-md-2{
- box-shadow: 0 3px 6px rgba(0,0,0,0.5)!important;
-    border:0px solid rgba(33,40,50,.125)!important;
-    border-radius: 0.35rem;   
-    margin-right:15px;
-    padding-top:0px;
-}
-.otherStep{
-    box-shadow: 0 0px 0px rgba(0,0,0,0.5)!important;
-    border:0px solid rgba(33,40,50,.125)!important;
-}
-.step{
-    padding-top:20px;
-}
-.step .col-md-2:first-child {
-    border-radius: 5px!important;
-}
-.step .col-md-2:last-child {
-    border-radius: 5px!important;
-}
-.step .activestep .pointer{
-    padding-bottom:0px;
-}
-.step .otherStep .pointer {
-    padding-bottom: 0px;
-    margin-bottom: 4px;
 }
 /*billing provider css end here*/
 
@@ -450,7 +328,6 @@ padding-top: 1rem;
     padding-top: 0.25rem!important;
     width: 0;
 }
-}
 
 @media screen and (min-width: 768px) {
     
@@ -475,14 +352,7 @@ min-width: 450px;
 .mainSec{
     padding: 0 44px;
 }
-.customBoxHeight{
-    min-height: calc(100vh - 60px);
 }
-.innerbox {
-    min-height:180px;
-    } 
-}
-
 
 .dropdown-menu {
     border: 1px solid #7f8082 !important;
@@ -728,6 +598,17 @@ font-size: 16px;
     margin: 0;
     padding-top: 6px;
 }
+.row-background
+{
+border: 1px solid #ccc!important;
+background-color:#fcfcfc
+}
+
+/*.heading-background*/
+/*{*/
+/*border-bottom: 2px solid #848080;*/
+/*}*/
+
 .form-row
 {
  margin-left: 0px!important;
@@ -746,7 +627,10 @@ font-size: 16px;
     border: 2px solid #b9bab6;
     background-color:#f3f3f3;
     }
- 
+.innerbox {
+    border: 2px solid #b9bab6;
+    background-color: white;
+    }  
 .paddingtop
 {
 padding-top: 10px;

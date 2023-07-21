@@ -1,7 +1,7 @@
 <?php
 namespace App\Traits;
 use Illuminate\Support\Facades\DB;
-use App\Models\{MasterHoliday, AllDocument, Patient, TaskAssign, Task, TaskStep, Status, Zipcode, Diagnosis_code,MasterDataLog, PatientInjuryBillog, Patient_injury, InjuryBill};
+use App\Models\{ReportType, MasterHoliday, AllDocument, Patient, TaskAssign, Task, TaskStep, Status, Zipcode, Diagnosis_code,MasterDataLog, PatientInjuryBillog, Patient_injury, InjuryBill};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
@@ -527,6 +527,23 @@ trait DataTrait
             $newHoliday->created_by     = Auth::user()->id; 
             $newHoliday->holiday_type   = $request->holiday_type;
             $newHoliday->save(); 
+        } 
+    }
+
+    public function saveReportType($request){  
+        $checkReportType = ReportType::where('id', $request->report_type_id)->first();
+        if($checkReportType){
+             $checkReportType->report_name      = $request->name;
+            $checkReportType->report_code       = strtoupper($request->report_code);
+            $checkReportType->description       = $request->description; 
+            $checkReportType->update();
+        }
+        else{
+            $newReportType = new ReportType();
+             $newReportType->report_name    = $request->name;
+            $newReportType->report_code     = strtoupper($request->report_code);
+            $newReportType->description     = $request->description; 
+            $newReportType->save(); 
         } 
     }
 }

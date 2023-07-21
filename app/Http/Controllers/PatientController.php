@@ -42,8 +42,7 @@ class PatientController extends Controller
             if(count($providersId) > 0){
                 $patients = Patient::with('getBillingProvider')->whereIn('billing_provider_id', $providersId)->orderBy('created_at', 'desc')->get(); 
             }
-        }
-        
+        } 
         return view('patients.index', compact('patients'));
     }
 
@@ -186,7 +185,6 @@ class PatientController extends Controller
                     $pAppoint->authorised= $request->appointment_authorization;
                     $pAppoint->appointment_addition_info = $request->appointment_additionInfo;
                     $pAppoint->is_interpreter= $request->is_interpreter;
-    
                     // $pAppoint->arrival_time  = $request->patientId;
                     // $pAppoint->notes  = $request->patientId;
                     $pAppoint->save();
@@ -938,9 +936,7 @@ class PatientController extends Controller
     {
         // echo  "<pre>";
         // print_r($request->id);exit;
-        //echo "###".$request->pid."==".$request->id;exit; 
-        
-        try {
+         try {
             $head = 'Add '; $documents = []; $id= null; $providerId = null;
             if(isset($request->id)){
                 $head = 'Update ';
@@ -988,13 +984,12 @@ class PatientController extends Controller
        //dd($request->all());exit;
        
        try {
-        DB::beginTransaction();
-       $id=  $this->storeTepInjuryDocuments($request);
-        DB::commit();
-        if($request){
-           return $id;
-        }
-       // 
+            DB::beginTransaction();
+            $id=  $this->storeTepInjuryDocuments($request);
+            DB::commit();
+            if($request){
+                return $id;
+            }
         } catch (\Exception $e) {
            DB::rollback(); 
             return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
