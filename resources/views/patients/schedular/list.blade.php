@@ -123,7 +123,7 @@
                 
                 <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                     <li class="breadcrumb-item">
-                        @can('Patient-create')
+                        @can('patient-create')
                         <a class="btn btn-primary"href="{{ url('/patient/create/schedular') }}"> Add Appointment</a>
                         @endcan
                     </li>
@@ -252,7 +252,9 @@
                                                              </a></td>
                                                     <td>{{ ($appountment->appointment_date) ? date('m-d-Y', strtotime($appountment->appointment_date)) : ''}}</td>
                                                     <td>{{ ($appountment->appointment_time) ? $appountment->appointment_time : ''}}</td>
-                                                    <td class="toolTipDiv"><a class="" href="{{url('/patients/view',$appountment->getPatient->id)}}">{{($appountment->getPatient) ? $appountment->getPatient->first_name : ''}} {{($appountment->getPatient) ? $appountment->getPatient->mi : ''}} {{($appountment->getPatient) ? $appountment->getPatient->last_name : ''}} </a> 
+                                                    <td class="toolTipDiv"><a  href="javascript:void(0)"  data-toggle="modal" data-target="#patientInfoModal_{{$appountment->getPatient->id}}"
+
+                                                    >{{($appountment->getPatient) ? $appountment->getPatient->first_name : ''}} {{($appountment->getPatient) ? $appountment->getPatient->mi : ''}} {{($appountment->getPatient) ? $appountment->getPatient->last_name : ''}} </a> 
                                                         @if($appountment->is_interpreter == 'on')
                                                             <span class="tool" data-tip="For this appointment need interpreter" tabindex="1"> 
                                                                 <i class="fa fa-info-circle fa-larger "></i>
@@ -263,24 +265,7 @@
                                                     <td>{{ ($appountment->getBillingProvider) ? $appountment->getBillingProvider->professional_provider_name : ''}}</td>
                                                     
                                                     <td>{{ $testPatientClass->getMeetingType($appountment->meeting_type)}}</td>
-                                                    
-                                                    <!--<td><a class="" href="{{url('/patients/view',$appountment->getPatient->id)}}">-->
-                                                    <!--<td>{{ ($appountment->getRenderingProvider) ? $appountment->getRenderingProvider->referring_provider_first_name : ''}}</td>-->
-                                                    <!--<td>{{ ($appountment->getLocation) ? $appountment->getLocation->nick_name : ''}}</td>-->
-                                                    
-                                                     <!--<td>-->
-                                                     <!--    @if($appountment->getBillingProvider && $appountment->getBillingProvider->getProviderReasons)-->
-                                                     <!--    <select name="appointmentReason" id="appointmentReason_{{$appountment->id}}" class="form-control" -->
-                                                     <!--    onchange="changeReason({{$appountment->id}}, this.value);">-->
-                                                     <!--       <option value="">Please Select</option>-->
-                                                     <!--       @foreach ($appountment->getBillingProvider->getProviderReasons as $reason)-->
-                                                     <!--           <option value="{{ $reason->id }}" {{($appountment && $appountment->appointment_reason == $reason->id) ? 'selected' : ''  }}>{{ $reason->name }}</option>-->
-                                                     <!--       @endforeach-->
-                                                     <!--   </select>-->
-                                                     <!--   @endIf-->
-                                                     <!--</td>-->
-                                                     <!--<td>{{$testPatientClass->catculateTotalHours($appountment->duration)}}</td>-->
-                                                    <td>
+                                                      <td>
                                                         @if($statuss)
                                                          <select name="appointmentReason" id="appointmentReason_{{$appountment->id}}" class="form-control" 
                                                          onchange="changeStatus({{$appountment->id}}, this.value);">
@@ -298,14 +283,14 @@
                                                          onchange="changeBillStatus({{$appountment->id}}, this.value);">
                                                             <option value=''>-Select-</option>
                                                             @foreach ($billStatus as $bs)
-                                                                <option value="{{$bs['id'] }}" {{ ($appountment && $appountment->bill_status == $bs['id']) ? 'selected' : ''  }}>{{$bs['name'] }}</option>
+                                                                <option value="{{$bs['id'] }}" {{ ($appountment && $appountment->bill_status == $bs['id']) ? 'selected' : ''  }}>{{$bs['status_name'] }}</option>
                                                             @endforeach
                                                         </select>
                                                         @endIf
                                                     </td>
                                                     
                                                     <td> 
-                                                    @can('Patient-delete')
+                                                    @can('patient-delete')
                                                     <a href="javascript:void(0)" class="text-danger" onclick="deleteApointment({{$appountment->id}})">
                                                         <i  class="icon-trash showPointer"/></i>
                                                     </a>
@@ -324,24 +309,59 @@
                                                             <div class="modal-body">
                                                                  <div class="card">
                                                                     <div class="card-body"> 
-                                                                    <div class="row">
-                                                                        <div class="col-md-6">
-                                                                            <ul class="list-group list-group-flush">
-                                                                            <li class="list-group-item"><b>Visit ID</b> : {{($appountment->appointment_no && $appountment->appointment_no != "") ? $appountment->appointment_no : ''}}</li>
-                                                                            <li class="list-group-item"><b>Visit Date</b> :{{ ($appountment->appointment_date) ? date('m-d-Y', strtotime($appountment->appointment_date)) : ''}}</li>
-                                                                            <li class="list-group-item"><b>Visit Type</b> :{{ $testPatientClass->getMeetingType($appountment->meeting_type)}}</li>
-                                                                            </ul>
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <ul class="list-group list-group-flush">
+                                                                                <li class="list-group-item"><b>Visit ID</b> : {{($appountment && $appountment->appointment_no != "") ? $appountment->appointment_no : ''}}</li>
+                                                                                <li class="list-group-item"><b>Visit Date</b> :{{ ($appountment->appointment_date) ? date('m-d-Y', strtotime($appountment->appointment_date)) : ''}}</li>
+                                                                                <li class="list-group-item"><b>Visit Type</b> :{{ $testPatientClass->getMeetingType($appountment->meeting_type)}}</li>
+                                                                                <li class="list-group-item"><b>Rendering Provider</b> :{{ ($appountment->getRenderingProvider && $appountment->getRenderingProvider->referring_provider_first_name) ? $appountment->getRenderingProvider->referring_provider_first_name : ''}} {{ ($appountment->getRenderingProvider && $appountment->getRenderingProvider->referring_provider_middle_name) ? $appountment->getRenderingProvider->referring_provider_middle_name : ''}} {{ ($appountment->getRenderingProvider && $appountment->getRenderingProvider->referring_provider_last_name) ? $appountment->getRenderingProvider->referring_provider_last_name : ''}}</li>
+                                                                                <li class="list-group-item"><b>Resource</b> : {{($appountment  && $appountment->resource ) ? $appountment->resource : ''}}</li>
+                                                                                <li class="list-group-item"><b>Authorization</b> : {{($appountment  && $appountment->authorised ) ? $appountment->authorised : ''}}</li>
+                                                                                <li class="list-group-item"><b>Status</b> :{{($appountment->getStatus && $appountment->getStatus->status_name) ? $appountment->getStatus->status_name : ''}} </li>
+                                                                                <li class="list-group-item"><b>Recurrene</b> :{{ ($appountment->recurrene && $appountment->recurrene == 'on') ? 'Yes' : 'No'}}</li>
+                                                                                </ul>
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <ul class="list-group list-group-flush">
+                                                                                <li class="list-group-item"><b>Patient Name</b> : 
+                                                                                {{($appountment->getPatient && $appountment->getPatient->first_name) ? $appountment->getPatient->first_name : ''}} 
+                                                                                {{($appountment->getPatient && $appountment->getPatient->mi) ? $appountment->getPatient->mi : ''}} 
+                                                                                {{($appountment->getPatient && $appountment->getPatient->last_name) ? $appountment->getPatient->last_name : ''}}</li>
+                                                                                <li class="list-group-item"><b>Visit Time</b> :{{ ($appountment->appointment_time) ? $appountment->appointment_time : ''}}</li>
+                                                                                <li class="list-group-item"><b>Provider Name</b> :{{ ($appountment->getBillingProvider && $appountment->getBillingProvider->professional_provider_name) ? $appountment->getBillingProvider->professional_provider_name : ''}}</li>
+                                                                                <li class="list-group-item"><b>Practice Location</b> :{{ ($appountment->getLocation && $appountment->getLocation->nick_name) ? $appountment->getLocation->nick_name : ''}}</li>
+                                                                                <li class="list-group-item"><b>Case No</b> :{{ ($appountment->getInjury && $appountment->getInjury->getInjuryClaim && $appountment->getInjury->getInjuryClaim->claim_no) ? $appountment->getInjury->getInjuryClaim->claim_no : ''}}</li>
+                                                                                <li class="list-group-item"><b>Reason</b> :{{ ($appountment->getResaons && $appountment->getResaons->name) ? $appountment->getResaons->name : ''}}</li>
+                                                                                <li class="list-group-item"><b>Duration</b> :{{ $testPatientClass->catculateTotalHours($appountment->duration)}}</li>
+                                                                                <li class="list-group-item"><b>Interpreter</b> :{{ ($appountment->is_interpreter && $appountment->is_interpreter == 'on') ? 'Yes' : 'No'}}</li>
+                                                                                </ul>
+                                                                            </div> 
                                                                         </div>
-                                                                        <div class="col-md-6">
-                                                                            <ul class="list-group list-group-flush">
-                                                                            <li class="list-group-item"><b>Patient Name</b> : {{($appountment->getPatient) ? $appountment->getPatient->first_name : ''}} {{($appountment->getPatient) ? $appountment->getPatient->mi : ''}} {{($appountment->getPatient) ? $appountment->getPatient->last_name : ''}}</li>
-                                                                            <li class="list-group-item"><b>Visit Time</b> :{{ ($appountment->appointment_time) ? $appountment->appointment_time : ''}}</li>
-                                                                            <li class="list-group-item"><b>Provider Name</b> :{{ ($appountment->getBillingProvider) ? $appountment->getBillingProvider->professional_provider_name : ''}}</li>
-                                                                            </ul>
-                                                                        </div> 
-                                                                    </div>
+                                                                        <div class="row">
+                                                                            <div class="col-md-6">
+                                                                                <ul class="list-group list-group-flush">
+                                                                                    <li class="list-group-item"><b>Addition Information</b> : {{($appountment && $appountment->appointment_addition_info != "") ? $appountment->appointment_addition_info : ''}}</li>
+                                                                                </ul>
+                                                                            </div> 
+                                                                        </div>
                                                                     </div> 
                                                                 </div>
+                                                            </div> 
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                <div id="patientInfoModal_{{$appountment->getPatient->id}}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="patientModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-xl">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="patientModalLabel">Patient Information</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                 @include('patients.show-modal', ['patient' => $appountment->getPatient])
                                                             </div> 
                                                         </div>
                                                     </div>

@@ -96,7 +96,7 @@ background: linear-gradient(to right,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
     padding: 0 0px;
 }
 .header-navbar .navbar-container {
-    height: 65px;
+    height: 62px;
 }
 .header-navbar .navbar-container ul.nav li>a.nav-link {
     padding: 0.85rem 1rem;
@@ -176,12 +176,19 @@ border:1px solid rgba(33,40,50,.125)!important;
     background:#ccc;
 }
 
-
+.otherStep p.bold, #div1 p.bold {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
 
 /*home css end here*/
 /*billing provider css end here*/
 .customBoxHeight{
     min-height:calc(100vh - 220px);
+}
+.customBoxHeight2{
+    min-height:calc(100vh - 350px);
 }
 .heading-background {
      background: #2a3f54;
@@ -323,6 +330,185 @@ background: linear-gradient(to right,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
     padding-bottom: 0px;
     margin-bottom: 4px;
 }
+.card-body{
+    padding: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+.card-header  .text-warning {
+    color: #fff!important;
+}
+.sub-header {
+    padding: 10px 10px!important;
+}
+.step div{
+    margin-left:10px; 
+    margin-right:10px;
+}
+.otherStep p.bold i, #div1 p.bold i {
+    margin-left: 5px;
+}
+.step .col-md-3 {
+    background-color: #fff;
+    border: 0px solid #C0C0C0;
+    border-right: none;
+    border-radius: 5px;
+}
+.step .pointer{
+    padding-top:18px;
+    font-size:18px;
+}
+
+
+.step .otherStep .pointer {
+    padding-bottom: 0px;
+    padding-top: 25px;
+}
+.step .activestep .pointer {
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+
+.scroll-h{
+    height:250px;
+    overflow-y:scroll;
+   scrollbar-width: thin;
+   scrollbar-color: #cccccc3c #005dba;
+}
+.scroll-h::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 3px;
+}
+
+.scroll-h::-webkit-scrollbar-track {
+  background-color: #cccccc3c;
+}
+.scroll-h::-webkit-scrollbar-thumb {
+  background-color: #005dba;
+}
+
+.table td, .table th {
+  border: 1px solid rgba(33,40,50,.125);
+}
+#nav-stats{
+    margin:0 10px;
+}
+.tab-content {
+    box-shadow: 0 0.15rem 1.75rem #21283226;
+    border: 1px solid rgba(33,40,50,.125);
+    border-radius:0 0 0.35rem 0.35rem;
+}
+.setMinheight {
+    min-height: auto!important;
+    padding: 0px 0 10px 0;
+}
+.appointmentDiv th, td {
+  border:0px solid rgba(33,40,50,.125);
+  color:#333;
+  font-weight:500;
+}
+.appointmentDiv table {
+    width: 100% !important;
+    border-collapse: collapse;
+    border: 1px solid rgba(33,40,50,.125);
+    font-size: 13px;
+    text-align: center;
+}
+.appointmentDiv table th{
+    font-weight:700;
+}
+.appointmentDiv table th, .appointmentDiv table td{
+    padding:5px;
+}
+
+/*nav  css Start here*/
+
+.custom-nav nav {
+	margin: 0px 0;
+}
+
+.custom-nav nav ul {
+	padding: 0;
+ margin: 0;
+	list-style: none;
+	position: relative;
+	}
+	
+.custom-nav nav ul li {
+	display:inline-block;
+	background:#ffffff;
+	text-align:center;
+	}
+
+.custom-nav nav a {
+	display:block;
+	padding:10px 18px;	
+	color:#55595C;
+	font-size:15px;
+	line-height: 26px;
+	text-decoration:none;
+	font-family: 'Figtree', sans-serif!important;
+	font-weight:600;
+	
+}
+.custom-nav nav a i{
+    display:block;
+    text-align:center;
+}
+
+.custom-nav nav a:hover { 
+	background-color:#2a3f54; 
+	color:#fff;
+}
+/* Hide Dropdowns by Default */
+.custom-nav nav ul ul {
+	display: none;
+	position: absolute; 
+	top: 60px; /* the height of the main nav */
+}
+.custom-nav nav ul ul ul{
+    
+    left:-3px;
+}
+
+.custom-nav nav ul ul li{
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    -webkit-box-shadow:0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-left: 1px solid #CCCCCC!important;
+    border-right: 1px solid #CCCCCC!important;
+    border-bottom: 1px solid #CCCCCC!important;
+    -webkit-border-radius:0px;
+    border-radius:0px;
+}
+
+/* Display Dropdowns on Hover */
+.custom-nav nav ul li:hover > ul {
+	display:block;
+}
+
+/* Fisrt Tier Dropdown */
+.custom-nav nav ul ul li {
+	width:220px;
+	float:none;
+	display:list-item;
+	position: relative;
+	text-align:left;
+}
+
+/* Second, Third and more Tiers	*/
+.custom-nav nav ul ul ul li {
+	position: relative;
+	top:-60px; 
+	left:220px;
+}
+
+	
+/* Change this in order to change the Dropdown symbol */
+.custom-nav li > a:after { content:  ' \25BC'; font-size:10px; }
+.custom-nav li > a:only-child:after { content: ''; }
+
+/*nav css end here*/
+
 /*billing provider css end here*/
 
 
@@ -372,6 +558,80 @@ border-bottom-left-radius: 0px;
 border-top-right-radius: 0px;
 border-bottom-right-radius: 0px;
 }
+/*Add Patient css start here*/
+.sub-header h4{
+    font-weight:600!important;
+    position:relative;
+   
+}
+.custom-form .card-body{
+    padding:0;
+}
+.custom-form .card-body h4{
+ border-block-end: 1px solid #e9edf6;    
+}
+.sub-header h4:before {
+    width: 3px;
+    height: 15px;
+    content: '';
+    background: linear-gradient(to bottom, #c1acef 0%,#c1acef 50%,#476d8e 50%,#476d8e 100%);
+    position: absolute;
+    left: -10px;
+    top: 2px;
+}
+form .form-control {
+    border: 1px solid #e9edf6;
+    color:#333335;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+    border-radius: 0.35rem!important;
+    padding: 0.5rem 0.85rem;
+}
+form .form-control input{
+    border-radius: 0.35rem;
+}
+.form-control:focus {
+    box-shadow: none;
+    border-color: #e9edf6;
+    box-shadow: 0 0.0625rem 0.125rem 0 rgba(0,0,0,.05);
+    color:#333;
+}
+form label {
+    color:#8c9097;
+}
+form select.form-control{
+    background:#e9ecef;
+}
+.rightside #billingInfoDiv{
+    box-shadow: 0 0.15rem 1.75rem #21283226;
+    border: 1px solid rgba(33,40,50,.125);
+    border-radius: 0.35rem;
+    background:#fff;
+}
+.rightside #billingInfoDiv .redial-dark{
+     background: #2a3f54;
+background: -moz-linear-gradient(left,  #2a3f54 5%, #2a3f54 56%, #476d8e 100%);
+background: -webkit-linear-gradient(left,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
+background: linear-gradient(to right,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
+     font-family: 'Figtree', sans-serif!important;
+    border:0px solid rgba(33,40,50,.125)!important;
+    border-radius: 0.35rem 0.35rem 0 0;
+    color:#fff;
+    padding: 1.5rem;
+}
+.custom-form .rightside .card-body{
+    padding: 1.5rem;
+}
+.rightside #billingInfoDiv  h6{
+     letter-spacing: .05rem;
+    font-size: 1.12rem!important;
+}
+
+
+
+
+/*Add Patient css end here*/
 
 @media screen and (min-width: 768px) {
 #adv-search {
@@ -640,10 +900,10 @@ min-width: 450px;
  background-color:#f3f3f3;
  
 }
-.setCollapseBorder
-{
- border:1px solid #000 !important;
-}
+/*.setCollapseBorder*/
+/*{*/
+/* border:1px solid #000 !important;*/
+/*}*/
 .mt-4, .my-4
 {
   margin-top: 0rem!important;

@@ -523,7 +523,7 @@
                                                                     <td>{{ $document->getUser ? $document->getUser->name : 'NA' }}
                                                                     </td>
                                                                     <td>{{ $document->description }}</td>
-                                                                    <td><a href="{{ asset('/injury_document/' . $document->injury_document) }}"
+                                                                    <td><a href="{{ asset('public/injury_document/' . $document->injury_document) }}"
                                                                             target="_blank">{{ $fileName }}</a>
                                                                     </td>
                                                                     <td>{{ $document->getReportType ? $document->getReportType->report_name : '-' }}
@@ -1123,8 +1123,8 @@
         </div>
     <!-- END: Claim Administrator  Modal Popup-->
 
-    <script src="{{ asset('js/controller/patient_injury.js') }}"></script>
-    <script src="{{ asset('js/helper.js') }}"></script>
+    <script src="{{ asset('public/js/controller/patient_injury.js') }}"></script>
+    <script src="{{ asset('public/js/helper.js') }}"></script>
     <script>
         function updateInjuryNote(note) {
             if (note != null) {

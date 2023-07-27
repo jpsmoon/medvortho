@@ -10,6 +10,7 @@ trait StatusTrait
             $statuses->status_name = $request->status_name;
             $statuses->display_order = $request->display_order;
             $statuses->description = $request->description;
+            $statuses->status_type = $request->status_type;
             $statuses->save();
             return $statuses;
         }else{ //Update here
@@ -17,7 +18,8 @@ trait StatusTrait
             $updateArr = array(
                 'status_name' => $request->status_name,
                 'display_order'=> $request->display_order,
-                'description' => $request->description
+                'description' => $request->description,
+                'status_type' => $request->status_type
             );        
             return Status::where("id", $id)->update($updateArr);
         }

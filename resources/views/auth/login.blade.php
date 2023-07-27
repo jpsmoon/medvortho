@@ -6,7 +6,8 @@
     <div class="row vh-100 justify-content-between align-items-center">
         <div class="col-12 col-md-12  justify-content-center">
             <div  style="display: flex; align-items: center; justify-content:center; text-align:center; margin-bottom:20px;">
-                <a href="https://medvortho.com/" title="https://medvortho.com"><img src="{{ asset('new_assets/app-assets/images/logo.png') }}"  width="250px" alt="logo"></a>
+                <a href="https://medvortho.com/" title="https://medvortho.com">
+                    <img src="{{ asset('public/new_assets/app-assets/images/logo.png') }}"  width="250px" alt="logo"></a>
              </div>
             <div class="login-form login_form2 col-12  col-md-12">
                 <div class="form-group mb-3 login-title">

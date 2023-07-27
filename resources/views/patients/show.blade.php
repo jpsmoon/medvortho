@@ -319,5 +319,5 @@ h2
             </div>
         </div>
 
-<script src="{{ asset('js/controller/patient_injury.js') }}"></script>
+<script src="{{ asset('public/js/controller/patient_injury.js') }}"></script>
 @endsection

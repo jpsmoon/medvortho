@@ -131,7 +131,7 @@ class RoleController extends Controller
         return  $this->redirectToRoute(route('roles.index'), 'Role updated successfully', 'success', ["positionClass" => "toast-top-center"]);
     }
     public function permissionList(Request $request){
-         $permissions = Permission::orderBy('id','DESC')->paginate(15);
+         $permissions = Permission::orderBy('id','DESC')->get();
         return view('roles.permission.index',compact('permissions'))
             ->with('i', ($request->input('page', 1) - 1) * 15);
     }

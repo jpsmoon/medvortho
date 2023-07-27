@@ -171,11 +171,11 @@ function getBillingInfoForView(val,divId){
                console.log('response',response.professional_provider_name);
                 var items = "";
                 $("#"+divId).html(" ");
-                items += `<div class="mb-0"> <h6 class="mb-0"> <a class=" text-uppercase redial-dark d-block border redial-border-light topmargin">
+                items += `<div class="mb-0"> <h6 class="mb-0"> <a class="redial-dark d-block border redial-border-light"><i class="fa-solid fa-file-invoice-dollar"></i>
                 Billing Provider </a> </h6> <div id="" class=" setCollapseBorder" role="tabpanel"><div class="card-body">
-                <span  class="font-weight-bold pr-3">Name:</span><span class="text-muted font-weight-bold">${response.professional_provider_name}</span><br/><br/>
-                <span  class="font-weight-bold pr-3">Tax ID:</span><span class="text-muted font-weight-bold">${response['tax_id']}</span><br/><br/>
-                <span  class="font-weight-bold pr-3">NPI:</span><span class="text-muted font-weight-bold">${response['professional_npi']}</span><br/><br/>
+                <span  class="font-weight-bold pr-1">Name :</span><span class="text-muted font-weight-bold">${response.professional_provider_name}</span><br/><br/>
+                <span  class="font-weight-bold pr-1">Tax ID :</span><span class="text-muted font-weight-bold">${response['tax_id']}</span><br/><br/>
+                <span  class="font-weight-bold pr-1">NPI :</span><span class="text-muted font-weight-bold">${response['professional_npi']}</span><br/><br/>
                 </div></div> </div>`;
                 $("#"+divId).html(items);
             },
