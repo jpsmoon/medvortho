@@ -17,10 +17,10 @@ class BillingProviderController extends Controller
     protected $bPModel;
     public function __construct(BillingProvider $billProviderMod )
     {
-        $this->middleware('permission:Patient-list|Patient-create|Patient-edit|Patient-delete', ['only' => ['index', 'show']]);
-        $this->middleware('permission:Patient-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:Patient-edit', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:Patient-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:patient-list|patient-create|patient-edit|patient-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:patient-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:patient-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:patient-delete', ['only' => ['destroy']]);
         $this->bPModel = $billProviderMod;
     }
     

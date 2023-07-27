@@ -19,6 +19,7 @@ class CreateStatusesTable extends Migration
             $table->integer('display_order');
             $table->mediumText('description');
             $table->enum('is_active', array('1', '0'))->default('1');
+            $table->integer('status_type')->nullable()->comment('1 for patient and 2 for Injury and 3 for bill and 4 appointment and 5 for other');
             $table->timestamps();
             $table->softDeletes();
         });

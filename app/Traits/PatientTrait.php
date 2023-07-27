@@ -163,7 +163,7 @@ trait PatientTrait
             $contactNumber  = ($apoint->getPatient && $apoint->getPatient->contact_no) ? $this->calculateAge($apoint->getPatient->contact_no) : 0;
             $toolTipData = '<div class="row"><div class="col-md-6">Age:-</div><div class="col-md-6">'.$totalAge.'</div></div><br><div class="row"><div class="col-md-6">Telephone:-</div><div class="col-md-6">'.$contactNumber.'</div></div>';
             $appointData[] = array('start' => $eTime, 'end' => $finalEndTime,'textColor'=>'black', 'color' =>"#257e4a",'title' => ($apoint->getPatient) ? $apoint->getPatient->first_name." ".$apoint->getPatient->last_name : 'NA',
-            'description' => $this->plainText($toolTipData));
+            'description' => $this->plainText($toolTipData), 'id' => $apoint->id);
         }
         return $appointData;
     }

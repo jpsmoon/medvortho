@@ -53,21 +53,22 @@
         }
 
         .swal-wide {
-            width: 300px !important;
-            height: 200px !important;
+            width: 255px !important;
+            height: 154px !important;
         }
 
         .swal2-container {
-            top: -11% !important;
+            top: -20% !important;
         }
 
         .swal2-button {
-            border: 1px dashed #333;
+            border: 1px dashed #333; font-size: 13px;
+
         }
 
         /*  style cancel buttons */
         .swal2-button--cancel {
-            color: #333;
+            color: #333; 
         }
 
         .swal2-button--confirm {
@@ -111,7 +112,10 @@
         justify-content: center;
         border-top: 1px solid #ECEEEF;
         }
-        
+        .swal2-title {
+            color: #595959;
+            font-size: 13px;
+        }
     </style>
     <!-- END: Breadcrumbs-->
     <div class="row">
@@ -238,6 +242,7 @@
                                 <div class="form-group col-md-6">
                                     <label for="appointment_date"> Appointment Date</label>
                                     <input autocomplete="off"  placeholder="Select appointment date" type="text" name="appointment_date" id="appointment_date" class="form-control" data-validation-event="change" data-validation="required" data-validation-error-msg="">
+                                    <span id="showHolidayError" class="" style="display:none" role="alert"><strong></strong> </span>
                                     @if($errors->has('appointment_date'))
                                     <span class="invalid-feedback" style="display:block" role="alert">
                                         <strong>{{ $errors->first('appointment_date') }}</strong>
@@ -415,7 +420,7 @@
                             </div>
                     </div>
                     <div class="modal-footer">
-                        <button  type="submit"  id="sendForm" class="btn btn-primary ladda-button"><span class="ladda-label">Schedule</span></button>
+                        <button  type="submit"  id="sendFormAppointment" class="btn btn-primary ladda-button"><span class="ladda-label">Schedule</span></button>
                         <button type="button" class="btn btn-default"  onclick="hideModel();">Cancle</button>
                     </div>
                 </form>
@@ -432,34 +437,41 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="table-responsive">
-                        <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Description</th>
-                                    <th scope="col">Start Date</th>
-                                    <th scope="col">Start Time</th>
-                                    <th scope="col">End Date</th>
-                                    <th scope="col">End Time</th>
-                                    <th scope="col">Status</th>
-                                </tr>
-                            </thead> 
-                            <tbody>
-                                <tr>
-                                    <td><span id="modalID"></span></td>
-                                    <td><span id="modalTitleLabel"></span></td>
-                                    <td><span id="modalDescriptionDiv"></span></td>
-                                    <td><span id="modalStartDate"></span></td>
-                                    <td><span id="modalStartTime"></span></td>
-                                    <td><span id="modalEndDate"></span></td>
-                                    <td><span id="modalEndTime"></span></td>
-                                    <td><span id="statusDiv"></span></td>
-                                </tr>
-                            </tbody>
-                        </table> 
-                     </div>   
+                    <div class="card-body"> 
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><b>Visit ID</b> : <span id="appointmentNo"></span></li>
+                                <li class="list-group-item"><b>Visit Date</b> : <span id="appointmentDate"></span> </li>
+                                <li class="list-group-item"><b>Visit Type</b> : <span id="meetingType"></span></li>
+                                <li class="list-group-item"><b>Rendering Provider</b> :<span id="renderingProvider"></span></li>
+                                <li class="list-group-item"><b>Resource</b> : <span id="resource"></span> </li>
+                                <li class="list-group-item"><b>Authorization</b> : <span id="authorised"></span> </li>
+                                <li class="list-group-item"><b>Status</b> : <span id="statusDivId"></span> </li>
+                                <li class="list-group-item"><b>Recurrene</b> : <span id="recurreneId"></span> </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><b>Patient Name</b> : <span id="patientNameId"></span></li>
+                                <li class="list-group-item"><b>Visit Time</b> : <span id="appointmentTime"></span></li>
+                                <li class="list-group-item"><b>Provider Name</b> : <span id="billingProvider"></span></li>
+                                <li class="list-group-item"><b>Practice Location</b> : <span id="locationID"></span></li>
+                                <li class="list-group-item"><b>Case No</b> :  <span id="claimNo"></span></li>
+                                <li class="list-group-item"><b>Reason</b> : <span id="resaonsId"></span></li>
+                                <li class="list-group-item"><b>Duration</b> : <span id="durationId"></span></li>
+                                <li class="list-group-item"><b>Interpreter</b> : <span id="isInterpreterId"></span></li>
+                                </ul>
+                            </div> 
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><b>Addition Information</b> : <span id="additionInformationId"></span></li>
+                                </ul>
+                            </div> 
+                        </div>
+                    </div> 
                 </div> 
             </div>
         </div>
@@ -474,361 +486,263 @@
         </style>
 
         <script>
-    $(document).ready(function() { 
-        $("#patientSearchId").keypress(function() {
-        addPatientSearch();
-    })
-        let tDate = new Date();
-        let dFDate = formatDate(tDate);
-        let pId = '<?php echo $patientId;?>';
-         
-        fullCalendar(dFDate);
-        console.log('see current Date',tDate)
-        showDatePicker(tDate);
-        $('#appointment_date').datepicker({
-            dateFormat: 'mm/dd/yy',
-             changeMonth: true, changeYear: true,
-        })
-
-        $('.timepicker').timepicker({
-                timeFormat: 'HH:mm:ss',
-                interval: 15,
-                // minTime: '10',
-                // maxTime: '6:00pm',
-                defaultTime: '12',
-                startTime: '12:00',
-                dynamic: false,
-                dropdown: true,
-                scrollbar: true
-        });
-});         
-function getMonthNumbner(month) {
-    d = new Date().toString().split(" ")
-    d[1] = month
-    d = new Date(d.join(' ')).getMonth()+1
-    if(!isNaN(d)) {
-    return d
-    }
-    return -1;
-} 
-function formatDate(date) {
-    var d = new Date(date),
-    day = '' + d.getDate(),
-    month = '' + (d.getMonth() + 1),
-    year = d.getFullYear();
-
-    if (month.length < 2) month = '0' + month;
-    if (day.length < 2) day = '0' + day;
-
-    return [year,month,day].join('-');
-}
-function showAddSheduleModelShow(){
-    console.log('checkModel Function');
-    $("#calendarModal").addClass('modal fade show');
-    $("#calendarModal").css("display", "block"); 
-    var elem = document.createElement('div');
-    elem.setAttribute('id', 'modalBdrop');
-    elem.setAttribute('class', 'modal-backdrop fade show allModelDrop');
-    var body_elems = document.getElementsByTagName('body');
-    body_elems[body_elems.length - 1].appendChild(elem);
-}
-function hideModel(){
-    $("#calendarModal").addClass('modal fade hide');
-    $("#calendarModal").css("display", "none"); 
-    $(".allModelDrop").removeClass('modal-backdrop fade hide');
-    $(".allModelDrop").css("display", "none"); 
-}
-function fullCalendar(dFDate){
-    $('#calendar-div').html('');
-    var calendarEl = document.getElementById('calendar-div');
-    if (calendarEl) {
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-            plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
-            //defaultView: 'timeGridWeek',
-            defaultView: 'timeGrid',
-            slotDuration: '00:15:00',
-            slotLabelInterval: 15,
-            defaultDate: dFDate,
-            initialDate:dFDate,
-            //editable: true,
-            eventLimit: true, // for all non-TimeGrid views
-            views: {
-                timeGrid: {
-                eventLimit: 6 // adjust to 6 only for timeGridWeek/timeGridDay
-                }
-            },
-            header: { 
-                right: 'prevYear,prev,next,nextYear today', 
-                center: 'title',
-                left: 'addEventButton'
-            },
-            customButtons: {
-                addEventButton: {
-                    text: 'Add Appointment',
-                    class: 'card-title text-warning',
-                    click: function(event) {
-                        $('#modalTitle').html(event.title);
-                        showAddSheduleModelShow();
-                        //$('#calendarModal').modal();
-                        
-                    }
-                }
-            },
-            eventRender: function (info) {
-                $(info.el).tooltip({
-                    title: info.event.extendedProps.description,
-                    placement: 'top',
-                    trigger: 'hover',
-                    container: 'body'
-                });
-            },
-            //events: <?php //echo $pateintJsonData; ?>,
-            events:  function(info, callback,failureCallback) {
-                console.log('event date1# info',info);
-            sEtNewDatePicker(info['start']);
-                $.ajax({
-                    url: "/ajaxViewEvents",
-                    headers: {
-                        'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    method:"POST",
-                    dataType: "json",
-                    data: {
-                    cDate:dFDate,
-                    //patientId:"<?php echo $patientId;?>",
-                    deviceType: 'web'
-                    },
-                    success: function(responseData){
-                    console.log("responseDataEvent",responseData)
-                    //successCallback(app.calendarParse(responseData));
-                    callback(responseData);
-                    }
-                })
-            },
-            eventClick:  function(info) {
-                console.log('#eventClick',info);
-                var dateSettings = { "year": "numeric", "month": "2-digit", "day": "2-digit" };
-                  var timeSettings = { "hour": "2-digit", "minute": "2-digit", "hour12": false };
-                
-                  var startdate = calendar.formatDate(info.event.start,  dateSettings);
-                  var starttime = calendar.formatDate(info.event.start,  timeSettings);
-                
-                  var enddate; 
-                  var endtime; 
-                  if (info.event.end != null) {
-                    enddate = calendar.formatDate(info.event.end, timeSettings );
-                    endtime = calendar.formatDate(info.event.end, dateSettings );
-                  } 
-                  else {
-                    enddate = startdate;
-                    endtime = starttime;
-                  }
-                    $('#modalID').html(info.event.id);
-                    $('#modalTitleLabel').html(info.event.title);
-                    $('#modalDescriptionDiv').html(info.event.extendedProps.location);
-                    $('#modalStartDate').html(startdate);
-                    $('#modalStartTime').html(starttime);
-                    $('#modalEndDate').html(enddate);
-                    $('#modalEndTime').html(endtime);
-                    //$('#fullCalModal').show(); //changed just for demo purposes
-                    $("#fullCalModal").addClass('modal fade show');
-                    $("#fullCalModal").css("display", "block"); 
-    
-            },
-        });
-
-        calendar.render();
-    }
-}
-function showDatePicker(tDate){
-    console.log('#showDatePicker',tDate);
-    $('#calendar-month').datepicker({
-        dateFormat:'yy-mm-dd',  changeMonth: true, changeYear: true,
-        defaultDate: tDate,
-        onSelect: function (date, datepicker) {
-            if (date != "") {
-                //alert("Selected Date: " + formatDate(date));
-                fullCalendar(formatDate(date));
-            }
-        },
-        onChangeMonthYear: function (year, month, inst) {
-            let mm = (month > 9) ? month : '0'+month;
-            let changedMonth = year +"-"+ mm +"-"+ "01";
-            fullCalendar(formatDate(changedMonth));
-        }
-    })
-}
-function sEtNewDatePicker(tDate)
-{
-    $('#calendar-month').datepicker("setDate", tDate );
-}
-function getBillingProviderByPatientId(patientId,patName){
-     $("#patientSearchId").val(patName);
-    $("#showPatientId").val(patientId); 
-    $.ajax({
-        url: "/ajaxBillingProvider",
-        headers: {
-            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-        },
-        method:"POST",
-        dataType: "json",
-        data: {
-        patientId:patientId
-        },
-        success: function(responseData){
-            var items = "";
-            items += "<option value=''>-Select-</option>";
-            $.each(responseData, function(i, item) {
-                if(responseData.length == 1){
-                    getProviderServiceLocation(item.id);
-                    items += "<option value='" + item.id + "' selected='selected'>" + item.professional_provider_name + "</option>";
-                }
-                else{
-                    items += "<option value='" + item.id + "' >" + item.professional_provider_name + "</option>";
-                }
-                
-            });
-            $("#appointment_provider").html(items);
-        }
-    })
-
-    $.ajax({
-        url: "/ajaxPatientInjury",
-        headers: {
-            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-        },
-        method:"POST",
-        dataType: "json",
-        data: {
-        patientId:patientId
-        },
-        success: function(responseData){
-            var items = "";
-            items += "<option value=''>-Select-</option>";
-            $.each(responseData, function(i, item) {
-                items += "<option value='" + item.id + "'>" + item.	description + "</option>";
-            });
-            $("#appointment_case_id").html(items);
-        }
-    })
-    $('.autoCompete-css').hide();
-}
-function getProviderServiceLocation(providerid){
-    $.ajax({
-        url: "/ajaxBillingProviderLocations",
-        headers: {
-            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-        },
-        method:"POST",
-        dataType: "json",
-        data: {
-        providerid:providerid
-        },
-        success: function(result){
-        console.log('#result',result);
-        var items = "";
-            items += "<option value=''>-Select-</option>";
-            $.each(result, function(i, item) {
-                items += "<option value='" + item.id + "'>" + item.	nick_name + "</option>";
-            });
-            $("#apt_loc_id").html(items);
-        }
-    })
-    $.ajax({
-        url: "/ajaxBillingProviderRendering",
-        headers: {
-            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-        },
-        method:"POST",
-        dataType: "json",
-        data: {
-        providerid:providerid
-        },
-        success: function(result){
-        console.log('#result',result);
-        var items = "";
-            items += "<option value=''>-Select-</option>";
-            $.each(result, function(i, item) {
-            let fullName = '';
-            if (typeof item.referring_provider_first_name !== 'undefined' && item.referring_provider_first_name !== null) {
-              fullName += item.referring_provider_first_name;
-            }
-            
-            if (typeof item.referring_provider_middle_name !== 'undefined' && item.referring_provider_middle_name !== null) {
-              if (fullName !== '') {
-                fullName += ' ';
-              }
-              fullName += item.referring_provider_middle_name;
-            }
-            
-            if (typeof item.referring_provider_last_name !== 'undefined' && item.referring_provider_last_name !== null) {
-              if (fullName !== '') {
-                fullName += ' ';
-              }
-              fullName += item.referring_provider_last_name;
-            }   
-                items += "<option value='" + item.id + "'>" + fullName + "</option>";
-            });
-            $("#apt_rendering_id").html(items);
-        }
-    })
-    
-    $.ajax({
-        url: "/ajaxBillingProviderReasons",
-        headers: {
-            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-        },
-        method:"POST",
-        dataType: "json",
-        data: {
-        providerid:providerid
-        },
-        success: function(result){
-        console.log('#result',result);
-        var items = "";
-            items += "<option value=''>-Select-</option>";
-            $.each(result, function(i, item) {
-                items += "<option value='" + item.id + "'>" + item.	name + "</option>";
-            });
-            $("#appointment_resason_id").html(items);
-        }
-    })
-}
-function addPatientSearch(){  
-     let searchString = $('#patientSearchId').val();
-        if (searchString.length >= 2) {
-             $.ajax({
-                url: '/get/search/patients',
-                type: 'POST',
-                data: {
-                    _token: token,
-                    searchString: searchString
-                },
-                success: function(data) {
-                    //console.log('data#', data);
-                    if (data.length > 0) {
-                        $('.autoCompete-css').show();
-                        var items = "";
-                        items += "<li value=''>-Select-</li>";
-                        $.each(data, function(i, item) {
-                            //let pateintName = (item.first_name) + " " + (item.last_name);
-                            let pateintName = item.full_name;
-
-                            items +=
-                                `<li onclick="getBillingProviderByPatientId(${item.id},'${pateintName}');" data-id-clicked="${item.id}"  id="${pateintName}">` +
-                                pateintName + `</li>`;
-                        });
-                        $("#searchPatientDiv").html(items);
-                    }
-                    else{
-                        //$('.autoCompete-css').hide();
-                        $('.autoCompete-css').show();
-                         $("#searchPatientDiv").html(`<li><a href='/patients/create/'>Add New Patient</a></li>`);
-                    }
-                },
+        
+        $(document).ready(function() { 
+            $("#patientSearchId").keypress(function() {
+                addPatientSearch();
             })
+            let tDate = new Date();
+            let dFDate = formatDate(tDate);
+            let pId = '<?php echo $patientId;?>';
+            
+            fullCalendar(dFDate);
+                console.log('see current Date',tDate)
+                showDatePicker(tDate);
+                $('#appointment_date').datepicker({
+                    dateFormat: 'mm/dd/yy',
+                    changeMonth: true, changeYear: true,
+                    onSelect: function(selectedDate, event) { 
+                        checkHolidayForAppointment(selectedDate);
+                    }
+                }) 
+            $('.timepicker').timepicker({
+                    timeFormat: 'HH:mm:ss',
+                    interval: 15,
+                    // minTime: '10',
+                    // maxTime: '6:00pm',
+                    defaultTime: '12',
+                    startTime: '12:00',
+                    dynamic: false,
+                    dropdown: true,
+                    scrollbar: true
+            });
+        });         
+        function getMonthNumbner(month) {
+            d = new Date().toString().split(" ")
+            d[1] = month
+            d = new Date(d.join(' ')).getMonth()+1
+            if(!isNaN(d)) {
+            return d
+            }
+            return -1;
         } 
-}  
+        function formatDate(date) {
+            var d = new Date(date),
+            day = '' + d.getDate(),
+            month = '' + (d.getMonth() + 1),
+            year = d.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            return [year,month,day].join('-');
+        }
+        function showAddSheduleModelShow(){
+            console.log('checkModel Function');
+            $("#calendarModal").addClass('modal fade show');
+            $("#calendarModal").css("display", "block"); 
+            var elem = document.createElement('div');
+            elem.setAttribute('id', 'modalBdrop');
+            elem.setAttribute('class', 'modal-backdrop fade show allModelDrop');
+            var body_elems = document.getElementsByTagName('body');
+            body_elems[body_elems.length - 1].appendChild(elem);
+        }
+        function hideModel(){
+            $("#calendarModal").addClass('modal fade hide');
+            $("#calendarModal").css("display", "none"); 
+            $(".allModelDrop").removeClass('modal-backdrop fade hide');
+            $(".allModelDrop").css("display", "none"); 
+        }
+       
+        function showDatePicker(tDate){
+            console.log('#showDatePicker',tDate);
+            $('#calendar-month').datepicker({
+                dateFormat:'yy-mm-dd',  changeMonth: true, changeYear: true,
+                defaultDate: tDate,
+                onSelect: function (date, datepicker) {
+                    if (date != "") {
+                        //alert("Selected Date: " + formatDate(date));
+                        fullCalendar(formatDate(date));
+                    }
+                },
+                onChangeMonthYear: function (year, month, inst) {
+                    let mm = (month > 9) ? month : '0'+month;
+                    let changedMonth = year +"-"+ mm +"-"+ "01";
+                    fullCalendar(formatDate(changedMonth));
+                }
+            })
+        }
+        function sEtNewDatePicker(tDate)
+        {
+            $('#calendar-month').datepicker("setDate", tDate );
+        }
+        function getBillingProviderByPatientId(patientId,patName){
+            $("#patientSearchId").val(patName);
+            $("#showPatientId").val(patientId); 
+            $.ajax({
+                url: "/ajaxBillingProvider",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                method:"POST",
+                dataType: "json",
+                data: {
+                patientId:patientId
+                },
+                success: function(responseData){
+                    var items = "";
+                    items += "<option value=''>-Select-</option>";
+                    $.each(responseData, function(i, item) {
+                        if(responseData.length == 1){
+                            getProviderServiceLocation(item.id);
+                            items += "<option value='" + item.id + "' selected='selected'>" + item.professional_provider_name + "</option>";
+                        }
+                        else{
+                            items += "<option value='" + item.id + "' >" + item.professional_provider_name + "</option>";
+                        }
+                        
+                    });
+                    $("#appointment_provider").html(items);
+                }
+            })
+
+            $.ajax({
+                url: "/ajaxPatientInjury",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                method:"POST",
+                dataType: "json",
+                data: {
+                patientId:patientId
+                },
+                success: function(responseData){
+                    var items = "";
+                    items += "<option value=''>-Select-</option>";
+                    $.each(responseData, function(i, item) {
+                        items += "<option value='" + item.id + "'>" + item.	description + "</option>";
+                    });
+                    $("#appointment_case_id").html(items);
+                }
+            })
+            $('.autoCompete-css').hide();
+        }
+        function getProviderServiceLocation(providerid){
+            $.ajax({
+                url: "/ajaxBillingProviderLocations",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                method:"POST",
+                dataType: "json",
+                data: {
+                providerid:providerid
+                },
+                success: function(result){
+                console.log('#result',result);
+                var items = "";
+                items += "<option value=''>-Select-</option>";
+                $.each(result, function(i, item) {
+                    items += "<option value='" + item.id + "'>" + item.	nick_name + "</option>";
+                });
+                $("#apt_loc_id").html(items);
+                }
+            })
+            $.ajax({
+                url: "/ajaxBillingProviderRendering",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                method:"POST",
+                dataType: "json",
+                data: {
+                providerid:providerid
+                },
+                success: function(result){
+                console.log('#result',result);
+                var items = "";
+                    items += "<option value=''>-Select-</option>";
+                    $.each(result, function(i, item) {
+                    let fullName = '';
+                    if (typeof item.referring_provider_first_name !== 'undefined' && item.referring_provider_first_name !== null) {
+                    fullName += item.referring_provider_first_name;
+                    }
+                    
+                    if (typeof item.referring_provider_middle_name !== 'undefined' && item.referring_provider_middle_name !== null) {
+                    if (fullName !== '') {
+                        fullName += ' ';
+                    }
+                    fullName += item.referring_provider_middle_name;
+                    }
+                    
+                    if (typeof item.referring_provider_last_name !== 'undefined' && item.referring_provider_last_name !== null) {
+                    if (fullName !== '') {
+                        fullName += ' ';
+                    }
+                    fullName += item.referring_provider_last_name;
+                    }   
+                        items += "<option value='" + item.id + "'>" + fullName + "</option>";
+                    });
+                    $("#apt_rendering_id").html(items);
+                }
+            })
+            
+            $.ajax({
+                url: "/ajaxBillingProviderReasons",
+                headers: {
+                    'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                },
+                method:"POST",
+                dataType: "json",
+                data: {
+                providerid:providerid
+                },
+                success: function(result){
+                console.log('#result',result);
+                var items = "";
+                    items += "<option value=''>-Select-</option>";
+                    $.each(result, function(i, item) {
+                        items += "<option value='" + item.id + "'>" + item.	name + "</option>";
+                    });
+                    $("#appointment_resason_id").html(items);
+                }
+            })
+        }
+        function addPatientSearch(){  
+            let searchString = $('#patientSearchId').val();
+                if (searchString.length >= 2) {
+                    $.ajax({
+                        url: '/get/search/patients',
+                        type: 'POST',
+                        data: {
+                            _token: token,
+                            searchString: searchString
+                        },
+                        success: function(data) {
+                            //console.log('data#', data);
+                            if (data.length > 0) {
+                                $('.autoCompete-css').show();
+                                var items = "";
+                                items += "<li value=''>-Select-</li>";
+                                $.each(data, function(i, item) {
+                                    //let pateintName = (item.first_name) + " " + (item.last_name);
+                                    let pateintName = item.full_name;
+
+                                    items +=
+                                        `<li onclick="getBillingProviderByPatientId(${item.id},'${pateintName}');" data-id-clicked="${item.id}"  id="${pateintName}">` +
+                                        pateintName + `</li>`;
+                                });
+                                $("#searchPatientDiv").html(items);
+                            }
+                            else{
+                                //$('.autoCompete-css').hide();
+                                $('.autoCompete-css').show();
+                                $("#searchPatientDiv").html(`<li><a href='/patients/create/'>Add New Patient</a></li>`);
+                            }
+                        },
+                    })
+                } 
+        }  
     $(document).click(function(){ 
         if($('#searchPatientDiv:visible').length > 0)
         {
@@ -841,6 +755,156 @@ function addPatientSearch(){
         $(".allModelDrop").removeClass('modal-backdrop fade hide');
         $(".allModelDrop").css("display", "none"); 
     }
+    function checkHolidayForAppointment(dateVal){     
+        console.log('#dateVal', dateVal); 
+        //let providerId = $("#appointment_provider").val();  
+        //console.log('#providerId', providerId); 
+        $.ajax({
+            url: '/check/holiday/appointment',
+            type: 'POST',
+            data: {
+                _token: token,
+                rDate: dateVal,
+                //providerid: providerId,
+            },
+            success: function(result) {
+             console.log('#checkHolidayForAppointment', result['status']); 
+                if(result['status'] == 2){
+                 let msg = 'Are you sure you want to create appointment on this '+ result['holiday'] +  ' we have ' + result['hType'] + ' holiday';
+
+                    swal.fire({
+                        title: msg,
+                        //text: "You won't be able to revert this!",
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085D6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes!',
+                        cancelButtonText: 'No',
+                        customClass: {
+                            confirmButton: "btn-sm btn-primary",
+                            cancelButton: "btn-sm btn-danger",
+                            popup: 'swal-wide',
+                        }
+                    }).then((result) => {
+                    // Use .then() to handle the user's response
+                        if (!result.isConfirmed) { // Only proceed if the user clicked the confirm button
+                            $('#appointment_date').val(" ");  
+                        } 
+                    });
+                }
+            },
+        })
+    }
+         function fullCalendar(dFDate){
+            $('#calendar-div').html('');
+            var calendarEl = document.getElementById('calendar-div');
+            if (calendarEl) {
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                    plugins: ['interaction', 'dayGrid', 'timeGrid', 'list'],
+                    //defaultView: 'timeGridWeek',
+                    defaultView: 'timeGrid',
+                    slotDuration: '00:15:00',
+                    slotLabelInterval: 15,
+                    defaultDate: dFDate,
+                    initialDate:dFDate,
+                    //editable: true,
+                    eventLimit: true, // for all non-TimeGrid views
+                    views: {
+                        timeGrid: {
+                        eventLimit: 6 // adjust to 6 only for timeGridWeek/timeGridDay
+                        }
+                    },
+                    header: { 
+                        right: 'prevYear,prev,next,nextYear today', 
+                        center: 'title',
+                        left: 'addEventButton'
+                    },
+                    customButtons: {
+                        addEventButton: {
+                            text: 'Add Appointment',
+                            class: 'card-title text-warning',
+                            click: function(event) {
+                                $('#modalTitle').html(event.title);
+                                showAddSheduleModelShow();
+                                //$('#calendarModal').modal();
+                                
+                            }
+                        }
+                    },
+                    eventRender: function (info) {
+                        $(info.el).tooltip({
+                            title: info.event.extendedProps.description,
+                            placement: 'top',
+                            trigger: 'hover',
+                            container: 'body'
+                        });
+                    },
+                    //events: <?php //echo $pateintJsonData; ?>,
+                    events:  function(info, callback,failureCallback) {
+                        console.log('event date1# info',info);
+                    sEtNewDatePicker(info['start']);
+                        $.ajax({
+                            url: "/ajaxViewEvents",
+                            headers: {
+                                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            method:"POST",
+                            dataType: "json",
+                            data: {
+                            cDate:dFDate,
+                            //patientId:"<?php echo $patientId;?>",
+                            deviceType: 'web'
+                            },
+                            success: function(responseData){
+                            console.log("responseDataEvent",responseData)
+                            //successCallback(app.calendarParse(responseData));
+                            callback(responseData);
+                            }
+                        })
+                    },
+                    eventClick:  function(info) {
+                        let eventId = info.event.id;
+                        console.log("eventId#",eventId)
+                        $.ajax({
+                            url: "/appointment/info",
+                            headers: {
+                                'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            method:"POST",
+                            //dataType: "json",
+                            data: {
+                            eventId:eventId, 
+                            },
+                            success: function(eventInfoData){
+                                $("#appointmentNo").text(eventInfoData.appointmentNo);
+                                $("#appointmentDate").text(eventInfoData.appointmentDate);
+                                $("#meetingType").text(eventInfoData.meetingType);
+                                $("#renderingProvider").text(eventInfoData.renderingProvider);
+                                $("#resource").text(eventInfoData.resource);
+                                $("#authorised").text(eventInfoData.authorised);
+                                $("#statusDivId").text(eventInfoData.statusDivId);
+                                $("#recurreneId").text(eventInfoData.recurreneId);
+                                $("#patientNameId").text(eventInfoData.patientNameId);
+                                $("#appointmentTime").text(eventInfoData.appointmentTime);
+                                $("#billingProvider").text(eventInfoData.billingProvider);
+                                $("#locationID").text(eventInfoData.locationID);
+                                $("#claimNo").text(eventInfoData.claimNo);
+                                $("#resaonsId").text(eventInfoData.resaonsId);
+                                $("#durationId").text(eventInfoData.durationId);
+                                $("#isInterpreterId").text(eventInfoData.isInterpreterId);
+                                $("#additionInformationId").text(eventInfoData.additionInformationId); 
+
+                                $("#fullCalModal").addClass('modal fade show');
+                                $("#fullCalModal").css("display", "block"); 
+                            }
+                        })
+                            
+                    },
+                });
+
+                calendar.render();
+            }
+        }
 </script>  
 
     

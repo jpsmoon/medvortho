@@ -1,40 +1,54 @@
 @extends('layouts.home-app')
-@section('content')
-<!-- START: Breadcrumbs-->
-    <div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mb-0">Edit Billing Provider</h4></div>
+<style>
+    .step .fa {
+        padding-top: 13px !important;
+        font-size: 18px !important;
+    }
 
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                    <li class="breadcrumb-item">
-                       <a class="btn btn-primary" href="{{ url('/view/billing/provider', $id) }}"> Back</a>
-                    </li>
-                </ol>
+    .pointer {
+        cursor: pointer;
+    }
+</style>
+@section('content')
+    <!-- START: Breadcrumbs-->
+    <!-- END: Breadcrumbs--> 
+    @if ($message = Session::get('success'))
+        <div class="row mt-2 customBox">
+            <div class="col-12 align-self-center">
+                <div class="alert alert-success">
+                    <p>{{ $message }}</p>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- END: Breadcrumbs-->
-
-    @if ($message = Session::get('flash_success_message'))
-    <div class="alert alert-success alert-block">
-	<button type="button" class="close" data-dismiss="alert">×</button>
-        <strong>{{ $message }}</strong>
-</div>
-@endif
-
-@if ($message = Session::get('flash_error_message'))
-<div class="alert alert-danger alert-block">
-	<button type="button" class="close" data-dismiss="alert">×</button>
-        <strong>{{ $message }}</strong>
-</div>
-@endif
-
-    <div class="row">
-        <div class="col-9 mt-4">
+    @endif
+    <div class="row mt-2">
+        <div class="col-md-12 mt-4">
+            <div class="card row-background customBoxHeight">
+                <div class="row ">
+                    <div class="col-md-12  align-self-center">
+                        <div class="sub-header py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div style="padding-top:10px" class="w-sm-100 mr-auto">
+                                <h2 class="heading">Edit Billing Provider</h2>
+                            </div>
+                            <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                                <li style="padding-bottom:10px" class="breadcrumb-item">
+                                    <a class="btn btn-primary" href="{{ url('/view/billing/provider', $id) }}">Back</a>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-body2 mt-2" style="padding-left: 5px;">
+                        <div class="col-12 mt-4">
             <div class="card row-background">
                 <div class="card-content">
                     <div class="card-body">
+                        <div class="col-md-4">
+                                <h4 class="mb-0 bold text-capitalize">{{$billingprovider->professional_provider_name}}</h4>
+                                <span>{{$billingprovider->bill_type." Billing Provider"}}</span>
+                        </div>
+                        <hr>
                          <form action="{{ route('saveBillProvider') }}" enctype="multipart/form-data" method="POST">
                             <input type="hidden" name="providerId" value="{{ $id }}">
                             @csrf
@@ -1318,8 +1332,42 @@
             <div id="billingInfoDiv"></div>
         </div>
     </div>
-@endsection
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <script type="text/javascript">
+            function resetActive(event, percent, step) {
+                hideSteps();
+                showCurrentStepInfo(step);
+            }
+
+            function hideSteps() {
+                $("div").each(function() {
+                    if ($(this).hasClass("activeStepInfo")) {
+                        $(this).removeClass("activeStepInfo");
+                        $(this).addClass("hiddenStepInfo");
+                    }
+                });
+            }
+
+            function showCurrentStepInfo(step) {
+                console.log('#step', step);
+                var id = "#step-" + step;
+                $(id).addClass("activeStepInfo");
+                $("div").each(function() {
+                    if ($(this).hasClass("activestep")) {
+                        $(this).removeClass("activestep");
+                    }
+                });
+                $('#div' + step).addClass("activestep");
+            }
+        </script>
+    @endsection
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
 <script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
 <script src="{{ asset('js/controller/master_for_all.js') }}"></script>
@@ -1379,4 +1427,5 @@
 
     });
 </script>
+
 

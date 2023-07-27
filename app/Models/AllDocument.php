@@ -21,5 +21,4 @@ class AllDocument extends Model
     public function getUser(){
         return $this->hasOne(User::class,  'id', 'added_by');
     }
-    
 }

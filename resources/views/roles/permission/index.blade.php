@@ -11,7 +11,7 @@
                 
                 <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                     <li class="breadcrumb-item">
-                         <a class="btn btn-primary" href="javascript:void(0)" data-toggle="modal" data-target="#permissionModal"> Create New Role</a> 
+                         <a class="btn btn-primary" href="javascript:void(0)" data-toggle="modal" data-target="#permissionModal"> Create New Permission</a> 
                     </li>
                 </ol>
             </div>
@@ -64,12 +64,12 @@
                                                         <div class="col-12 mt-4">
                                                             <form id="editFrmId_{{$permission->id}}" action="{{ route('savePermission') }}" enctype="multipart/form-data" class="form-horizontal ladda-form'" method="POST">
                                                                 @csrf
-                                                                <input type="text" name="permissionId" id="permissionId" value="{{$permission->id}}">
+                                                                <input type="hidden" name="permissionId" id="permissionId" value="{{$permission->id}}">
                                                                 <input type="text" name="guard_name" id="guard_name" value="web">
                                                                 <div class="row">
                                                                     <div class="form-group col-md-8">
                                                                         <label for="">Permission<span class="required">* </span> </label>
-                                                                        <input type="text" id="permissionId" value="{{$permission->name}}" name="name" class="form-control" data-validation-event="change" data-validation="required, custom" data-validation-regexp ="^[a-zA-Z-]*$"> 
+                                                                        <input type="text" value="{{strtolower($permission->name)}}" id="permissionId" value="" name="name" class="form-control" data-validation-event="change" data-validation="required, custom" data-validation-regexp ="^[a-z-]*$"> 
                                                                         @if ($errors->has('name'))
                                                                             <span class="invalid-feedback" style="display:block" role="alert">
                                                                                 <strong>{{ $errors->first('name') }}</strong>
@@ -77,8 +77,8 @@
                                                                         @endif
                                                                     </div> 
                                                                     <div class="form-group col-md-4">
-                                                                        <span class="text-muted">Only enter alphabetic string with dash don't use underscore, special character,number </span>
-                                                                    </div>
+                                                                        <span class="text-muted">Only enter alphabetic string in small letter with dash don't use underscore, special character,number and capital letter </span>
+                                                                    </div> 
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="form-group col-md-4 mt-2">
@@ -105,8 +105,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-        {!! $permissions->render() !!}
+        </div> 
         <div class="modal fade" id="permissionModal" tabindex="-1" role="dialog" aria-labelledby="permissionLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -125,7 +124,7 @@
                                 <div class="row">
                                     <div class="form-group col-md-8">
                                         <label for="">Permission<span class="required">* </span> </label>
-                                        <input type="text" id="permissionId" value="" name="name" class="form-control" data-validation-event="change" data-validation="required, custom" data-validation-regexp ="^[a-zA-Z-]*$"> 
+                                        <input type="text" id="permissionId" value="" name="name" class="form-control" data-validation-event="change" data-validation="required, custom" data-validation-regexp ="^[a-z-]*$"> 
                                         @if ($errors->has('name'))
                                             <span class="invalid-feedback" style="display:block" role="alert">
                                                 <strong>{{ $errors->first('name') }}</strong>
@@ -133,7 +132,7 @@
                                         @endif
                                     </div> 
                                     <div class="form-group col-md-4">
-                                        <span class="text-muted">Only enter alphabetic string with dash don't use underscore, special character,number </span>
+                                        <span class="text-muted">Only enter alphabetic string in small letter with dash don't use underscore, special character,number and capital letter </span>
                                     </div>
                                 </div> 
                                 <div class="row">

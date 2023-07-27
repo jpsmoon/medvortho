@@ -163,7 +163,7 @@ trait DataTrait
        ->toArray();
         return  $diagnosis;
     }
-    public function diagnosisCodeForDropDown($str = null,  $type){
+    public function diagnosisCodeForDropDown($type, $str = null){
         $diagnosis = [];
         // $diagnosis =  Diagnosis_code ::where(strtoupper('diagnosis_name'),'like', "%$newStr%")
         // ->orWhere(strtoupper('diagnosis_code'),'like', "%$newStr%")

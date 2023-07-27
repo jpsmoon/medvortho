@@ -120,13 +120,6 @@
                                             <p class="bold">View <i class="icon-arrow-right-circle"></i></p>
                                         </a>
                                     </div>
-                                    <div id="div7" class="col-md-2 otherStep">
-                                        <span class="fa fa-info-circle fa-larger"></span>
-                                        <a class="text-dark" href="{{ url('/billing/providers/holidays', $id) }}">
-                                            <p class="bold margin-bottom">Holidays</p>
-                                            <p class="bold">View <i class="icon-arrow-right-circle"></i></p>
-                                        </a>
-                                    </div>
                                 </div>
                             </div>
 

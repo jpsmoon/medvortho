@@ -31,7 +31,7 @@ class HomeController extends Controller
     public function index()
     {
         $this->setSession();
-        $statuses = $this->getActiveData(Status::class, 'display_order');
+        $statuses = Status::whereIn('status_type', [3,6])->where('is_active', 1)->get();
         $mytasks = $this->getMyTaskCountList();
         $totalPatients = null; $totalBProviders = null;
         if(Auth::user()->roles[0]['name'] =='SubAdmin'){

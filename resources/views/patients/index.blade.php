@@ -1,59 +1,66 @@
 @extends('layouts.home-app')
 @section('content')
+    <!-- START: Breadcrumbs-->
+    <!-- END: Breadcrumbs-->
+    
+  <style>
+      .dataTables_length
+        {
+          padding-top: 2%;  
+        }  
+  </style>  
+    
+    @if ($errors->any())
+        <div class="row mt-2 customBox">
+            <div class="col-md-12  align-self-center">
+                <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
+                    <div class="w-sm-100 mr-auto">
+                        <h4 class="mb-0">Billing Providers List</h4>
+                    </div>
 
-<!-- START: Breadcrumbs-->
-    <div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mt-3">Patients</h4>
-                <!--<ol class="breadcrumb">-->
-                <!--  <li class="breadcrumb-item"><a href="index.html">Home</a>-->
-                <!--  </li>-->
-                <!--  <li class="breadcrumb-item"><a href="#">Navbars</a>-->
-                <!--  </li>-->
-                <!--  <li class="breadcrumb-item active">Fixed Navigation-->
-                <!--  </li>-->
-                <!--</ol>-->
+                    <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                        <li class="breadcrumb-item">
+                            <a class="btn btn-primary" href="{{ route('billingproviders.index') }}">Back</a>
+                        </li>
+                    </ol>
                 </div>
-                
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                    <li class="breadcrumb-item">
-                        @can('Patient-create')
-                        <a class="btn btn-primary" href="{{ route('patients.create') }}"> Add Patient</a>
-                        @endcan
-                    </li>
-                </ol>
+            </div>
+            <div align="center" class="col-12  align-self-center">
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- END: Breadcrumbs-->
-    <!-- <div class="row">
-        <div class="col-12 mt-3">
-            <div class="card">
-                <div class="card-body">
-                {!! Form::open(['class' => 'form-horizontal','id' => 'patientListFrm','method'=>"get"]) !!}
-                <div class="row row-xs">
-                        <div class="col-md-10 mt-3 mt-md-0" id="keywordDiv">
-                            <input type="text" name="keyword" class="form-control" maxlength="200" id="keyword" placeholder="search by patient name, id" value="">
-                        </div>
-
-                        <div class="col-md-2">
-                            <label for="">&nbsp;</label>
-                            <button type="submit" id="patient_Btn" class="btn btn-primary filter_patient">Search</button>
-                            <button type="reset" class="btn btn-primary reset_payslip_filter">Reset</button>
+    @endif
+    <div class="row mt-2 ">
+        <div class="col-md-12 mt-4">
+            <div class="card row-background customBoxHeight">
+                <!-- START: Breadcrumbs-->
+                <div class="row ">
+                    <div class="col-12  align-self-center">
+                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div style="padding-top:10px" class="w-sm-100 mr-auto">
+                                <h2 class="heading">Patient List </h2>
+                            </div>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                            <li class="breadcrumb-item">
+                                <a class="btn btn-primary" href="{{ route('billingproviders.index') }}"> Back</a>
+                            </li>
+                        </ol> 
                         </div>
                     </div>
-                {!! Form::close() !!}
-
                 </div>
-            </div>
-        </div>
-    </div> -->
-
-    <div class="row">
-            <div class="col-12 mt-3">
+                <!-- END: Breadcrumbs-->
+                <div class="card-content">
+                    <div class="col-md-12 col-12">
+                        <div class="row">
+            <div class="col-12">
                 <div class="card">
-                    <div class="card-body">
                         <div class="table-responsive">
                         <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
                                 <thead class="thead-dark">
@@ -94,13 +101,13 @@
                                                     <td> <a class="" data-id="{{$patient->id}}"  href="{{url('/patients/view',$patient->id)}}">
                                                         <i  class="icon-eye showPointer"/></i>
                                                     </a>
-                                                    @can('Patient-edit')
+                                                    @can('patient-edit')
                                                         <a class="text-info" data-id="{{$patient->id}}" href="{{url('/edit/patient')}}/{{$patient->id}}" >
                                                         <i  class="icon-pencil  showPointer"/></i>
                                                         </a>
                                                     @endcan
                                                             @if(count($patient->getInjuries) == 0)
-                                                            @can('Patient-delete')
+                                                            @can('patient-delete')
                                                                 <a href="javascript:void(0)" class="text-danger" data-id="{{$patient->id}}" onclick="deleteTodo({{$patient->id}})">
                                                                 <i  class="icon-trash showPointer"/></i>
                                                                 </a>
@@ -117,11 +124,18 @@
                                         </tbody>
                                 </table>
                         </div>
-                    </div>
                 </div>
             </div>
         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 mt-4"></div>
+        </div>
+    </div>
 @endsection
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script> 
-<script src="{{ asset('js/controller/patients.js') }}"></script>
+<script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+<script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
+<script src="{{ asset('js/controller/master_for_all.js') }}"></script>
+<script></script>

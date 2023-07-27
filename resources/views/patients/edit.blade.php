@@ -157,8 +157,8 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
-<script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
-<script src="{{ asset('js/controller/master_for_all.js') }}"></script>
+<script src="{{ asset('public/js/bootstrap-inputmask.js') }}"></script>
+<script src="{{ asset('public/js/controller/master_for_all.js') }}"></script>
 <script>
     $( document ).ready(function() {
         $('#editDobId').datepicker({ dateFormat: 'mm/dd/yy', maxDate: new Date() });

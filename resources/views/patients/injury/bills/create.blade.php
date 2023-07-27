@@ -78,7 +78,7 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script> 
-<script src="{{ asset('js/controller/bills.js') }}"></script>
+<script src="{{ asset('public/js/controller/bills.js') }}"></script>
 <script>
 var  diagnosesType = $('input[name=diagnosis_code_type]').val(); 
 console.log('#diagnosesType',diagnosesType);

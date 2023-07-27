@@ -846,7 +846,7 @@ trait BillTrait
             $bill_info->id;
         }
         }
-    public function storeInjuryBillServices($request, $bId = false, $id = false, $dosYear)
+    public function storeInjuryBillServices($request, $dosYear, $bId = false, $id = false)
     {
         // echo "<pre>";
         // print_r($request->all());

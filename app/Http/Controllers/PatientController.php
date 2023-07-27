@@ -21,10 +21,10 @@ class PatientController extends Controller
     protected $patientModel;
     public function __construct(Patient $patientMod )
     {
-        $this->middleware('permission:Patient-list|Patient-create|Patient-edit|Patient-delete', ['only' => ['index', 'show']]);
-        $this->middleware('permission:Patient-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:Patient-edit', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:Patient-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:patient-list|patient-create|patient-edit|patient-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:patient-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:patient-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:patient-delete', ['only' => ['destroy']]);
         $this->patientModel = $patientMod;
     }
     public function index(Request $request)
@@ -42,7 +42,8 @@ class PatientController extends Controller
             if(count($providersId) > 0){
                 $patients = Patient::with('getBillingProvider')->whereIn('billing_provider_id', $providersId)->orderBy('created_at', 'desc')->get(); 
             }
-        } 
+        }
+        
         return view('patients.index', compact('patients'));
     }
 
@@ -185,6 +186,7 @@ class PatientController extends Controller
                     $pAppoint->authorised= $request->appointment_authorization;
                     $pAppoint->appointment_addition_info = $request->appointment_additionInfo;
                     $pAppoint->is_interpreter= $request->is_interpreter;
+    
                     // $pAppoint->arrival_time  = $request->patientId;
                     // $pAppoint->notes  = $request->patientId;
                     $pAppoint->save();
@@ -936,7 +938,9 @@ class PatientController extends Controller
     {
         // echo  "<pre>";
         // print_r($request->id);exit;
-         try {
+        //echo "###".$request->pid."==".$request->id;exit; 
+        
+        try {
             $head = 'Add '; $documents = []; $id= null; $providerId = null;
             if(isset($request->id)){
                 $head = 'Update ';
@@ -984,12 +988,13 @@ class PatientController extends Controller
        //dd($request->all());exit;
        
        try {
-            DB::beginTransaction();
-            $id=  $this->storeTepInjuryDocuments($request);
-            DB::commit();
-            if($request){
-                return $id;
-            }
+        DB::beginTransaction();
+       $id=  $this->storeTepInjuryDocuments($request);
+        DB::commit();
+        if($request){
+           return $id;
+        }
+       // 
         } catch (\Exception $e) {
            DB::rollback(); 
             return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
@@ -1026,7 +1031,7 @@ class PatientController extends Controller
             $minutes  = $duration - ($hours * 60);    
             date_default_timezone_set('UTC');
             $date = new DateTime($hours.":".$minutes);
-            echo $date->format('H:i:s');
+            return $date->format('H:i:s');
     }
     public function ajaxBillingProviderReasons(Request $request)
     {
@@ -1041,8 +1046,8 @@ class PatientController extends Controller
         $newAppoint =  date('Y-m-d'); $patientAppointment = []; $searchKey =null; $durationDate =null; $meetingType =null; $srcProvider = null; 
         $appointMents =  AppointmentReason::where('is_active', 1)->get(); 
         $meetingTypes = $this->patientModel->getMeetingType();
-        $billStatus = $this->patientModel->getBillStatus();
-        $statuss = Status::where("is_active", '1')->get(); 
+        $billStatus = Status::where("is_active", 1)->where("status_type", 6)->orderBy('display_order', 'ASC')->get(); 
+        $statuss = Status::where("is_active", 1)->where("status_type", 7)->orderBy('display_order', 'ASC')->get(); 
         $providerIds = []; $renderProviders = []; $locations = []; $srcRendering = ''; $srcLocation= '';
         foreach (Auth::user()->getUserBillingProviders as $usBilling){
             $providerIds[] = $usBilling->provider_id;
@@ -1057,7 +1062,7 @@ class PatientController extends Controller
                 'appointment_meeting_Type' => 'required_without_all:keyword,duration_date',
             ); 
         if(empty($request->keyword)  && empty($request->locationId) && empty($request->renderingProviderId) && empty($request->duration_date) && empty($request->appointment_meeting_Type) ){
-            $patientAppointment = PatientAppointment::with('getPatient','getBillingProvider', 'getResaons');
+            $patientAppointment = PatientAppointment::with('getPatient','getBillingProvider', 'getResaons','getRenderingProvider');
             $patientAppointment =  $patientAppointment->where('appointment_date', $newAppoint);
             $patientAppointment =  $patientAppointment->orderBy('appointment_date', 'desc')->get();
         }  
@@ -1120,5 +1125,58 @@ class PatientController extends Controller
             $appointment->delete();
         }  
     }
-    
+    function getApointmentInfoById(Request $request){
+         $appountment = PatientAppointment::where('id', $request->eventId)->first();
+        if($appountment){
+            $fRenderingProvider = null;  $fpatientName = null; $durationData = null;
+            $fRenderingProvider = ($appountment->getRenderingProvider && $appountment->getRenderingProvider->referring_provider_first_name) ? $appountment->getRenderingProvider->referring_provider_first_name : '';
+            
+            if($appountment->getRenderingProvider && $appountment->getRenderingProvider->referring_provider_middle_name){
+                if ($fRenderingProvider !== '') {
+                    $fRenderingProvider .= ' ';
+                }
+                $fRenderingProvider .=  $appountment->getRenderingProvider->referring_provider_middle_name;
+            }
+            if($appountment->getRenderingProvider && $appountment->getRenderingProvider->referring_provider_last_name){
+                if ($fRenderingProvider !== '') {
+                    $fRenderingProvider .= ' ';
+                }
+                $fRenderingProvider .=  $appountment->getRenderingProvider->referring_provider_last_name;
+            }
+            $fpatientName = ($appountment->getPatient && $appountment->getPatient->first_name) ? $appountment->getPatient->first_name : '';
+            
+            if($appountment->getPatient && $appountment->getPatient->mi){
+                if ($fpatientName !== '') {
+                    $fpatientName .= ' ';
+                }
+                $fRenderingProvider .=  $appountment->getPatient->mi;
+            }
+            if($appountment->getPatient && $appountment->getPatient->last_name){
+                if ($fpatientName !== '') {
+                    $fpatientName .= ' ';
+                }
+                $fpatientName .=  $appountment->getPatient->last_name;
+            }
+            $durationData = $this->catculateTotalHours($appountment->duration);
+            $appountment->appointmentNo         = $appountment->appointment_no;
+            $appountment->appointmentDate       = ($appountment->appointment_date) ? date('m-d-Y', strtotime($appountment->appointment_date)) : '';
+            $appountment->meetingType           = $this->getMeetingType($appountment->meeting_type);
+            $appountment->renderingProvider     = $fRenderingProvider;
+            $appountment->resource              = ($appountment  && $appountment->resource ) ? $appountment->resource : '';
+            $appountment->authorised            = ($appountment  && $appountment->authorised ) ? $appountment->authorised : '';
+            $appountment->statusDivId           = ($appountment->getStatus && $appountment->getStatus->status_name) ? $appountment->getStatus->status_name : '';
+            $appountment->recurreneId             = ($appountment->recurrene && $appountment->recurrene == 'on') ? 'Yes' : 'No';
+            $appountment->patientNameId           =  $fpatientName;
+            $appountment->appointmentTime       = ($appountment->appointment_time) ? $appountment->appointment_time : '';
+            $appountment->billingProvider       = ($appountment->getBillingProvider && $appountment->getBillingProvider->professional_provider_name) ? $appountment->getBillingProvider->professional_provider_name : '';
+            $appountment->locationID            = ($appountment->getLocation && $appountment->getLocation->nick_name) ? $appountment->getLocation->nick_name : '';
+            $appountment->claimNo               = ($appountment->getInjury && $appountment->getInjury->getInjuryClaim && $appountment->getInjury->getInjuryClaim->claim_no) ? $appountment->getInjury->getInjuryClaim->claim_no : '';
+            $appountment->resaonsId             =  ($appountment->getResaons && $appountment->getResaons->name) ? $appountment->getResaons->name : '';
+            $appountment->durationId            =  $durationData;
+            $appountment->isInterpreterId       =  ($appountment->is_interpreter && $appountment->is_interpreter == 'on') ? 'Yes' : 'No';
+            $appountment->additionInformationId   =  ($appountment && $appountment->appointment_addition_info != "") ? $appountment->appointment_addition_info : '';
+            return $appountment;
+        }
+        
+    }
 }

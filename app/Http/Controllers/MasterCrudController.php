@@ -21,10 +21,10 @@ class MasterCrudController extends Controller
     protected $patientModel;
     public function __construct(Patient $patientMod )
     {
-        $this->middleware('permission:Patient-list|Patient-create|Patient-edit|Patient-delete', ['only' => ['index', 'show']]);
-        $this->middleware('permission:Patient-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:Patient-edit', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:Patient-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:patient-list|patient-create|patient-edit|patient-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:patient-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:patient-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:patient-delete', ['only' => ['destroy']]);
         $this->patientModel = $patientMod;
     }
     public function reprtTypeList(Request $request)
@@ -34,7 +34,7 @@ class MasterCrudController extends Controller
     }
     public function storeReportType(Request $request)
     {
-       try {
+      try {
             DB::beginTransaction();
                 $this->saveReportType($request);
             DB::commit();

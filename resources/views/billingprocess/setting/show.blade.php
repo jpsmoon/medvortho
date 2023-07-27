@@ -1,52 +1,57 @@
 @extends('layouts.home-app')
-@section('content')
 <style>
-.fa {
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    font-size: 18px!important;
-}
+    .step .fa {
+        padding-top: 13px !important;
+        font-size: 18px !important;
+    }
 
-.fa-angle-down:before{content:"\f107"};
-
-#myDIV {
-  width: 100%;
-  padding: 10px 0;
-  
-}
-
-
+    .pointer {
+        cursor: pointer;
+    }
 </style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<!-- START: Breadcrumbs-->
-
-    <!-- END: Breadcrumbs-->
-
-    <div class="row">
-	<div class="col-1 mt-4"></div>
-            <div class="col-10 mt-4">
-                <div class="card">
-                    <div class="card-body" style="padding-left: 30px;">
-                        <div class="row">
-                            <div class="col-md-10">
-                                <h4 class="mb-0 bold text-capitalize"">{{$billingProviders->professional_provider_name}}</h4>
-                                <span>{{$billingProviders->bill_type." Billing Provider"}}</span>
-                                
+@section('content')
+    <!-- START: Breadcrumbs-->
+    <!-- END: Breadcrumbs--> 
+    @if ($message = Session::get('success'))
+        <div class="row mt-2 customBox">
+            <div class="col-12 align-self-center">
+                <div class="alert alert-success">
+                    <p>{{ $message }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
+    <div class="row mt-2">
+        <div class="col-md-12 mt-4">
+            <div class="card row-background customBoxHeight">
+                <div class="row ">
+                    <div class="col-md-12  align-self-center">
+                        <div class="sub-header py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div style="padding-top:10px" class="w-sm-100 mr-auto">
+                                <h2 class="heading">Billing Provider Setting</h2>
                             </div>
-                            <div class="col-md-2">
                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                                <li style="padding-bottom:10px" class="breadcrumb-item">
+                                    <a class="btn btn-primary" href="{{ route('billingproviders.index') }}">Back</a>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-body2 mt-2" style="padding-left: 30px;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4 class="mb-0 bold text-capitalize">{{$billingProviders->professional_provider_name}}</h4>
+                                <span>{{$billingProviders->bill_type." Billing Provider"}}</span>
+                            </div>
+                            <div class="col-md-8">
+                                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                                 <li style="padding-bottom:10px" class="breadcrumb-item">
                                 <span>
                                 <a class="btn btn-primary" href="{{ url('/edit/billing/provider',$billingProviders->id)}}"><i class="icon-pencil"></i> Edit</a></span>
                                 </li>
-                                <li style="padding-bottom:10px" class="breadcrumb-item">
-                                    <a class="btn btn-primary" href="{{url('/billing/providers/setting',$billingProviders->id)}}"> Back</a>
-                                </li>
-
-                            </ol>
+                                </ol>
                             </div>
                         </div>
                         <hr> 
@@ -97,10 +102,15 @@
                                     <span>{{($billingProviders->professional_telephone) ? $billingProviders->professional_telephone : ''}}</span>
                                 </div>
                                 
+                                <div class="col-md-4">
+                                    <label class="bold" for="">Bill Type </label><br>
+                                    <span>{{$billingProviders->bill_type}}</span>
+                                </div>
+                                
                             </div>
                              <hr>
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label class="bold" for=""> Physical Address </label><br>
                                      <span >{{$billingProviders->professional_address1}} - {{$billingProviders->professional_address2}}
                                     {{$billingProviders->professional_city1}}
@@ -111,7 +121,7 @@
                                     </span>
                                    
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <label class="bold" for=""> Pay To Address </label><br>
                                     <span>
                                         {{$billingProviders->professional_addres1}} - {{$billingProviders->professional_addres2}}
@@ -121,21 +131,13 @@
 
                                    {{$billingProviders->professional_zip}}
                                    </span>
-                                   
-                                    
                                 </div>
-                            </div>
-                            <hr>
-                            <div class="row">
+                                
                                 <div class="col-md-4">
-                                    <label class="bold" for="">Active? </label><br>
-                                    <span>{{($billingProviders->is_active == 1) ? 'Yes' : 'No'}}</span>
-                                   
+                                <label class="bold" for="">Active? </label><br>
+                                <span>{{($billingProviders->is_active == 1) ? 'Yes' : 'No'}}</span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="bold" for="">Bill Type </label><br>
-                                    <span>{{$billingProviders->bill_type}}</span>
-                                </div>
+                                
                             </div>
                             <hr>
                             <div class="row">
@@ -157,14 +159,38 @@
                             </div>
                         </div>  
                         </div>
+                    
                     </div>
                 </div>
             </div>
-	<div class="col-1 mt-4"></div>		
         </div>
-        @endsection
-        
-<script>
+        </div>
 
-</script>        
-        
+        <script type="text/javascript">
+            function resetActive(event, percent, step) {
+                hideSteps();
+                showCurrentStepInfo(step);
+            }
+
+            function hideSteps() {
+                $("div").each(function() {
+                    if ($(this).hasClass("activeStepInfo")) {
+                        $(this).removeClass("activeStepInfo");
+                        $(this).addClass("hiddenStepInfo");
+                    }
+                });
+            }
+
+            function showCurrentStepInfo(step) {
+                console.log('#step', step);
+                var id = "#step-" + step;
+                $(id).addClass("activeStepInfo");
+                $("div").each(function() {
+                    if ($(this).hasClass("activestep")) {
+                        $(this).removeClass("activestep");
+                    }
+                });
+                $('#div' + step).addClass("activestep");
+            }
+        </script>
+    @endsection

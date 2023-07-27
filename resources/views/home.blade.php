@@ -7,7 +7,7 @@
             color: #fff;
             background: #ccc;
             border-radius: 0;
-            width: 30%;
+            width:100%;
             font-size: 14px;
         }
 
@@ -30,13 +30,14 @@
             border-right: 1px solid #ccc;
             font-size: 14px;
             font-weight: 800;
+            text-align:center;
         }
 
         nav>div a.nav-item.nav-link.active:after {
             content: "";
             position: relative;
             bottom: -47px;
-            left: -16%;
+            left: -7%;
             border: 15px solid transparent;
             border-top-color: #2A3F54;
         }
@@ -72,20 +73,20 @@
             border: 1px solid #2A3F54;
         }
 
-        .setMinheight {
-            min-height: 250px !important;
-        }
+        /*.setMinheight {*/
+        /*    min-height: 250px !important;*/
+        /*}*/
         .diagCode .card-header {
             background-color: #FFFFFF !important;
         }
        .appointmentDiv table {
             width:100% !important;
             border-collapse: collapse;
-            border: 1px solid black;
+            border: 1px solid rgba(33,40,50,.125);
         } 
 
        .appointmentDiv  th,td {
-        border: 1px solid black;
+        border: 1px solid rgba(33,40,50,.125);
         }
 
        .appointmentDiv  table.a {
@@ -170,7 +171,7 @@
                 <!-- <div class="card-header  bg-primary  justify-content-between align-items-center">
                         <h4 class="card-title text-warning">{{ __('Dashboard: My Tasks') }}</h4>
                     </div> -->
-                <div class="card-body">
+                <div class="card-body customBoxHeight2">
                     <div class="wizard mb-4">
                         <div class="connecting-line"></div>
                         <div class="row">
@@ -179,9 +180,9 @@
                                     <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
                                         <a class="nav-item nav-link active" id="nav-task-tab" data-toggle="tab"
                                             href="#nav-task" role="tab" aria-controls="nav-task"
-                                            aria-selected="true">Task</a>
+                                            aria-selected="true"><i class="fa-solid fa-list-check"></i> Task</a>
                                         <a class="nav-item nav-link" id="nav-stats-tab" data-toggle="tab" href="#nav-stats"
-                                            role="tab" aria-controls="nav-stats" aria-selected="false">Stats</a>
+                                            role="tab" aria-controls="nav-stats" aria-selected="false"><i class="fa-solid fa-signal"></i> Stats</a>
 
                                         <!--<a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a>-->
                                         <!--<a class="nav-item nav-link" id="nav-about-tab" data-toggle="tab" href="#nav-about" role="tab" aria-controls="nav-about" aria-selected="false">About</a>-->
@@ -203,7 +204,7 @@
                                                         </a>
                                                     </h6>
                                                     <div id="collapse_{{ $status->id }}"
-                                                        class="collapse setMinheight {{ count($mytasks) > 0 && $i == 1 ? 'show' : '' }} "
+                                                        class="collapse scroll-h setMinheight {{ count($mytasks) > 0 && $i == 1 ? 'show' : '' }} "
                                                         role="tabpanel" data-parent="#accordion2">
                                                         <div class="card-body">
                                                             <table class="table">
@@ -241,13 +242,13 @@
 
                                 </div>
                             </div>
-                            <div class="col-4  col-md-4 mt-3">
+                            <div class="col-4  col-md-4">
                                 <div class="card mt-3">
                                     <div class="card-header  showButtonColor justify-content-between align-items-center">
-                                        <h5 class="card-title text-warning">Patients Appointment</h5>
+                                        <h5 class="card-title text-warning"><i class="fa-solid fa-hospital-user"></i> Patients Appointment</h5>
                                     </div>
                                     <div class="card-body text-center border-primary table-responsive" id="sowPatintInfoRit">
-                                            <div id="accordion23" class="accordion-alt tabContentDiv" role="tablist">
+                                            <div id="accordion23" class="accordion-alt scroll-h tabContentDiv" role="tablist">
                                                 <?php $i=1;?>
                                                 @foreach($patients as $patient)
                                                     <div class="col-md-12">

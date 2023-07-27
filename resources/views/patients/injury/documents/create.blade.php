@@ -271,7 +271,7 @@ jQuery(document).ready(function() {
             processData: false,
             contentType: false,
             error: function(request) {
-                ajax_msg(false, 'An error has occured while uploading document.');
+                ajax_msg(false, 'An error has occured while uploading photo.');
             },
             success: function(json) {
                 console.log('#json',json);
