@@ -20,6 +20,7 @@ class CreatePatientInjuriesTable extends Migration
             $table->text('description');
             $table->text('injury_state_id')->nullable();
             $table->enum('is_active', array('1', '0'))->default('1');
+            $table->integer('status_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('patient_id')->references('id')->on('patients');

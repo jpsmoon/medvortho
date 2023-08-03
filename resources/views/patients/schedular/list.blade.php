@@ -110,7 +110,7 @@
     <div class="row ">
         <div class="col-12  align-self-center">
             <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mt-3">Appointments</h4>
+                <div class="w-sm-100 mr-auto">
                 <!--<ol class="breadcrumb">-->
                 <!--  <li class="breadcrumb-item"><a href="index.html">Home</a>-->
                 <!--  </li>-->
@@ -212,7 +212,7 @@
                         <div class="col-md-2 mt-2">
                             <label for="">&nbsp;</label>
                             <button type="submit" id="patient_Btn" class="btn btn-primary filter_patient">Search</button>
-                            <button type="button" onClick="resetFrm();" class="btn btn-primary reset_payslip_filter">Reset</button>
+                            <button type="button" onClick="resetFrm();" class="btn btn-primary">Reset</button>
                         </div>
                     </div>
                 {!! Form::close() !!}
@@ -225,11 +225,22 @@
     <div class="row">
             <div class="col-12 mt-3">
                 <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-10">Appointments </div>
+                        <div class="col-2">
+                            <span id="showBulkLableBtn">
+                                <button type="button" onClick="changeBillStatus( 'billStatus', 'APPOINTMENT_BILL_STATUS_READY_TO_BILL');" class="btn btn-primary">Ready to bill</button>
+                            </span>
+                        </div>
+                    </div> 
+                </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                        <table id="examplelist" class="table layout-secondary dataTable table-striped table-bordered">
+                        <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
                                 <thead class="thead-dark">
                                     <tr>
+                                        <th><label><input type="checkbox" id="checkAll" /> Select All</label></th>
                                         <th scope="col">Visit ID</th>
                                         <th scope="col">Visit Date</th>
                                         <th scope="col">Visit Time</th>
@@ -247,9 +258,17 @@
                                         @inject('testPatientClass', 'App\Http\Controllers\PatientController')
                                             @foreach ($patientAppointment as $appountment)
                                                 <tr>
-                                                    <td> <a  href="javascript:void(0)"  data-toggle="modal" data-target="#appointmentInfoModal_{{$appountment->id}}">
+                                                    <td> 
+                                                     @if($appountment->getBill && $appountment->getBill->getStatus && $appountment->getBill->getStatus->slug_name && $appountment->getBill->getStatus->slug_name != 'COMPLETE_BILL')
+                                                        @if($appountment->getStatus && $appountment->getStatus->slug_name && $appountment->getStatus->slug_name == 'APPOINTMENT_VISIT_STATUS_COMPLETE')
+                                                            <label><input class="chk" type="checkbox" name=appointItem[] value="{{$appountment->id}}" /> </label>
+                                                        @endif
+                                                    @endif
+                                                     </td>
+                                               
+                                                 <td> <a  href="javascript:void(0)"  data-toggle="modal" data-target="#appointmentInfoModal_{{$appountment->id}}">
                                                              {{($appountment->appointment_no && $appountment->appointment_no != "") ? $appountment->appointment_no : ''}}
-                                                             </a></td>
+                                                  </a></td>
                                                     <td>{{ ($appountment->appointment_date) ? date('m-d-Y', strtotime($appountment->appointment_date)) : ''}}</td>
                                                     <td>{{ ($appountment->appointment_time) ? $appountment->appointment_time : ''}}</td>
                                                     <td class="toolTipDiv"><a  href="javascript:void(0)"  data-toggle="modal" data-target="#patientInfoModal_{{$appountment->getPatient->id}}"
@@ -267,8 +286,8 @@
                                                     <td>{{ $testPatientClass->getMeetingType($appountment->meeting_type)}}</td>
                                                       <td>
                                                         @if($statuss)
-                                                         <select name="appointmentReason" id="appointmentReason_{{$appountment->id}}" class="form-control" 
-                                                         onchange="changeStatus({{$appountment->id}}, this.value);">
+                                                         <select name="appointmentStatus" id="appointmentReason_{{$appountment->id}}" class="form-control" 
+                                                         onchange="changeStatus(this.value, {{ $appountment->id }});">
                                                             <option value="">Please Select</option>
                                                             @foreach ($statuss as $status)
                                                             <option value="{{ $status->id }}" {{ ($appountment && $appountment->status == $status->id) ? 'selected' : ''  }}>{{ $status->status_name }}</option>
@@ -277,18 +296,7 @@
                                                         @endIf
                                                     </td>
                                                     
-                                                    <td>
-                                                        @if($billStatus)
-                                                         <select name="appointmentReason" id="appointmentReason_{{$appountment->id}}" class="form-control" 
-                                                         onchange="changeBillStatus({{$appountment->id}}, this.value);">
-                                                            <option value=''>-Select-</option>
-                                                            @foreach ($billStatus as $bs)
-                                                                <option value="{{$bs['id'] }}" {{ ($appountment && $appountment->bill_status == $bs['id']) ? 'selected' : ''  }}>{{$bs['status_name'] }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        @endIf
-                                                    </td>
-                                                    
+                                                    <td> {{($appountment && $appountment->getBillStatus && $appountment->getBillStatus->status_name) ? $appountment->getBillStatus->status_name : ''}} </td> 
                                                     <td> 
                                                     @can('patient-delete')
                                                     <a href="javascript:void(0)" class="text-danger" onclick="deleteApointment({{$appountment->id}})">
@@ -388,96 +396,32 @@ $(document).ready(function () {
     $('#duration_date').datepicker({
         dateFormat: 'mm/dd/yy',changeMonth: true, changeYear: true,
     });
+    $("#checkAll").change(function () {
+        $("input:checkbox").prop('checked', $(this).prop("checked"));
+        showLinkForBulk();
+      });
+      $('.chk').on('click', function () { 
+        if ($('.chk:checked').length == $('.chk').length) {
+          $('#checkAll').prop('checked', true); 
+          showLinkForBulk();
+        } else {
+          $('#checkAll').prop('checked', false); 
+          showLinkForBulk();
+        }
+      });
 });
+ function showLinkForBulk(){
+    if ( $( "#showBulkLable").hasClass( "d-none" ) ) {
+        $("#showBulkLable").removeClass('d-none'); 
+    }
+    else{
+        $("#showBulkLable").addClass('d-none'); 
+    }
+ }
 function resetFrm(){
     window.location.href='/patient/list/schedular';
-}
-function changeBillStatus(appointMentId, reasonId){ 
-    swal.fire({
-        title: 'Are you sure you want to change this?',
-        //text: "You won't be able to revert this!",
-        showCancelButton: true,
-        confirmButtonColor: '#3085D6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, Change it!',
-        customClass: {
-            confirmButton: "btn btn-primary",
-            cancelButton: "btn btn-danger",
-            popup: 'swal-wide',
-        }
-    }).then((result) => { 
-        // Use .then() to handle the user's response
-        if (result.isConfirmed) { 
-            // Only proceed if the user clicked the confirm button
-            let _url     = `/changeAppointmentBillStatus`;
-            $.ajax({
-                url: _url,
-                type: 'POST',
-                data: {
-                    _token: token,
-                    reasonId:reasonId,
-                    appointMentId:appointMentId
-                },
-                success: function(response) {
-                    swal.fire({
-                        title: 'Bill status changed suceessfully', 
-                        customClass: {
-                            successButton: "btn btn-primary",
-                            popup: 'swal-wide',
-                        }
-                    });
-                   location.reload();
-                },
-                error: function(response) {
-                    swal.fire(response.responseJSON.message, '', 'error');
-                }
-            });
-        }
-    });
-}
-function changeStatus(appointMentId, statusId){
-    swal.fire({
-        title: 'Are you sure you want to change this?',
-       // text: "You won't be able to revert this!",
-        showCancelButton: true,
-        confirmButtonColor: '#3085D6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, Change it!',
-        customClass: {
-            confirmButton: "btn btn-primary",
-            cancelButton: "btn btn-danger",
-            popup: 'swal-wide',
-        }
-    }).then((result) => { 
-        // Use .then() to handle the user's response
-        if (result.isConfirmed) { 
-            // Only proceed if the user clicked the confirm button
-            let _url     = `/changeAppointmentStatus`;
-            $.ajax({
-                url: _url,
-                type: 'POST',
-                data: {
-                    _token: token,
-                    statusId:statusId,
-                    appointMentId:appointMentId
-                },
-                success: function(response) {
-                    swal.fire({
-                        title: 'Visit status changed suceessfully', 
-                        customClass: {
-                            successButton: "btn btn-primary",
-                            popup: 'swal-wide',
-                        }
-                    });
-                    location.reload();
-                },
-                error: function(response) {
-                    swal.fire(response.responseJSON.message, '', 'error');
-                }
-            });
-        }
-    });
-}
+} 
+
 function deleteApointment(id){
     swal.fire({
         title: 'Are you sure you want to delete?',
@@ -491,7 +435,8 @@ function deleteApointment(id){
             cancelButton: "btn btn-danger",
             //popup: 'swal-wide',
         }
-    }).then((result) => { // Use .then() to handle the user's response
+    }).then((result) => { 
+    // Use .then() to handle the user's response
         if (result.isConfirmed) { // Only proceed if the user clicked the confirm button
             let _url     = `/delete/Appointment`;
             $.ajax({
@@ -510,6 +455,95 @@ function deleteApointment(id){
                         }
                     });
                     location.reload();
+                },
+                error: function(response) {
+                    swal.fire(response.responseJSON.message, '', 'error');
+                }
+            });
+        }
+    });
+}
+function changeBillStatus(type, changeVal){
+    var myCheckboxes = new Array();
+        $('input[name="appointItem[]"]:checked').each(function() {
+            myCheckboxes.push($(this).val());
+    }); 
+    console.log('#myCheckboxes', myCheckboxes);
+    if(myCheckboxes.length == 0){
+         swal.fire({
+            title: 'Please select any appointment from checkbox',
+            showCloseButton: true,
+            showCancelButton: false,
+            showConfirmButton: false,
+         });
+    }
+    else{
+         swal.fire({
+                title: 'Are you sure you want to change this?',
+            // text: "You won't be able to revert this!",
+                showCancelButton: true,
+                confirmButtonColor: '#3085D6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Change it!',
+                customClass: {
+                    confirmButton: "btn btn-primary",
+                    cancelButton: "btn btn-danger",
+                   // popup: 'swal-wide',
+                }
+            }).then((result) => { 
+                // Use .then() to handle the user's response
+                if (result.isConfirmed) { 
+                    // Only proceed if the user clicked the confirm button
+                    let _url     = `/changeAppointmentBillStatus`;  
+                    $.ajax({
+                        url: _url,
+                        type: 'POST',
+                        data: {
+                            _token: token,
+                            changeVal:changeVal,
+                            appointmentIds:myCheckboxes,
+                            type:type
+                        },
+                        success: function(response) {
+                            //console.log('#response' , response);
+                            location.reload();
+                        },
+                        error: function(response) {
+                            swal.fire(response.responseJSON.message, '', 'error');
+                        }
+                    });
+                }
+        });
+    } 
+}
+function changeStatus(changeVal, appointMentId){
+    swal.fire({
+        title: 'Are you sure you want to change this?',
+       // text: "You won't be able to revert this!",
+        showCancelButton: true,
+        confirmButtonColor: '#3085D6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Change it!',
+        customClass: {
+            confirmButton: "btn btn-primary",
+            cancelButton: "btn btn-danger",
+            //popup: 'swal-wide',
+        }
+    }).then((result) => { 
+        // Use .then() to handle the user's response
+        if (result.isConfirmed) { 
+            // Only proceed if the user clicked the confirm button
+            let _url     = `/changeAppointmentStatus`; 
+            $.ajax({
+                url: _url,
+                type: 'POST',
+                data: {
+                    _token: token,
+                    statusId:changeVal,
+                    appointMentId:appointMentId
+                },
+                success: function(response) {
+                     location.reload();
                 },
                 error: function(response) {
                     swal.fire(response.responseJSON.message, '', 'error');

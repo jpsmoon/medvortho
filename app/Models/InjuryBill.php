@@ -46,4 +46,12 @@ class InjuryBill extends Model
     {
         return $this->hasOne(BillReferingOrderProvider::class, 'id', 'bill_rendering_provider');
     }
+    public function getPatientForBill()
+    {
+        return $this->hasOne(Patient::class, 'id', 'patient_id');
+    }
+    public function getStatus()
+    {
+        return $this->hasOne(Status::class, 'id', 'bill_status');
+    }
 }

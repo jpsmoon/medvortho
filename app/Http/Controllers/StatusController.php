@@ -10,6 +10,13 @@ use Toastr;
 
 class StatusController extends Controller
 {
+    protected $statusModel;
+
+    public function __construct(Status $statusMod )
+      {
+          $this->statusModel = $statusMod;
+      }
+
     public function index()
     {
         $statuses = $this->getAllData(new Status(), 'id');
@@ -101,9 +108,21 @@ class StatusController extends Controller
       elseif($status == 7){
         return 'Appointment Visit Status';
       } 
+      elseif($status == 8){
+        return 'Task';
+      } 
     }
     public function getBillStatuss(){
       $billStatus = Status::where("is_active", 1)->where("status_type", 3)->orderBy('display_order', 'ASC')->get(); 
       return $billStatus; 
     }
+    public function getFilteredAlias(Request $request){
+      $type = $request->statusType;
+      $new = array_filter($this->statusModel->getAliaseNames(), function ($var) use ($type) {
+        return ($var['type'] == $type);
+    });
+    //return $this->getValFromArray($new);
+    return $new;
+    }
+    
 }

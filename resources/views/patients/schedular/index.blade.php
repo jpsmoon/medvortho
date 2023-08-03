@@ -372,20 +372,7 @@
                                     </span>
                                     @endif
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <label for="mi"> Status</label>
-                                    <select name="appointment_status" class="form-control 4col formcls" data-validation-event="change" data-validation="required" data-validation-error-msg="">
-                                        <option value=''>-Select-</option>
-                                        @foreach ($status as $st)
-                                            <option value="{{$st->id }}">{{$st->status_name }}</option>
-                                        @endforeach
-                                    </select>
-                                    @if($errors->has('appointment_status'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_status') }}</strong>
-                                    </span>
-                                    @endif
-                                </div> 
+                                
                             </div>
                             <div class="row">
                                 <div class="form-group col-md-3">

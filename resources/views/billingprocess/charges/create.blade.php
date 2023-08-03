@@ -1,5 +1,8 @@
 @extends('layouts.home-app')
 @section('content')
+    <!-- START: Breadcrumbs-->
+    <!-- END: Breadcrumbs-->
+    
 <style>
 #myDIV 
 {
@@ -7,16 +10,10 @@
   padding: 10px 0;
   
 }
-</style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<?php $billingId = 1;
-?>
- @inject('providerClass', 'App\Http\Controllers\BillingProviderController')
- 
-<!-- START: Breadcrumbs-->
-<!-- END: Breadcrumbs-->
+</style> 
+    
     @if ($errors->any())
-        <div class="row ">
+        <div class="row mt-2 customBox">
             <div align="center" class="col-12  align-self-center">
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -27,35 +24,34 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-1 mt-4"></div>
         </div>
     @endif
-    <div class="row">
-        <div class="col-1 mt-4"></div>
-        <div class="col-10 mt-4">
-            <div class="card row-background" style="min-height: 565px;">
+    <div class="row mt-2 ">
+        <div class="col-md-12 mt-4">
+            <div class="card row-background customBoxHeight">
                 <!-- START: Breadcrumbs-->
-                <div class="row">
+                <div class="row ">
                     <div class="col-12  align-self-center">
-                        <div class="sub-header mt-3 py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
-                            <div style="padding-top:10px; padding-left:20px;" class="w-sm-100 mr-auto">
+                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div style="padding-top:10px" class="w-sm-100 mr-auto">
                                 @if($chargeType != 2)
                                     <h2 class="heading">% {{($providerInfo) ? $providerInfo->injury_state_id : '-'}} Fee Schedule Reimbursements</h2>
                                 @else
                                     <h2 class="heading">$ Expected Reimbursements</h2>
                                 @endif
                             </div>
-                            <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                                <li style="padding-bottom:10px" class="breadcrumb-item">
-                                    <a class="btn btn-primary" href="{{ url('/billing/providers/setting', $providerId) }}"> Back</a>
-                                </li>
-                            </ol>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                            <li class="breadcrumb-item">
+                                <a class="btn btn-primary" href="{{ url('/billing/providers/setting', $providerId) }}"> Back</a>
+                            </li>
+                        </ol> 
                         </div>
                     </div>
                 </div>
                 <!-- END: Breadcrumbs-->
-                @if($chargeType != 2)
-                <div class="row">
+                <div class="card-content">
+                    <div class="col-md-12 col-12">
+                        <div class="row">
                     <div class="col-12 mt-4">
                         <form action="{{ route('saveBillProviderCharge') }}" method="POST" enctype="multipart/form-data">
                             @csrf
@@ -138,7 +134,7 @@
                         </div>
                     </div> 
                 </div>
-                @endif
+                	
 
                     <div class="form-row col-md-12 border-bottom2 {{ ($chargeType == 2) ? 'mt-2' : '' }}">
                         <div class="col-md-12">
@@ -175,46 +171,18 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>       
+                    </div>      
                     
                 </div>
+                    </div>
+                </div>
             </div>
+            <div class="col-1 mt-4"></div>
         </div>
-        <div class="col-1 mt-4"></div>
-    </div>
     </div>
 @endsection
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
 <script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
 <script src="{{ asset('js/controller/master_for_all.js') }}"></script>
-
-<script>
-$( document ).ready(function() {
-var type = '<?php echo $billingId;?>';
-    //console.log('##type',type);
-    showOtherDIv(type);
-});
-function showOtherDIv(val){
-    if(val == 1){
-        $('#personaleDiv').removeClass('d-none');
-        $('#nonPersonaleDiv').addClass('d-none');
-    }
-    else{
-        $('#personaleDiv').addClass('d-none');
-        $('#nonPersonaleDiv').removeClass('d-none');
-    }
-}
-</script>
-<script>
-function myFunction() {
-  var x = document.getElementById("myDIV");
-  if (x.style.display === "none") {
-    x.style.display = "block";
-  } else {
-    x.style.display = "none";
-  }
-}
-</script>
-
-
+<script></script>

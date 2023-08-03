@@ -1,10 +1,10 @@
 @extends('layouts.home-app')
 @section('content')
 <!-- START: Breadcrumbs-->
-    <div class="row ">
+    <div class="row mt-2">
         <div class="col-12">
-            <div class="sub-header align-self-center mt-1 py-2 px-2 align-items-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mb-0">{{$title}}</h4></div>
+            <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                <div class="w-sm-100 mr-auto margin05"><h2 class="mb-0 heading">{{$title}}</h2></div>
 
                 <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                     <li class="breadcrumb-item">
@@ -31,7 +31,7 @@
 @endif
 
     <div class="row custom-form">
-        <div class="col-9 mt-4">
+        <div class="col-9 mt-1">
             <div class="card row-background2">
                 <div class="card-content">
                     <div class="card-body">
@@ -54,8 +54,33 @@
                 </div>
             </div>
         </div>
-        <div class="col-3 mt-4 rightside">
-            <div id="billingInfoDiv"></div>
+        <div class="col-3 mt-1 rightside">
+<div id="billingInfobydefault">
+   <div class="mb-0">
+     <h6 class="mb-0">
+       <a class="redial-dark d-block border redial-border-light">
+         <i class="fa-solid fa-file-invoice-dollar"></i> Billing Provider </a>
+     </h6>
+     <div id="" class=" setCollapseBorder" role="tabpanel">
+       <div class="card-body">
+         <span class="font-weight-bold pr-1">Name :</span>
+         <span class="text-muted font-weight-bold">WorkMed California, APC</span>
+         <br>
+         <br>
+         <span class="font-weight-bold pr-1">Tax ID :</span>
+         <span class="text-muted font-weight-bold">33-0184132</span>
+         <br>
+         <br>
+         <span class="font-weight-bold pr-1">NPI :</span>
+         <span class="text-muted font-weight-bold">1487029278</span>
+         <br>
+         <br>
+       </div>
+     </div>
+   </div>
+ </div>
+            
+            <div id="billingInfoDiv" class="mt-1"></div>
         </div>
     </div>
 @endsection

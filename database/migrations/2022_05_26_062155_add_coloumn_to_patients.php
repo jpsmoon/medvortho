@@ -16,6 +16,7 @@ class AddColoumnToPatients extends Migration
         Schema::table('patients', function (Blueprint $table) {
             //
             $table->string('patient_no')->nullable();
+            $table->integer('status_id')->nullable();
         });
     }
 

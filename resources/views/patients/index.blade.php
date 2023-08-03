@@ -12,19 +12,6 @@
     
     @if ($errors->any())
         <div class="row mt-2 customBox">
-            <div class="col-md-12  align-self-center">
-                <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                    <div class="w-sm-100 mr-auto">
-                        <h4 class="mb-0">Billing Providers List</h4>
-                    </div>
-
-                    <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                        <li class="breadcrumb-item">
-                            <a class="btn btn-primary" href="{{ route('billingproviders.index') }}">Back</a>
-                        </li>
-                    </ol>
-                </div>
-            </div>
             <div align="center" class="col-12  align-self-center">
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -44,8 +31,8 @@
                 <div class="row ">
                     <div class="col-12  align-self-center">
                         <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
-                            <div style="padding-top:10px" class="w-sm-100 mr-auto">
-                                <h2 class="heading">Patient List </h2>
+                            <div class="w-sm-100 mr-auto margin05">
+                                <h2 class="heading">Patient List</h2>
                             </div>
                              <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                             <li class="breadcrumb-item">
@@ -99,17 +86,17 @@
                                                     <td>{{ ($patient->getBillingProvider) ? $patient->getBillingProvider->professional_provider_name : 'NA'}} </td>
                                                     <td>{{ $patient->is_active ? 'Active' : 'Block' }}</td>
                                                     <td> <a class="" data-id="{{$patient->id}}"  href="{{url('/patients/view',$patient->id)}}">
-                                                        <i  class="icon-eye showPointer"/></i>
+                                                        <!--<i  class="icon-eye showPointer"/></i>--><i class="fa-regular fa-eye"></i>
                                                     </a>
                                                     @can('patient-edit')
                                                         <a class="text-info" data-id="{{$patient->id}}" href="{{url('/edit/patient')}}/{{$patient->id}}" >
-                                                        <i  class="icon-pencil  showPointer"/></i>
+                                                        <!--<i  class="icon-pencil  showPointer"/></i>--><i class="fa-regular fa-pen-to-square"></i>
                                                         </a>
                                                     @endcan
                                                             @if(count($patient->getInjuries) == 0)
                                                             @can('patient-delete')
                                                                 <a href="javascript:void(0)" class="text-danger" data-id="{{$patient->id}}" onclick="deleteTodo({{$patient->id}})">
-                                                                <i  class="icon-trash showPointer"/></i>
+                                                                <!--<i  class="icon-trash showPointer"/></i>--><i class="fa-solid fa-trash-can"></i>
                                                                 </a>
                                                             @endcan
                                                         @endif
