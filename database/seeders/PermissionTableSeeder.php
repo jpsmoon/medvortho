@@ -63,11 +63,6 @@ class PermissionTableSeeder extends Seeder
             'billing-provider-rendering-refering-edit',
             'billing-provider-rendering-refering-delete',
 
-            'billing-provider-rendering-refering-list', //billing-provider-practice-charge
-            'billing-provider-rendering-refering-create',
-            'billing-provider-rendering-refering-edit',
-            'billing-provider-rendering-refering-delete',
-
             'billing-provider-bill-task-preferences-list', //billing-provider-bill-task-preferences
             'billing-provider-bill-task-preferences-create',
             'billing-provider-bill-task-preferences-edit',

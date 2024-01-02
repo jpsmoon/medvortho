@@ -1,22 +1,27 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
-
-<!-- START: Breadcrumbs-->
-    <div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mb-0">{{$title}}</h4></div>
-
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                    <li class="breadcrumb-item">
-                        <a class="btn btn-primary" href="{{ url('/list/practice/contact', $providerId) }}"> Back</a>
-                    </li>
-                </ol>
+  <style>
+      .dataTables_length
+        {
+          padding-top: 2%;  
+        }  
+  </style>  
+    
+    @if ($errors->any())
+        <div class="row mt-2 customBox">
+            <div align="center" class="col-12  align-self-center">
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- END: Breadcrumbs-->
-
+    @endif
+    
     @if ($message = Session::get('flash_success_message'))
     <div class="alert alert-success alert-block">
 	<button type="button" class="close" data-dismiss="alert">×</button>
@@ -30,12 +35,30 @@
         <strong>{{ $message }}</strong>
 </div>
 @endif
-
-    <div class="row">
-        <div class="col-9 mt-4">
-            <div class="card row-background">
+    <div class="row mt-0">
+        <div class="col-md-12 mt-4">
+            <div class="card row-background customBoxHeight">
+                <!-- START: Breadcrumbs-->
+                <div class="row ">
+                    <div class="col-12  align-self-center">
+                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div style="padding-top:10px" class="w-sm-100 mr-auto">
+                                <h2 class="heading">{{$title}}</h2>
+                            </div>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                             <li class="breadcrumb-item">
+                                <a class="btn btn-primary" href="{{ url('/list/practice/contact', $providerId) }}"> Back</a>
+                            </li>
+                        </ol> 
+                        </div>
+                    </div>
+                </div>
+                <!-- END: Breadcrumbs-->
                 <div class="card-content">
-                    <div class="card-body">
+                    <div class="col-md-12 col-12">
+                        <div class="row">
+            <div class="col-12">
+                <div class="card">
                         <form action="{{ route('practiceContact') }}" enctype="multipart/form-data" class="form-horizontal ladda-form'" method="POST">
                         @csrf
                         <input type="hidden" name="billing_provider_id" id="billing_provider_id" value="{{ $providerId }}">
@@ -117,12 +140,13 @@
                                 </div>
                             </div>
                         </form>
+                        </div>
+                        </div>
                     </div>
+                   </div>
                 </div>
             </div>
-        </div>
-        <div class="col-3 mt-4 rightside">
-            <div id="billingInfoDiv"></div>
+            <div class="col-1 mt-4"></div>
         </div>
     </div>
 @endsection
@@ -130,6 +154,7 @@
 <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
 <script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
 <script src="{{ asset('js/controller/master_for_all.js') }}"></script>
+<script></script>
 
 <script>
 $( document ).ready(function() {
@@ -145,3 +170,4 @@ function showOtherDIv(val){
     }
 }
 </script>
+

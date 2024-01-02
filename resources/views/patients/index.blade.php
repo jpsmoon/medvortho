@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
     <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
@@ -8,6 +8,9 @@
         {
           padding-top: 2%;  
         }  
+        .mt-1, .my-1{
+    margin-top:0.5rem!important;
+}
   </style>  
     
     @if ($errors->any())
@@ -24,20 +27,25 @@
             </div>
         </div>
     @endif
-    <div class="row mt-2 ">
-        <div class="col-md-12 mt-4">
+    <div class="row mt-0">
+        <div class="col-md-12 mt-0">
             <div class="card row-background customBoxHeight">
                 <!-- START: Breadcrumbs-->
                 <div class="row ">
                     <div class="col-12  align-self-center">
-                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                        <div class="sub-header py-4 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
                             <div class="w-sm-100 mr-auto margin05">
-                                <h2 class="heading">Patient List</h2>
+                                <h2 class="heading">{{ trans('billLabel.patient_List') }}</h2>
                             </div>
                              <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                            <li class="breadcrumb-item">
-                                <a class="btn btn-primary" href="{{ route('billingproviders.index') }}"> Back</a>
-                            </li>
+                             
+                             <li class="breadcrumb-item">
+                                <a class="btn btn-primary" href="{{ route('patients.create') }}"> {{ trans('billLabel.patient_Add') }}</a>
+                            </li>    
+                                 
+                            <!--<li class="breadcrumb-item">-->
+                            <!--    <a class="btn btn-primary" href="{{ route('billingproviders.index') }}"> Back</a>-->
+                            <!--</li>-->
                         </ol> 
                         </div>
                     </div>
@@ -52,14 +60,14 @@
                         <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th scope="col">Patient ID</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">DOB</th>
-                                        <th scope="col">SSN</th>
-                                        <th scope="col">Claim Number</th>
-                                        <th scope="col">Billing Provider Name</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Action</th>
+                                        <th scope="col">{{ trans('billLabel.patient_ID') }}</th>
+                                        <th scope="col">{{ trans('billLabel.name') }}</th>
+                                        <th scope="col">{{ trans('billLabel.dob') }}</th>
+                                        <th scope="col">{{ trans('billLabel.ssn') }}</th>
+                                        <th scope="col">{{ trans('billLabel.claim_Number') }}</th>
+                                        <th scope="col">{{ trans('billLabel.billing_provider_name') }}</th>
+                                        <th scope="col">{{ trans('billLabel.status') }}</th>
+                                        <th scope="col">{{ trans('billLabel.action') }}</th>
                                     </tr>
                                 </thead>
                                     <tbody>
@@ -83,7 +91,7 @@
                                                         {{implode(',',$claimNumbers)}}
                                                         @endif
                                                     </td>
-                                                    <td>{{ ($patient->getBillingProvider) ? $patient->getBillingProvider->professional_provider_name : 'NA'}} </td>
+                                                    <td>{{ ($patient->billingProviderForPatientList) ? $patient->billingProviderForPatientList->professional_provider_name : 'NA'}} </td>
                                                     <td>{{ $patient->is_active ? 'Active' : 'Block' }}</td>
                                                     <td> <a class="" data-id="{{$patient->id}}"  href="{{url('/patients/view',$patient->id)}}">
                                                         <!--<i  class="icon-eye showPointer"/></i>--><i class="fa-regular fa-eye"></i>
@@ -109,15 +117,15 @@
                                             </tr>
                                             @endif
                                         </tbody>
-                                </table>
+                                       </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                </div>
-            </div>
-        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-1 mt-4"></div>
+           <div class="col-1 mt-4"></div>
         </div>
     </div>
 @endsection

@@ -14,7 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-        $this->call(BillPlaceServiceSeeder::class);  //Added by priyanka on 24/07/2022
+        //$this->call(BillPlaceServiceSeeder::class);  //Added by priyanka on 24/07/2022
         $this->call( RenderingProversSeeder::class);  //Added by priyanka on 24/07/2022
         $this->call( BillModifierSeeder::class);  //Added by priyanka on 03/08/2022
         $this->call( CountriesSeeder::class);  //Added by priyanka on 07/09/2022
@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         $this->call( UserRolesSeeder::class);  //Added by priyanka on 05/06/2023
         $this->call( PermissionTableSeeder::class);  //Added by priyanka on 06/13/2023
         $this->call( StatusTableSeeder::class);  //Added by priyanka on 08/02/2023
+        $this->call( UserSeeder::class);  //Added by priyanka on 05/06/2023
 
     }
 }

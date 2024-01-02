@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
     <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
@@ -24,22 +24,22 @@
             </div>
         </div>
     @endif
-    <div class="row mt-2 ">
-        <div class="col-md-12 mt-4">
-            <div class="card row-background customBoxHeight">
+    <div class="row mt-0 ">
+        <div class="col-md-12 mt-0">
+            <div class="card row-background customBoxHeight5">
                 <!-- START: Breadcrumbs-->
                 <div class="row ">
                     <div class="col-12  align-self-center">
                         <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
-                            <div style="padding-top:10px" class="w-sm-100 mr-auto">
+                            <div style="padding-top:5px" class="w-sm-100 mr-auto">
                                 <h2 class="heading">Rendering Provider List</h2>
                             </div>
                              <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                                 
-                             <li class="breadcrumb-item">
-                                <a class="btn btn-primary" href="{{url('add/billing/rendering',$id)}}">  Add Rendering Provider</a>
-                            </li>    
-                                 
+                              @can('rendering-provider-create')   
+                                <li class="breadcrumb-item">
+                                    <a class="btn btn-primary" href="{{url('add/billing/rendering',$id)}}">  Add Rendering Provider</a>
+                                </li>    
+                            @endcan 
                             <li class="breadcrumb-item">
                                 <a class="btn btn-primary" href="{{url('/billing/providers/setting',$id)}}"> Back</a>
                             </li>
@@ -64,26 +64,28 @@
                                         <th scope="col">Active</th>
                                     </tr>
                                 </thead>
+                                @can('rendering-provider-list')
                                     <tbody>
-                                            @if(count($bRenderings)>0)
-                                                @foreach ($bRenderings as $rendering)
-                                                <tr>
-                                                    <td>
-                                                        <a href="{{ url('/view/billing/rendering',$rendering->id)}}">
-                                                        {{$rendering->referring_provider_first_name}} {{ ($rendering->referring_provider_last_name) ? $rendering->referring_provider_last_name : ''}} {{ ($rendering->referring_provider_middle_name) ? $rendering->referring_provider_middle_name : ''}}
-                                                    </a></td>
-                                                    <td>{{$rendering->referring_provider_npi}}</td>
-                                                    <td>{{ ($rendering->taxonomyCode) ? $rendering->taxonomyCode->code." " .$rendering->taxonomyCode->name : '-'}}</td>
-                                                    <td>Rendering</td>
-                                                    <td>{{ ($rendering->is_active == 1) ? 'Yes' : 'No'  }}</td>
-                                                </tr>
-                                                @endforeach
-                                                @else
-                                                <tr>
-                                                    <td colspan="10">No Records Found.</td>
+                                        @if(count($bRenderings)>0)
+                                            @foreach ($bRenderings as $rendering)
+                                            <tr>
+                                                <td>
+                                                <a href="{{ url('/view/billing/rendering',$rendering->id)}}">
+                                                {{$rendering->referring_provider_first_name}} {{ ($rendering->referring_provider_last_name) ? $rendering->referring_provider_last_name : ''}} {{ ($rendering->referring_provider_middle_name) ? $rendering->referring_provider_middle_name : ''}} {{ ($rendering->referring_provider_suffix) ? $rendering->referring_provider_suffix : ''}}
+                                                </a></td>
+                                                <td>{{$rendering->referring_provider_npi}}</td>
+                                                <td>{{ ($rendering->taxonomyCode) ? $rendering->taxonomyCode->code." " .$rendering->taxonomyCode->name : '-'}}</td>
+                                                <td>Rendering</td>
+                                                <td>{{ ($rendering->is_active == 1) ? 'Yes' : 'No'  }}</td>
                                             </tr>
-                                            @endif
-                                        </tbody>
+                                            @endforeach
+                                            @else
+                                            <tr>
+                                            <td colspan="10">No Records Found.</td>
+                                        </tr>
+                                        @endif
+                                    </tbody>
+                                @endcan
                                 </table>
                         </div>
                 </div>

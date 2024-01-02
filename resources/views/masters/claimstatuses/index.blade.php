@@ -1,5 +1,4 @@
-@extends('layouts.home-app')
-
+@extends('layouts.home-new-app')
 
 @section('content')
 <!-- START: Breadcrumbs-->
@@ -10,7 +9,7 @@
 
                 <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                     <li class="breadcrumb-item">
-                    @can('ClaimStatus-create')
+                    @can('claim-status-create')
                         <a class="btn btn-success text-white" id="myBtn" onclick="show_addmodal();" data-toggle="modal" data-target="#addModal"> Add New </a>
                     @endcan
                     </li>
@@ -56,41 +55,35 @@
                                                 <th class="jsgrid-header-cell jsgrid-header-sortable">Action</th>
                                             </tr>
                                             </thead>
-                                            <tbody>
-                                                @if(count($claimstatuses))
-                                                @foreach ($claimstatuses as $claim)
-                                                <tr  id="todo_{{$claim->id}}" class="jsgrid-row">
-                                                    <td class="jsgrid-cell">{{ ++$i }}</td>
-                                                    <td class="jsgrid-cell">{{ $claim->claim_status }}</td>
-                                                    <td class="jsgrid-cell">{{ $claim->is_active ? 'Active' : 'Block' }}</td>
-                                                    <td class="jsgrid-cell">
-
-                                                        @if($claim->is_active == '0' || $claim->deleted_at != '')
-                                                            @can('ClaimStatus-delete')
-                                                            <a data-id="{{$claim->id}}" class="btn btn-success" onclick="restoreTodo({{$claim->id}})">Restore</a>
-                                                            @endcan
-                                                        @else
-                                                            @can('ClaimStatus-edit')
+                                            @can('claim-status-list')
+                                                <tbody>
+                                                    @if(count($claimstatuses))
+                                                    @foreach ($claimstatuses as $claim)
+                                                    <tr  id="todo_{{$claim->id}}" class="jsgrid-row">
+                                                        <td class="jsgrid-cell">{{ ++$i }}</td>
+                                                        <td class="jsgrid-cell">{{ $claim->claim_status }}</td>
+                                                        <td class="jsgrid-cell">{{ $claim->is_active ? 'Active' : 'Block' }}</td>
+                                                        <td class="jsgrid-cell"> 
+                                                            @can('claim-status-edit')
                                                             <a data-id="{{$claim->id}}" onclick="editTodo({{$claim->id}})" data-toggle="modal" data-target="#editModal">
-                                                            <input class="jsgrid-button jsgrid-edit-button" type="button" title="Edit" data-id="{{$claim->id}}">
+                                                            <button class="btn btn-primary" type="button" title="Edit" data-id="{{$claim->id}}">Edit</button>
                                                             </a>
                                                             @endcan
-                                                            @can('ClaimStatus-delete')
+                                                            @can('claim-status-delete')
                                                             <a data-id="{{$claim->id}}"  onclick="deleteTodo({{$claim->id}})">
-                                                            <input data-id="{{$claim->id}}" class="jsgrid-button jsgrid-delete-button" type="button"></input>
+                                                            <button data-id="{{$claim->id}}" class="btn btn-primary" type="button">Delete</button>
                                                             </a>
-                                                            @endcan
-                                                        @endif
-
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                                    @else
-                                                    <tr class="jsgrid-row">
-                                                            <td class="jsgrid-cell">No Records Found.</td>
+                                                            @endcan 
+                                                        </td>
                                                     </tr>
-                                                    @endif
-                                            </tbody>
+                                                    @endforeach
+                                                        @else
+                                                        <tr class="jsgrid-row">
+                                                                <td class="jsgrid-cell">No Records Found.</td>
+                                                        </tr>
+                                                        @endif
+                                                </tbody>
+                                            @endcan
                                     </table>
                                 </div>
                             </div>

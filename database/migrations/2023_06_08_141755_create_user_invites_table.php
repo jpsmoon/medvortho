@@ -17,8 +17,8 @@ class CreateUserInvitesTable extends Migration
             $table->id();
             $table->string('email');
             $table->string('token')->unique();
-            $table->integer('role_id')->unsigned();
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->integer('role_id')->nullable();
+            //$table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->string('billing_provider_ids')->nullable(); 
             $table->string('token_url')->nullable(); 
             $table->string('created_by')->nullable();

@@ -19,7 +19,7 @@
     }
 
     .showImgaeInBack {
-        background-image: url('/new_assets/app-assets/images/1150-1488.jpg');
+        background-image: url('/public/new_assets/app-assets/images/1150-1488.jpg');
         background-size: auto 100%;
         background-repeat: no-repeat;
         background-position: left top;
@@ -414,7 +414,6 @@
                                                     </td>
                                                     <td width="420px" valign="top">
                                                         <table style="padding-top:0px; heigth:100px;">
-                                                           
                                                         </table>
                                                     </td>
                                                 </tr>

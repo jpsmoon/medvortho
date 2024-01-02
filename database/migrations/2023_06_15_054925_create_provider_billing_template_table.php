@@ -21,7 +21,7 @@ class CreateProviderBillingTemplateTable extends Migration
             $table->string('description')->nullable();
             $table->enum('is_active', array('1', '0'));
             $table->integer('created_by')->unsigned();
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            //$table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

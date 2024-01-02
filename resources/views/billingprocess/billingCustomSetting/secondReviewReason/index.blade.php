@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <?php $billingId = 1;
@@ -110,6 +110,10 @@
                             <div class="form-group">
                                 <label for="message-text" class="col-form-label">Text:</label>
                                 <textarea name="reason" id="message-text" data-validation="required, length"  data-validation-length="2-100" rows="6" class="form-control"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" class="checkbox" id="1" name="for_all_providers" value="1">
+                                <label for="vehicle1">For All Providers</label>
                             </div>
                             
                             <div>

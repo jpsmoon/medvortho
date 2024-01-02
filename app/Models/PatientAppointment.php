@@ -51,5 +51,8 @@ class PatientAppointment extends Model
     {
         return $this->hasOne(InjuryBill::class, 'appointment_id', 'id');
     }
-
+    public function getVisitStatus()
+    {
+        return $this->hasOne(Status::class, 'id', 'status');
+    }
 }

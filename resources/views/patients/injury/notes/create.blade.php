@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
         <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css" />

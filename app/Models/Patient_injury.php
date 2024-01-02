@@ -29,13 +29,19 @@ class Patient_injury extends Model
         return $this->hasOne(User::class,  'id', 'added_by');
     }
     public function getInjuryHistory(){
-        return $this->hasMany(MasterDataLog::class, 'data_id', 'id')->WhereIn('type', ['INJURY_DOCUMENT_CREATED','INJURY_DOCUMENT_UPDATED','INJURY_CREATED', 'INJURY_UPDATED', 'INJURY_NOTE_DELETED']);
+        return $this->hasMany(MasterDataLog::class, 'data_id', 'id')->whereIn('type', ['INJURY_DOCUMENT_CREATED','INJURY_DOCUMENT_UPDATED','INJURY_CREATED', 'INJURY_UPDATED', 'INJURY_NOTE_DELETED']);
     }
     public function getInjuryContacts(){
         return $this->hasMany(InjuryContact::class, 'injury_id', 'id');
     }
     public function getInjuryBills(){
         return $this->hasMany(InjuryBill::class, 'injury_id', 'id');
+    }
+    public function getInjuryUnsendBills(){
+        return $this->hasMany(InjuryBill::class, 'injury_id', 'id')->whereIn('bill_status',[1,2,20]);
+    }
+    public function getInjurySentBills(){
+        return $this->hasMany(InjuryBill::class, 'injury_id', 'id')->where('bill_status',3);
     }
     
     

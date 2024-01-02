@@ -1,22 +1,16 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
-<!-- START: Breadcrumbs-->
-    <div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mb-0">Create New Role</h4></div>
-
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                    <li class="breadcrumb-item">
-                        <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back</a>
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div>
+    <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
-
-    @if ($message = Session::get('flash_success_message'))
+    
+  <style>
+      .dataTables_length
+        {
+          padding-top: 2%;  
+        }  
+  </style>  
+    
+   @if ($message = Session::get('flash_success_message'))
     <div class="alert alert-success alert-block">
 	<button type="button" class="close" data-dismiss="alert">×</button>
         <strong>{{ $message }}</strong>
@@ -28,17 +22,43 @@
 	<button type="button" class="close" data-dismiss="alert">×</button>
         <strong>{{ $message }}</strong>
 </div>
-@endif
+@endif 
 
-    <div class="row">
-        <div class="col-9 mt-4">
-            <div class="card row-background">
+    <div class="row mt-0 ">
+        <div class="col-md-12 mt-4">
+            <div class="card row-background customBoxHeight">
+                <!-- START: Breadcrumbs-->
+                <div class="row ">
+                    <div class="col-12  align-self-center">
+                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div class="w-sm-100 mr-auto margin05">
+                                <h2 class="heading">Create New Role</h2>
+                            </div>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                             
+                             <li class="breadcrumb-item">
+                                <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back</a>
+                            </li>    
+                                 
+                            <!--<li class="breadcrumb-item">-->
+                            <!--    <a class="btn btn-primary" href="{{ route('billingproviders.index') }}"> Back</a>-->
+                            <!--</li>-->
+                        </ol> 
+                        </div>
+                    </div>
+                </div>
+                <!-- END: Breadcrumbs-->
                 <div class="card-content">
-                    <div class="card-body">
+                    <div class="col-md-12 col-12">
+                        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                   <div class="card-content">
+                    <div class="card-body2">
                         {!! Form::open(array('route' => 'roles.store','method'=>'POST')) !!}
                         @csrf
                             <div class="row">
-                                <div class="form-group col-md-4">
+                                <div class="form-group mt-2 col-md-4">
                                         <label for="name"> Name <span class="required">* </span> </label>
                                         <input type="text" name="name" value=" " class="form-control" data-validation-event="change" data-validation="required, length"
                                             data-validation-length="2-100">
@@ -53,12 +73,12 @@
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label  for="billing_provider_ids"> Permission<span class="required">* </span></label>
-                                    <label id="selectAllCheckBoxes"><input type="checkbox" id="checkAll"  class="checkAll"/>Select / Unselect All</label>
+                                    <label id="selectAllCheckBoxes"><input type="checkbox" id="checkAll"  class="checkAll"/> Select / Unselect All</label>
                                     <ul class="list-inline">
                                         @foreach($permission as $value)
                                             <li class="list-inline-item liItem col-md-3">
                                                 {{ Form::checkbox('permission[]', $value->id, false, array('class' => 'name')) }}
-                                                <span> {{ $value->name }} </span>
+                                                <span style="position: relative; bottom: 3px;"> {{ $value->name }} </span>
                                             </li>
                                         @endforeach 
                                     </ul> 
@@ -76,11 +96,14 @@
                             </div>
                         </form>
                     </div>
+                </div>     
                 </div>
             </div>
         </div>
-        <div class="col-3 mt-4 rightside">
-            
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 mt-4"></div>
         </div>
     </div>
 @endsection

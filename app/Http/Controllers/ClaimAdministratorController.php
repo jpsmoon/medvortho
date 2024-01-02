@@ -17,7 +17,7 @@ class ClaimAdministratorController extends Controller
     {
         $states = State::where('is_active', 1)->orderBy('state_name')->get();
         $claims = ClaimAdministrator::leftjoin('company_types as comp', 'claim_administrators.company_type_id', '=', 'comp.id')
-                            ->select('claim_administrators.*', 'comp.name as company_type')->orderBy('claim_administrators.id', 'desc')->get();
+                            ->select('claim_administrators.*', 'comp.name as company_type')->orderBy('claim_administrators.name', 'ASC')->get();
                             //->paginate(15);
 
         $i =  (request()->input('page', 1) - 1) * 5;
@@ -25,14 +25,39 @@ class ClaimAdministratorController extends Controller
         return view('claimadministrators.index', compact('states', 'claims', 'i'));
     }
 
-    public function create()
+    public function create(ClaimAdministrator $claimadministrator)
     {
         //$states = State::where('is_active', 1)->orderBy('state_name')->get(); 
         $company_types = Company_type::where('is_active', 1)->orderBy('name')->get(); 
         $bill_treatment_types = BillTreatmentType::where('is_active', 1)->orderBy('bill_treatment_type')->get();
         $bill_submission_types = BillSubmissionType::where('is_active', 1)->orderBy('bill_submission_type')->get();
-             
-        return view('claimadministrators.create', compact('company_types', 'bill_treatment_types', 'bill_submission_types'));
+        $title = 'Add Claim Administrator';
+        $claim_bills = ClaimBillReview::where('claim_admin_id', $claimadministrator->id)->get();            
+        $claim_auths = ClaimAuthContact::where('claim_admin_id', $claimadministrator->id)->get();
+        $claim_mails = ClaimMailAddress::where('claim_admin_id', $claimadministrator->id)->get();
+        if(!empty($claim_mails)){
+            foreach($claim_mails as $claim_mail){                
+                $claim_mail_bills = ClaimMailBillTreatmentType::where('claim_mail_id', $claim_mail->id)->get();
+                $claim_subs = ClaimMailBillSubmissionType::where('claim_mail_id', $claim_mail->id)->get();
+
+                $claim_mail->bill_treatment_type_id = $claim_mail->bill_submission_type_id = array();
+                if($claim_mail_bills){
+                    $tmp = array();
+                    foreach($claim_mail_bills as $subtype){                     
+                        array_push($tmp, $subtype->bill_treatment_type_id);
+                    }
+                    $claim_mail->bill_treatment_type_id = $tmp;                  
+                }
+                if($claim_subs){
+                    $tmp = array();
+                    foreach($claim_subs as $subtype){                     
+                        array_push($tmp, $subtype->bill_submission_type_id);
+                    }
+                    $claim_mail->bill_submission_type_id = $tmp;
+                }
+            }
+        }
+        return view('claimadministrators.create', compact('title','claimadministrator', 'claim_bills', 'claim_auths', 'claim_mails', 'company_types', 'bill_treatment_types', 'bill_submission_types'));
     }
 
     public function store(Request $request)
@@ -202,15 +227,18 @@ class ClaimAdministratorController extends Controller
 
     public function edit(ClaimAdministrator $claimadministrator)
     {
+        $title = 'Edit Claim Administrator';
         $company_types = Company_type::where('is_active', 1)->orderBy('name')->get(); 
         $bill_treatment_types = BillTreatmentType::where('is_active', 1)->orderBy('bill_treatment_type')->get();
         $bill_submission_types = BillSubmissionType::where('is_active', 1)->orderBy('bill_submission_type')->get();
+        //echo "@@".$claimadministrator->id."###";exit;
+        // $claim_bills = ClaimBillReview::where('claim_admin_id', $claimadministrator->id)->get(); 
+        // $claim_auths = ClaimAuthContact::where('claim_admin_id', $claimadministrator->id)->get();
+        // $claim_mails = ClaimMailAddress::where('claim_admin_id', $claimadministrator->id)->get();
 
-        $claim_bills = $claim_auths = $claim_mails = array();
-
-        $claim_bills = ClaimBillReview::where('claim_admin_id', $claimadministrator->id)->get();            
-        $claim_auths = ClaimAuthContact::where('claim_admin_id', $claimadministrator->id)->get();
-        $claim_mails = ClaimMailAddress::where('claim_admin_id', $claimadministrator->id)->get();
+        $claim_bills =  $claimadministrator->getClaimReview;
+        $claim_auths =  $claimadministrator->getClaimAuthContact;
+        $claim_mails =  $claimadministrator->getMailAddress;
         if(!empty($claim_mails)){
             foreach($claim_mails as $claim_mail){                
                 $claim_mail_bills = ClaimMailBillTreatmentType::where('claim_mail_id', $claim_mail->id)->get();
@@ -234,7 +262,7 @@ class ClaimAdministratorController extends Controller
             }
         }   
 
-        return view('claimadministrators.edit', compact('claimadministrator', 'claim_bills', 'claim_auths', 'claim_mails', 'company_types', 'bill_treatment_types', 'bill_submission_types'));
+        return view('claimadministrators.create', compact('title','claimadministrator', 'claim_bills', 'claim_auths', 'claim_mails', 'company_types', 'bill_treatment_types', 'bill_submission_types'));
     }
 
     public function update(Request $request, ClaimAdministrator $claimadministrator)
@@ -445,5 +473,39 @@ class ClaimAdministratorController extends Controller
     {
         $company_types = Company_type::where('is_active', 1)->orderBy('name')->get(); 
         return view('masters.companytypes.index', compact('company_types'));
+    }
+    public function storeClaimAdminInfo(Request $request)
+    {
+        // echo "<pre>";
+        // print_r($request->all());exit;
+        $validator = Validator::make($request->all(),[
+            'company_type_id' => 'required', 'name' => 'required', 'payer_id'=>'required',  'website' => 'required', 'description' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return $this->redirectToRoute(redirect()->back(), $validator->errors()->first(), 'error', ["positionClass" => "toast-top-center"]); 
+        } 
+        try
+        {
+            DB::beginTransaction(); 
+            $msg = '';
+             if($request->claimAdminId != null){
+                $msg = 'Claim admin updated successfully';
+                $this->saveUpdateClaimAdministratorDetail($request);
+            }
+            else{
+                $msg = 'Claim admin added successfully';
+                $checkAdmin = ClaimAdministrator::where('name', $request->claimName)->first(); 
+                if($checkAdmin)
+                {
+                    return $this->redirectToRoute('/claimadministrators', 'This claim admin already exist', 'error', ["positionClass" => "toast-top-center"]);
+                } 
+                $this->saveUpdateClaimAdministratorDetail($request);
+            }
+            DB::commit();
+            return $this->redirectToRoute('/claimadministrators', $msg, 'success', ["positionClass" => "toast-top-center"]);
+        }catch(\Exception $e){     
+            DB::rollback();
+            return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]); 
+        }
     }
 }

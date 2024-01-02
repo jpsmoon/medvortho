@@ -6,22 +6,22 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', ' Meraki RCM') }}</title>
-    <link rel="shortcut icon" href="{{ asset('public/new_assets/images/favicon.ico') }}" />
+    <link rel="shortcut icon" href="{{ asset('new_assets/images/favicon.ico') }}" />
         <meta name="viewport" content="width=device-width,initial-scale=1">
      <!-- Styles -->
-        <link rel="stylesheet" href="{{ asset('public/new_assets/vendors/bootstrap/css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('public/new_assets/vendors/jquery-ui/jquery-ui.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('public/new_assets/vendors/jquery-ui/jquery-ui.theme.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('public/new_assets/vendors/simple-line-icons/css/simple-line-icons.css') }}">
-        <link rel="stylesheet" href="{{ asset('public/new_assets/vendors/flags-icon/css/flag-icon.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('public/new_assets/vendors/flag-select/css/flags.css') }}">
+        <link rel="stylesheet" href="{{ asset('new_assets/vendors/bootstrap/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('new_assets/vendors/jquery-ui/jquery-ui.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('new_assets/vendors/jquery-ui/jquery-ui.theme.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('new_assets/vendors/simple-line-icons/css/simple-line-icons.css') }}">
+        <link rel="stylesheet" href="{{ asset('new_assets/vendors/flags-icon/css/flag-icon.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('new_assets/vendors/flag-select/css/flags.css') }}">
 
           <!-- START: Page CSS-->
-          <link rel="stylesheet" href="{{ asset('public/new_assets/vendors/social-button/bootstrap-social.css') }}"/>
+          <link rel="stylesheet" href="{{ asset('new_assets/vendors/social-button/bootstrap-social.css') }}"/>
         <!-- END: Page CSS-->
 
         <!-- START: Custom CSS-->
-        <link rel="stylesheet" href="{{ asset('public/new_assets/css/main.css') }}">
+        <link rel="stylesheet" href="{{ asset('new_assets/css/main.css') }}">
         <!-- END: Custom CSS-->
         <style>
     .body_class{
@@ -146,12 +146,12 @@
 </div>
 
     <!-- START: Template JS-->
-     <script src="{{ asset('public/new_assets/vendors/jquery/jquery-3.3.1.min.js') }}"></script>
-        <script src="{{ asset('public/new_assets/vendors/jquery-ui/jquery-ui.min.js') }}"></script>
-        <script src="{{ asset('public/new_assets/vendors/moment/moment.js') }}"></script>
-        <script src="{{ asset('public/new_assets/vendors/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-        <script src="{{ asset('public/new_assets/vendors/slimscroll/jquery.slimscroll.min.js') }}"></script>
-        <script src="{{ asset('public/new_assets/vendors/flag-select/js/jquery.flagstrap.min.js') }}"></script>
+     <script src="{{ asset('new_assets/vendors/jquery/jquery-3.3.1.min.js') }}"></script>
+        <script src="{{ asset('new_assets/vendors/jquery-ui/jquery-ui.min.js') }}"></script>
+        <script src="{{ asset('new_assets/vendors/moment/moment.js') }}"></script>
+        <script src="{{ asset('new_assets/vendors/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('new_assets/vendors/slimscroll/jquery.slimscroll.min.js') }}"></script>
+        <script src="{{ asset('new_assets/vendors/flag-select/js/jquery.flagstrap.min.js') }}"></script>
         <!-- END: Template JS-->
 
 </body>

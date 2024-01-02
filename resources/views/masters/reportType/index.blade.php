@@ -1,54 +1,60 @@
-@extends('layouts.home-app')
-
-
+@extends('layouts.home-new-app')
 @section('content')
-
-<!-- START: Breadcrumbs-->
-<div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mb-0">Report Type</h4></div>
-
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                    <li class="breadcrumb-item">
-                    @can('CompanyType-create')
-                        <a class="btn btn-primary text-white" id="myBtn"  data-toggle="modal" data-target="#addModal"> Add Report Type </a>
-                    @endcan
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div>
+    <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
-
-
-    @if ($message = Session::get('success'))
-    <div class="row">
-        <div class="col-12 mt-3">
-            <div class="alert alert-success">
-                <p> {{ $message }}</p>
+    
+  <style>
+      .dataTables_length
+        {
+          padding-top: 2%;  
+        }  
+  </style>  
+    
+    @if ($errors->any())
+        <div class="row mt-2 customBox">
+            <div align="center" class="col-12  align-self-center">
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
     @endif
-    @if(Session::has('message'))
-     <div class="row">
-        <div class="col-12 mt-3">
-            <div class="alert alert-success">
-            <p class="alert{{ Session::get('alert-class', 'alert-info') }}">{{Session::get('message') }}</p>
-            </div>
-        </div>
-    </div>
-    @endif
-<div class="row">
-    <div class="col-12 mt-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
+    <div class="row mt-2 mb-2 ">
+        <div class="col-md-12 mt-4">
+            <div class="card row-background customBoxHeight">
+                <!-- START: Breadcrumbs-->
+                <div class="row ">
+                    <div class="col-12  align-self-center">
+                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div class="w-sm-100 mr-auto margin05">
+                                <h2 class="heading">Report Type</h2>
+                            </div>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                            
+                            <li class="breadcrumb-item">
+                            @can('report-type-create')
+                            <a class="btn btn-primary text-white" id="myBtn"  data-toggle="modal" data-target="#addModal"> Add Report Type </a>
+                            @endcan
+                            </li>
+                    
+                        </ol> 
+                        </div>
+                    </div>
+                </div>
+                <!-- END: Breadcrumbs-->
+         <div class="row">
+            <div class="col-12">
+                <div class="card p-1">
+                        <div class="table-responsive">
+                        <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
                         <thead class="thead-dark">
                             <tr class="jsgrid-header-row">
-                                <th scope="col">No</th>
+                                <th scope="col">S.No#</th>
                                 <th scope="col">Code</th>
                                 <th scope="col">Name</th>  
                                 <th scope="col">Description</th>  
@@ -68,12 +74,12 @@
                                         <td>{{ ($reportType->is_active == 1) ? 'Active' : 'Block' }}</td>
                                         <td>
                                             @if($reportType->is_active == 1)
-                                            @can('CompanyType-edit')
+                                            @can('report-type-edit')
                                                 <a   data-toggle="modal" data-target="#editModalReportType{{$reportType->id}}">
                                                     <i  class="icon-pencil  showPointer"  /></i>
                                                 </a>
                                             @endcan 
-                                            @can('CompanyType-delete')
+                                            @can('report-type-edit')
                                              <a data-id="{{$reportType->id}}" onclick="deleteReportType({{$reportType->id}}, {{$reportType->id, $reportType->provider_id}})">
                                                     <i  class="icon-trash showPointer"/></i>
                                                 </a>
@@ -99,7 +105,7 @@
                                                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                                                     <div class="form-group">
                                                                         <strong>Name:</strong>
-                                                                        <input value="{{ $reportType->report_name }}" type="text" name="name" id="name" class="form-control" placeholder="Name" data-validation-event="change" data-validation="required" data-validation-error-msg="">
+                                                                        <input value="{{ $reportType->report_name }}" type="text" name="name" id="nameEdit" class="form-control" placeholder="Name" data-validation-event="change" data-validation="required" data-validation-error-msg="">
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-xs-6 col-sm-6 col-md-6">
@@ -111,14 +117,15 @@
                                                                 <div class="col-xs-12 col-sm-12 col-md-12">
                                                                     <div class="form-group">
                                                                         <strong>Description:</strong>
-                                                                        <input type="text" value="{{ $reportType->report_name }}" name="description" id="description" class="form-control" placeholder="Description" data-validation-event="change" data-validation="required" data-validation-error-msg="">
+                                                                        <input type="text" value="{{ $reportType->description }}" name="description" id="description" class="form-control" placeholder="Description" data-validation-event="change" data-validation="required" data-validation-error-msg="">
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                                             <button type="submit" class="btn btn-primary" >Update</button>
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            
                                                         </div>
                                                     </div>
                                                 </form>
@@ -133,13 +140,13 @@
                                     @endif
                             </tbody>
                     </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div> 
-
-
 <!-- Modal content -->
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -182,9 +189,10 @@
         </form>
     </div>
 </div>
-<!-- Modal content --> 
-
+<!-- Modal content -->             
+            
 @endsection
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script> 
   function deleteReportType(id, provider_id) { 
@@ -223,3 +231,4 @@
         });
     }
 </script>
+

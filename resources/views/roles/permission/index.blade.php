@@ -1,29 +1,54 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
-
-<!-- START: Breadcrumbs-->
-    <div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mt-3">Permission Management</h4>
-                 
+    <!-- START: Breadcrumbs-->
+    <!-- END: Breadcrumbs-->
+  <style>
+      .dataTables_length
+        {
+          padding-top: 2%;  
+        }  
+  </style>  
+    
+    @if ($errors->any())
+        <div class="row mt-2 customBox">
+            <div align="center" class="col-12  align-self-center">
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-                
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                    <li class="breadcrumb-item">
-                         <a class="btn btn-primary" href="javascript:void(0)" data-toggle="modal" data-target="#permissionModal"> Create New Permission</a> 
-                    </li>
-                </ol>
             </div>
         </div>
-    </div>
-    <!-- END: Breadcrumbs--> 
-    <div class="row">
-            <div class="col-12 mt-3">
+    @endif
+    <div class="row mt-2 ">
+        <div class="col-md-12 mt-4">
+            <div class="card row-background customBoxHeight">
+                <!-- START: Breadcrumbs-->
+                <div class="row ">
+                    <div class="col-12  align-self-center">
+                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div class="w-sm-100 mr-auto margin05">
+                                <h2 class="heading">Permission Management</h2>
+                            </div>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                            <li class="breadcrumb-item">
+                                <a class="btn btn-primary" href="javascript:void(0)" data-toggle="modal" data-target="#permissionModal"> Create New Permission</a> 
+                            </li>
+                        </ol> 
+                        </div>
+                    </div>
+                </div>
+                <!-- END: Breadcrumbs-->
+                <div class="card-content">
+                    <div class="col-md-12 col-12">
+                        <div class="row">
+            <div class="col-12">
                 <div class="card">
-                    <div class="card-body">
                         <div class="table-responsive">
-                            <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
+                        <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col"> S.No#</th>
@@ -102,11 +127,17 @@
                                 </tbody>
                             </table>
                         </div>
+                </div>
+            </div>
+        </div>
                     </div>
                 </div>
             </div>
-        </div> 
-        <div class="modal fade" id="permissionModal" tabindex="-1" role="dialog" aria-labelledby="permissionLabel" aria-hidden="true">
+            <div class="col-1 mt-4"></div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="permissionModal" tabindex="-1" role="dialog" aria-labelledby="permissionLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -148,51 +179,10 @@
                 </div>
             </div>
         </div>
-@endsection  
+        
+@endsection
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
-<script>
-function resetFormValue(frmId){
-    $('#'+frmId).trigger("reset");
-}
-function deletePermission(id) { 
-    swal.fire({
-        title: 'Are you sure you want to delete?',
-        text: "You won't be able to revert this!",
-        showCancelButton: true,
-        confirmButtonColor: '#3085D6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, Delete it!',
-        customClass: {
-            confirmButton: "btn btn-primary",
-            cancelButton: "btn btn-danger",
-            //popup: 'swal-wide',
-        }
-    }).then((result) => { // Use .then() to handle the user's response
-        if (result.isConfirmed) { // Only proceed if the user clicked the confirm button
-            let _url     = `/delete/permission/${id}`;
-            $.ajax({
-                url: _url,
-                type: 'post',
-                data: {
-                    _token: token
-                },
-                success: function(response) {
-                    console.log('#response',response);
-                    swal.fire({
-                        title: 'Permission has been deleted', 
-                        customClass: {
-                            successButton: "btn btn-primary",
-                            popup: 'swal-wide',
-                        }
-                    });
-                    location.reload();
-                },
-                error: function(response) {
-                    swal.fire(response.responseJSON.message, '', 'error');
-                }
-            });
-        }
-    });
-}
-</script>
+<script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
+<script src="{{ asset('js/controller/master_for_all.js') }}"></script>
+<script></script>

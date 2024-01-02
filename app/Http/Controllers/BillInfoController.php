@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{ProviderBillingTemplateServiceItem, ProviderBillingTemplate, Status, AllDocument, State, InjuryContact, MasterDataLog, Service_code, ReportType, BillingProviderCharge, BillingProviderChargeProcedureCode,
+use App\Models\{SentBill, ProviderBillingTemplateServiceItem, ProviderBillingTemplate, Status, AllDocument, State, InjuryContact, MasterDataLog, Service_code, ReportType, BillingProviderCharge, BillingProviderChargeProcedureCode,
   BillingProvider,BillModifier,ClaimAdministrator,ClaimStatus,Country,Health_provider,InjuryBill,InjuryBillService,InjuryDiagnosis,
   MasterPlaceOfService,MedicalProvider,ModifierCode,Patient,PatientAppointment,Patient_injury,ProcedureCode, RenderinProvider, BillReferingOrderProvider, Diagnosis_code
   };
@@ -13,6 +13,8 @@ use App\Models\{ProviderBillingTemplateServiceItem, ProviderBillingTemplate, Sta
   use DB;
   use Illuminate\Support\Facades\Auth;
   use PDF;
+  use Maatwebsite\Excel\Facades\Excel;
+  use App\Exports\BillSendDownloadPDFExport;
 
 class BillInfoController extends Controller
 {
@@ -174,4 +176,20 @@ class BillInfoController extends Controller
       $billServices = []; $billName = $request->statusType;
       return view('patients.injury.bills.index', compact(['injuryBills', 'billServices', 'billName']));
     }
+  public function billSentProcess(Request $request) {
+    echo "Check form action for 1 or 2 radio";exit;
+    //SentBill
+    try {
+      DB::beginTransaction();
+        $this->storeSentBillDetail($request, null, null);
+        $this->addBillLogs(null, $request->bill_id, 'Bill Sent Information', 'BILL_INFO', null);
+      DB::commit();
+      $url =  'view/patient/injury/bill/info/' .  $request->bill_id; 
+      return $this->redirectToRoute($url, 'Bill sent successfully', 'success', ["positionClass" => "toast-top-center"]);
+    } catch (\Exception $e) {
+      DB::rollback();   
+      return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
+    }
+  }
+  
 }

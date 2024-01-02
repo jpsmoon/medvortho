@@ -1,66 +1,124 @@
-<!-- @extends('layouts.home-app')-->
+ @extends('layouts.home-new-app')
+ @section('content')
 <style>
-    .provider_heading_type {
-        color: #858585;
-        font-size: 14px;
-        font-weight: 300;
-        margin: -9px 0 10px;
-    }
+.Letter table tr td label {
+    border-bottom: 1px solid #1d1b1b;
+    width:78%;
+    padding: 4px 6px;
+}
 
-    .provider_heading {
-        align-items: center;
-        color: #3a3a3a;
-        display: flex;
-        font-size: 18px;
-        font-weight: 600;
-        line-height: normal;
-        margin: 0;
-        padding: 11px 0 9px;
+.Letter table tr td label.w80{
+    width:80%!important;
+}
+.Letter table tr td label.w90{
+    width:90%!important;
+}
+.Letter table tr td label.w30{
+    width:30%!important;
+}
+.Letter table tr td input[type="text"]{
+     border: 1px solid #1d1b1b;
+     padding:5px 6px;
+     width:85%;
+}
+.Letter table tr td span.title{
+    width:15%;
+    float:left;
+    font-family: 'Figtree', sans-serif!important;
+}
+.Letter table tr td label.bordernone{
+    border-bottom: 0px solid #1d1b1b;
+}
+ #full-view{
+        width:85%;
     }
+    
+ @media screen and (max-width:1620px) {
+    .Letter table tr td label.w90 {
+    width: 70%!important;
+}
+.Letter table tr td span.title {
+    width: 23%!important;
+}
+.Letter table tr td input[type="text"] {
+    width:77%!important;
+}  
+ }
 
-    .showImgaeInBack {
-        background-image: url('/new_assets/app-assets/images/form-1500.jpg');
-        background-size: auto 100%;
-        background-repeat: no-repeat;
-        background-position: left top;
-    }
+ @media print {
+      html, body {
+        page-break-before: avoid;
+        page-break-after: avoid;
+        background-color: #fff!important;
+       display: flex;
+       justify-content: center;
+       margin:0px;
+       padding:0px;
+      }
+      @page {
+        margin:0.5cm 0cm;
+        size: letter landscape;
+      }
+      .breakdown{
+          margin-top:100px;
+          page-break-before: always ;
+      }
+      #full-view{
+        width:100%!important;
+        flex: 0 0 100%;
+        max-width: 100%;
+       }
+       .p-2{
+           padding:0rem!important;
+       }
+        .mainSec {
+            padding: 0 0px!important;
+            width:100%!important;
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+        .print-none, footer{
+          display:none!important;
+        }
+       
+  .row-background {
+    border:0px solid rgba(33,40,50,0)!important;
+    background-color: #fff;
+}
+.card {
+    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,.0)!important;
+    box-shadow: 0 3px 6px rgba(0,0,0,.0)!important;
+}
+}
 
-    #loadingForm {
-        height: 1492px;
-        width: 1153px;
-    }
-
-    #tdcontent td {
-        font: Arial, Helvetica, sans-serif;
-        font-size: 18px
-    }
 </style>
 
-@section('content')
-    <div class="row">
-        <div class="col-1 mt-4"></div>
-        <div class="col-10 mt-4">
 
+
+  <div class="row mx-auto mt-2 mb-2">
+         <div class="col-10 mx-auto" id="full-view">
             <div class="card row-background">
                 <!-- START: Breadcrumbs-->
                 <div class="row">
-                    <div class="col-12  align-self-center">
-                        <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                   <div class="col-12  align-self-center print-none">
+                        <div class="sub-header mt-0 py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
                             <div style="padding-top:10px" class="w-sm-100 mr-auto">
                                 <h2 class="heading"> Show Referring and Ordering Providers</h2>
                             </div>
+                            @if($pInjuries)
                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                                 <li class="breadcrumb-item">
                                     <a class="btn btn-primary" href="{{ url('/injury/view', $pInjuries->id) }}"> Back</a>
                                 </li>
                             </ol>
+                           @endIf
                         </div>
                     </div>
                 </div>
                 <!-- END: Breadcrumbs-->
 
-                <div style="border="1" bordercolor="#000000"" class="demand" align="justify" id="exportContent">
-                    <div align="center">
+                <div class="demand Letter p-2" align="justify" id="exportContent">
+                    <div class="text-center">
 
                         <span style="font-size:16px; font-family:Arial Black; font-weight:bold";> PRIMARY TREATING
                             PHYSICIAN'S PROGRESS REPORT ADDENDUM </span><br>
@@ -68,10 +126,9 @@
                                 report, please refer to the last report submitted </i></span><br><br>
                     </div>
                     <div class="row">
-                        <div class="col-2 mt-4"></div>
-                        <div class="col-8 mt-4">
+                        <div class="col-10 mt-4 mx-auto" id="full-view">
 
-                            <div class="row">
+                            <div class="row print-none">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
                                     <div class="col-md-8 col-sm-8 col-xs-8">&nbsp;</div>
                                     <div class="col-md-4 col-sm-4 col-xs-4">
@@ -97,7 +154,7 @@
                                                             90670-6043</b></font><br>
                                                     <font face="Century Gothic";>(877)285-2686-PHONE, (877) 318-9686-FAX
                                                     </font>
-                                                    <div style="margin-top:-16px;">
+                                                    <div style="margin-top:"-10px">
                                                         ___________________________________________________________________________________________________________________________
                                                     </div><br>
                                                     <font face="Century Gothic"; size="+2"><b><u>CORRECTED BILLING/VOID
@@ -198,21 +255,20 @@
                                             <input type="checkbox"> Prescription for DME<br>
                                             <input type="checkbox"> Delivery Ticket<br>
                                             <input type="checkbox"> Purchase Invoice for Miscellaneous HCPCS E1399
-                                        </p><br>
-                                        <hr style="border-bottom:#000 groove; margin: 15px -120px;">
-                                        </hr>
-
-                                        <div class="row">
+                                        </p><br><br>
+                                        <hr style="border-bottom:#000 groove; margin: 15px -100px;" class="print-none">
+                                        
+                                        <div class="row breakdown mt-2">
                                             <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <div align="center"><br>
+                                                <div align="center">
                                                     <font face="Century Gothic" size="+2";> Progressive Orthopedic
                                                         Solutions, LLC. </font><br>
                                                     <font face="Century Gothic";><b>PO BOX 2906, SANTA FE SPRINGS CA
                                                             90670-6043</b></font><br>
                                                     <font face="Century Gothic";>(877)285-2686-PHONE, (877) 318-9686-FAX
                                                     </font>
-                                                    <div style="margin-top:-16px;">
-                                                        ___________________________________________________________________________________________________________________________
+                                                    <div class="col-md-12">
+                                                       <hr style="margin-top:10px; margin-bottom:10px; border-color:#000 !important"; width="100%">
                                                     </div><br>
 
                                                     <font face="Century Gothic";><b>PROOF OF SERVICE (Second Submission)<br>
@@ -243,7 +299,7 @@
                                                         mailing contained in this affidavit.<br><br>
 
                                                         <b>Sincerely,<br>
-                                                            <img src="../images/Apathak.jpg"><br>
+                                                            <img src="{{ asset('public/new_assets/app-assets/images/Apathak.jpg') }}"><br>
                                                             Austin Pathak </b>
                                                     </p><br><br>
 
@@ -255,12 +311,10 @@
                             </div>
 
                         </div>
-                        <div class="col-2 mt-4"></div>
                     </div>
                 </div>
 
             </div>
         </div>
-        <div class="col-1 mt-4"></div>
     </div>
 @endsection

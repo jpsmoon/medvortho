@@ -23,7 +23,13 @@ class CreateInjuryBillServiceTable extends Migration
             $table->string('bill_diag_codes1')->nullable();
             $table->string('bill_diag_codes2')->nullable();
             $table->string('bill_diag_codes3')->nullable();
-            $table->string('bill_diag_code4')->nullable();
+            $table->string('bill_diag_code4')->nullable(); 
+            $table->string('expected_fee_amt')->nullable();
+            $table->string('calculated_br_amt')->nullable();
+            $table->string('original_submission_amt')->nullable();
+            $table->string('bill_payment_total_amt')->nullable();
+            $table->string('due_balace_amt')->nullable();
+            $table->string('expected_fee_percent')->nullable();
             $table->timestamps();
         });
     }

@@ -17,10 +17,13 @@ function formatRepoSelection(val) {
 }
 //
 $(document).ready(function () {
+        checkICDCode(injuryId);
+
     $('#bill_dos').bind('change',function(selected,evnt){
     // someFunction();
-     setICDCheckBox($(this).val());
-});
+     //setICDCheckBox($(this).val());
+        checkICDCode(injuryId);
+    });
     $('#bill_dos').datepicker({
             dateFormat: 'mm/dd/yy',
             changeMonth: true, changeYear: true,
@@ -422,20 +425,7 @@ function addSelect2InAddedFeilds(){
         })
     } 
  }
- function setICDCheckBox(selectedDate){
-    console.log('#selectedDate',selectedDate);
-    let previousDate =  '10/01/2015';
-    if(new Date(selectedDate)  <= new Date(previousDate)){
-        //CurrentDate is more than SelectedDate
-        console.log('if condition');
-        $("#icdId").text('ICD-9');
-        $("input[name=diagnosis_code_type][value=" + '9' + "]").prop('checked', true);
-    } else{
-        $("#icdId").text('ICD-10');
-        $("input[name=diagnosis_code_type][value=" + '10' + "]").prop('checked', true);
-    }
-    setSelect2ForFIlter( null, null);
-}
+ 
 // for select2 drop down code start here
 function setSelect2ForFIlter(tagId= null, newArr = null){
     if(tagId != null){
@@ -519,3 +509,48 @@ function setSelect2ForFIlter(tagId= null, newArr = null){
     }
 }
 // for select2 drop down code end here
+function setICDCheckBox(selectedDate){
+    console.log('#selectedDate',selectedDate);
+    let previousDate =  '10/01/2015';
+    if(new Date(selectedDate)  <= new Date(previousDate)){
+        //CurrentDate is more than SelectedDate
+        console.log('if condition');
+        $("#icdId").text('ICD-9');
+        $("input[name=diagnosis_code_type][value=" + '9' + "]").prop('checked', true);
+    } else{
+        $("#icdId").text('ICD-10');
+        $("input[name=diagnosis_code_type][value=" + '10' + "]").prop('checked', true);
+    }
+    setSelect2ForFIlter( null, null);
+}
+function checkICDCode(injuryId){
+    console.log('#injuryId', injuryId);
+    var dos = $("#bill_dos").val();
+     $.ajax({
+        url: '/checkICDForBill',
+        type: 'POST',
+        data: { _token: token,  injuryId:injuryId, dos : dos },
+        success: function(response) {
+            console.log('#response', response['successStatus']);
+            if(response['errorStatus'] == null){
+                if(response['icdCode'] == 10){
+                    $("#icdId").text('ICD-10');
+                    $("input[name=diagnosis_code_type][value=" + '10' + "]").prop('checked', true);
+                }
+                else{
+                    $("#icdId").text('ICD-9');
+                    $("input[name=diagnosis_code_type][value=" + '9' + "]").prop('checked', true);
+                }
+            } 
+            else{
+                //$("#icdId").attr("data-validation","required");
+                //$("#bill_dos").val(" ");
+                $("#bill_dos").addClass("input-icons has-error");
+                $("#showInjuryDateError").css("display", "block");
+            }
+        },
+        error: function(response) {
+            alert(response.responseJSON.message);
+        }
+    });
+}

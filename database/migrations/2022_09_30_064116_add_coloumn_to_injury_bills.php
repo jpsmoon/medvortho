@@ -14,11 +14,15 @@ class AddColoumnToInjuryBills extends Migration
     public function up()
     {
         Schema::table('injury_bills', function (Blueprint $table) {
-            //
             $table->string('dos_end')->nullable();
             $table->string('bill_provider_name')->nullable();
-            $table->integer('task_status', 11)->nullable();
-            $table->integer('bill_status', 11)->nullable();
+            $table->integer('appointment_id')->nullable();
+            $table->integer('template_id')->nullable();
+            $table->integer('bill_stage')->nullable();
+            $table->integer('bill_status')->nullable();
+            $table->integer('task_status')->nullable();
+            $table->integer('bill_provider_write_of_reason')->nullable();
+            $table->integer('write_of_reason_description')->nullable();
         });
     }
 
@@ -33,8 +37,6 @@ class AddColoumnToInjuryBills extends Migration
             //
             $table->string('dos_end')->nullable();
             $table->string('bill_provider_name')->nullable();
-            $table->integer('task_status', 11)->nullable();
-            $table->integer('bill_status', 11)->nullable();
         });
     }
 }

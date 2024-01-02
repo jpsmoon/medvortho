@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
 <style>
 #sig-canvas {
@@ -26,12 +26,12 @@
     @endif
     <div class="row">
         <div class="col-1 mt-4"></div>
-        <div class="col-10 mt-4">
+        <div class="col-12 mt-4">
             <div class="card row-background" style="min-height: 565px;">
                 <!-- START: Breadcrumbs-->
                 <div class="row">
                     <div class="col-12  align-self-center">
-                        <div class="sub-header mt-3 py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
+                        <div class="sub-header mt-4 py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
                             <div style="padding-top:10px" class="w-sm-100 mr-auto">
                                 <h2 class="heading"> {{$title}} </h2>
                             </div>
@@ -168,7 +168,7 @@
                             </div>
                             
                             
-                            <div class="col-md-8 border-bottom2">
+                            <div class="col-md-12 border-bottom2">
                                 <div class="form-row col-md-12">
                                     <div class="form-group">
                                         <label for="taxonomy_code">Signature (PNG format) </label>
@@ -181,16 +181,13 @@
                                             </span>
                                         @endif
                                     </div>
-                                    <div class="col-md-2 title" style="cursor: pointer; pointer: cursor; " data-toggle="modal" data-target="#canvasModal"> Or Add signature  </div>
+                                    <div class="col-md-2 title" style="cursor: pointer; pointer: cursor; padding-top:30px; padding-left:10px;" data-toggle="modal" data-target="#canvasModal"> Or Add signature  </div>
                                 </div>
                             </div>
-                            <div class="col-md-8 border-bottom2">
-                            <input type="hidden" name="dataUrlVal" id="dataUrlVal" value="">
-                            <img src="" id="showSignture">
-                             </div>
+                            
                             <div class="col-md-12 border-bottom2">
                                 <div class="form-row col-md-12">
-                                    <div class="form-row col-md-10 pt-4">
+                                    <div class="form-row col-md-10 pt-0">
                                         <div class="form-group col-md-4">
                                             <button type="submit" style="min-width: 120px" class="btn btn-primary ladda-button">
                                                 <span class="ladda-label">Add</span></button>

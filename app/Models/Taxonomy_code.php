@@ -9,5 +9,5 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Taxonomy_code extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = [ 'name', 'code' ];
+    protected $fillable = [ 'name', 'code','is_active' ];
 }

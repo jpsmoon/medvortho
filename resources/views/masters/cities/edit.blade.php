@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
 <!-- START: Breadcrumbs-->
 <div class="row ">

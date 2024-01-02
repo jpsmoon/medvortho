@@ -3,10 +3,13 @@ namespace App\Traits;
 
 use App\Models\Patient;
 use DateTime;
-use App\Models\{BillingProviderHoliday, BillingProviderRecurrence, AppointmentReason, PatientAppointment, ZipCityState, ProviderBillingTemplateServiceItem, ProviderBillingTemplate }; 
+use App\Models\{AllDocument, BillingProviderHoliday, BillingProviderRecurrence, AppointmentReason, PatientAppointment, ZipCityState, ProviderBillingTemplateServiceItem, ProviderBillingTemplate }; 
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Str;
+use Config;
+use File;
 
 trait PatientTrait
 {
@@ -319,5 +322,37 @@ trait PatientTrait
                 $newHoliday->description = $request->description;
                 $newHoliday->save();  
         } 
+    }
+    public function storeBillServicePrecedureDocument($request) {
+        
+        // echo "<pre>";
+        // print_r($request->all());exit;
+        if($request->file('billDoc')){
+            $file                = $request->file('billDoc');
+            $filename2           = Str::random(12);
+            $fileExt             = $file->getClientOriginalExtension();
+            $injury_document     = Config::get('global_variables');
+            $destinationPath     = public_path('injury_document');
+            $filename2           = $filename2 . '.' . $fileExt;
+            $document_path       = $filename2;
+            $file->move($destinationPath, $filename2);
+        }
+        if(isset($request->fileName)){
+            $filePathName = $destinationPath."/".$request->fileName;
+            if (File::exists($filePathName)) {
+                File::delete($filePathName);
+            }
+        }
+        $injuryDocumentId1 = new AllDocument();
+        $injuryDocumentId1->injury_document	                = $document_path;
+        $injuryDocumentId1->doc_type	                    =  'Bill';
+        $injuryDocumentId1->injury_id	                    = $request->billId;
+        $injuryDocumentId1->bill_service_procedure_id	    = $request->billServiceProcedure;
+        $injuryDocumentId1->is_new_document	                = 1;
+        $injuryDocumentId1->is_sbr_document	                = 1; 
+        $injuryDocumentId1->is_active	                    =  1;
+        $injuryDocumentId1->added_by                        = Auth::user()->id;
+        $injuryDocumentId1->save(); 
+        
     }
 }

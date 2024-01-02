@@ -1,51 +1,57 @@
-@extends('layouts.home-app')
-
-
+@extends('layouts.home-new-app')
 @section('content')
-
-<!-- START: Breadcrumbs-->
-<div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mb-0">Holidays</h4></div>
-
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                    <li class="breadcrumb-item">
-                    @can('CompanyType-create')
-                        <a class="btn btn-primary text-white" id="myBtn"  data-toggle="modal" data-target="#addModal"> Add Holiday </a>
-                    @endcan
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div>
+    <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
-
-
-    @if ($message = Session::get('success'))
-    <div class="row">
-        <div class="col-12 mt-3">
-            <div class="alert alert-success">
-                <p> {{ $message }}</p>
+    
+  <style>
+      .dataTables_length
+        {
+          padding-top: 2%;  
+        }  
+  </style>  
+    
+    @if ($errors->any())
+        <div class="row mt-2 customBox">
+            <div align="center" class="col-12  align-self-center">
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
     @endif
-    @if(Session::has('message'))
-     <div class="row">
-        <div class="col-12 mt-3">
-            <div class="alert alert-success">
-            <p class="alert{{ Session::get('alert-class', 'alert-info') }}">{{Session::get('message') }}</p>
-            </div>
-        </div>
-    </div>
-    @endif
-<div class="row">
-    <div class="col-12 mt-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
+    <div class="row mt-2 ">
+        <div class="col-md-12 mt-4">
+            <div class="card row-background customBoxHeight">
+                <!-- START: Breadcrumbs-->
+                <div class="row ">
+                    <div class="col-12  align-self-center">
+                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div class="w-sm-100 mr-auto margin05">
+                                <h2 class="heading">Holidays List 11</h2>
+                            </div>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                            <li class="breadcrumb-item">
+                                @can('state-create')
+                                <a class="btn btn-primary text-white" id="myBtn"  data-toggle="modal" data-target="#addModal"> Add Holiday</a>
+                                @endcan
+                            </li>
+                        </ol> 
+                        </div>
+                    </div>
+                </div>
+                <!-- END: Breadcrumbs-->
+                <div class="card-content">
+                    <div class="col-md-12 col-12">
+                        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                        <div class="table-responsive">
+                        <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
                         <thead class="thead-dark">
                             <tr class="jsgrid-header-row">
                                 <th scope="col">No</th>
@@ -70,12 +76,12 @@
                                         <td>{{ $holiday->is_active ? 'Active' : 'Block' }}</td>
                                         <td>
                                             @if($holiday->is_active == 1)
-                                            @can('CompanyType-edit')
+                                            @can('holiday-edit')
                                                 <a   data-toggle="modal" data-target="#editModalCompanyType{{$holiday->id}}">
-                                                    <i  class="icon-pencil  showPointer"  /></i>
+                                                    <i  class="icon-pencil showPointer"/></i>
                                                 </a>
                                             @endcan 
-                                            @can('CompanyType-delete')
+                                            @can('holiday-delete')
                                              <a data-id="{{$holiday->id}}" onclick="deleteHoliday({{$holiday->id}}, {{$holiday->id, $holiday->provider_id}})">
                                                     <i  class="icon-trash showPointer"/></i>
                                                 </a>
@@ -151,19 +157,23 @@
                                     @endforeach
                                     @else
                                     <tr>
-                                            <td colspan="9">No Records Found.</td>
+                                    <td colspan="9">No Records Found.</td>
                                     </tr>
                                     @endif
                             </tbody>
                     </table>
+                        </div>
                 </div>
             </div>
         </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
     </div>
-</div> 
-
-
-<!-- Modal content -->
+    
+    <!-- Modal content -->
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <form action="{{ url('/save/holiday') }}"  enctype="multipart/form-data" class="form-horizontal ladda-form'" method="POST">
@@ -194,7 +204,7 @@
                         <div class="col-xs-6 col-sm-6 col-md-6">
                             <div class="form-group">
                                 <strong>Date:</strong>
-                                <input type="text" name="holiday_date" id="holiday_date" class="form-control" placeholder="Holiday Date" data-validation-event="change" data-validation="required" data-validation-error-msg="">
+                                <input type="text" name="holiday_date" id="holiday_dateId" class="form-control" placeholder="Holiday Date" data-validation-event="change" data-validation="required" data-mask="99/99/9999" data-validation-error-msg="">
                             </div>
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6">
@@ -227,16 +237,21 @@
     </div>
 </div>
 <!-- Modal content --> 
-
 @endsection
+
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+<script src="{{ asset('public/js/bootstrap-inputmask.js') }}"></script>
+<script src="{{ asset('public/js/controller/master_for_all.js') }}"></script>
 <script>
-  $(document).ready(function() { 
-    $('#holiday_date').datepicker({
-        dateFormat: 'mm/dd/yy',
-        changeMonth: true, changeYear: true,
-    })
-  })
+    $( document ).ready(function() {
+        $('#holiday_dateId').datepicker({ dateFormat: 'mm/dd/yy', maxDate: new Date(), changeMonth: true, changeYear: true, });
+    });
+</script>
+
+
+<script>
+ 
   function deleteHoliday(id, provider_id) { 
         swal.fire({
             title: 'Are you sure you want to delete?',
@@ -273,3 +288,4 @@
         });
     }
 </script>
+

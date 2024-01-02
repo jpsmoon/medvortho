@@ -14,10 +14,10 @@ class CompanyTypeController extends Controller
 {
     function __construct()
     {
-         $this->middleware('permission:CompanyType-list|CompanyType-create|CompanyType-edit|CompanyType-delete', ['only' => ['index','show']]);
-         $this->middleware('permission:CompanyType-create', ['only' => ['create','store']]);
-         $this->middleware('permission:CompanyType-edit', ['only' => ['edit','update']]);
-         $this->middleware('permission:CompanyType-delete', ['only' => ['destroy']]);
+         $this->middleware('permission:company-type-list|company-type-create|company-type-edit|company-type-delete', ['only' => ['index','show']]);
+         $this->middleware('permission:company-type-create', ['only' => ['create','store']]);
+         $this->middleware('permission:company-type-edit', ['only' => ['edit','update']]);
+         $this->middleware('permission:company-type-delete', ['only' => ['destroy']]);
     }
     public function index()
     {

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTaskStatusesTable extends Migration
+class CreateTasksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,6 +16,8 @@ class CreateTaskStatusesTable extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('category_id');
+            $table->integer('provider_id')->nullable();
+            $table->integer('status_id')->nullable();
             $table->string('task_name', 55);
             $table->string('slug', 255);
             $table->mediumText('description');

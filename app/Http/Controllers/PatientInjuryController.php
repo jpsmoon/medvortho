@@ -391,20 +391,18 @@ class PatientInjuryController extends Controller
     public function savePatientInjury(Request $request)
     {
        try {
+        // echo "<pre>";
+        // print_r($request->all());exit;
             DB::beginTransaction();
-            $this->storePatientinjuryInfo($request);
-            // echo "<pre>";
-            // print_r($result);exit;
+            $this->storePatientinjuryInfo($request); 
             DB::commit();
-            $toastr_title = trans('messages.toastr_success');            
+            $toastr_title = "Injury Added succesffully";  
+            $url = 'patients/view/'.$request->patient_id;            
             if(isset($request->injuryId)){
-                Toastr::success("Injury Updated succesffully", '', ["positionClass" => "toast-top-center"]);
-                return redirect('/injury/view/'.$request->injuryId)->with('success','Patient Injury Data updated successfully');
-            }
-            else{
-                Toastr::success("Injury Added succesffully", '', ["positionClass" => "toast-top-center"]);
-                return redirect('patients/view/'.$request->patient_id)->with('success','Patient Injury Data inserted successfully');
-            }
+                $toastr_title = "Injury Updated succesffully";    
+                $url = '/edit/patients/injury/'.$request->injuryId;     
+            } 
+            return $this->redirectToRoute($url, $toastr_title, 'success', ["positionClass" => "toast-top-center"]);
         }
         catch (\Exception $e) {
             DB::rollback();

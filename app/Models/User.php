@@ -46,6 +46,6 @@ class User extends Authenticatable
     ];
     public function getUserBillingProviders()
      {
-         return $this->hasMany(UserBillingProvider::class,  'user_id', 'id');
+         return $this->hasMany(UserBillingProvider::class,  'user_id', 'id')->where('is_active', 1);
      }
 }

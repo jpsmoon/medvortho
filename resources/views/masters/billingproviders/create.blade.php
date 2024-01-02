@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
 <style>
 .ms-options-wrap > .ms-options > ul label {
@@ -20,9 +20,9 @@
 <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
     @if ($errors->any())
-    <div class="row ">
+    <div class="row">
         <div class="col-1 mt-4"></div>
-        <div class="col-10  align-self-center">
+        <div class="col-12  align-self-center">
             <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
                 <div class="w-sm-100 mr-auto"><h4 class="mb-0">Add Billing Provider</h4></div>
 
@@ -48,12 +48,12 @@
     @endif
     <div class="row">
         <div class="col-1 mt-4"></div>
-        <div class="col-10 mt-4">
+        <div class="col-12 mt-4">
                 <div class="card row-background">
             <!-- START: Breadcrumbs-->
     <div class="row ">
         <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+            <div class="sub-header mt-4 py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
                 <div style="padding-top:10px" class="w-sm-100 mr-auto"><h2 class="heading">Add Billing Provider</h2></div>
                 <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                     <li style="padding-bottom:10px" class="breadcrumb-item">
@@ -75,7 +75,7 @@
                                     <label for=""> Injury State <span class="required">*</span> </label>
                                     </div>
                                     <div class="form-group col-md-2">
-                                    <select data-validation-event="change" data-validation="required"  data-validation-error-msg="" name="injury_state_id" id="injury_state_id" class="form-control">
+                                    <select data-validation-event="change" data-validation="required" data-validation-error-msg="" name="injury_state_id" id="injury_state_id" class="form-control">
                                         <option value="" class="option">Select</option>
                                         @foreach ($states as $state)
                                         <option value="{{$state["state_name"]}}" {{($state["state_name"] == 'California') ? 'selected' : ''}}> {{$state["state_name"]}}</option>
@@ -88,14 +88,13 @@
                                     @endif
                                 </div>
                             </div>
-
                             <div class="form-row d-none col-12 border-bottom2" id="showBillingTypeDiv">
                                 <div class="form-group col-md-2 title">
                                 <label for=""> Bill Type <span class="required">* </span> </label>
                                 </div>
                                 <div class="form-group col-md-10">
                                     <div class="custom-control custom-radio custom-control-inline">
-                                        <input data-validation-event="change" data-validation="required"  data-validation-error-msg="" onclick="showOtherInputsFOrBillType(this.value);"
+                                        <input checked data-validation-event="change" data-validation="required"  data-validation-error-msg="" onclick="showOtherInputsFOrBillType(this.value);"
                                         class="custom-control-input" type="radio" name="bill_type" id="flexRadioDefault1" value="Professional" />
                                         <label class="custom-control-label"  for="flexRadioDefault1"> Professional </label>
                                     </div>
@@ -149,7 +148,7 @@
                                         </div>
                                             <div class="form-group col-md-2">
                                                 <label for=""> Tax ID <span class="required">* </span> </label>
-                                                <input type="text" name="professional_tax_id" class="form-control " data-mask="99-9999999">
+                                                <input type="text" id="professional_tax_id" name="professional_tax_id" class="form-control" data-validation-event="onkeypress" data-validation="custom" data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit Tax ID ">
                                                 @if($errors->has('professional_tax_id'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('professional_tax_id') }}</strong>
@@ -182,7 +181,7 @@
                                                 </div>
                                                 <div class="form-group col-md-2">
                                                     <label for=""> Telephone </label>
-                                                    <input type="text" name="professional_telephone" class="form-control" data-mask="(999) 999-9999">
+                                                    <input type="text" name="professional_telephone" class="form-control" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{10}$" maxLength="10" data-validation-error-msg="Please Enter the 10 Digit Telephone Number">
                                                     @if($errors->has('professional_telephone'))
                                                     <span class="invalid-feedback" style="display:block" role="alert">
                                                         <strong>{{ $errors->first('professional_telephone') }}</strong>
@@ -244,7 +243,7 @@
 
                                                 <div class="form-group col-md-2">
                                                     <label for="">Zip Code </label>
-                                                    <input type="text" name="professional_zip" class="form-control">
+                                                    <input type="text" name="professional_zip" class="form-control"  data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit ZIP Code No.">
                                                     @if($errors->has('professional_zip'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('professional_zip') }}</strong>
@@ -259,7 +258,7 @@
                                         </div>
                                             <div class="form-group col-md-2">
                                                 <label for=""> NPI <span class="required">* </span> </label>
-                                                <input type="text" name="professional_npi" class="form-control" max-maxLength="12">
+                                                <input type="text" name="professional_npi" class="form-control" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{10}$" maxLength="10" data-validation-error-msg="Please Enter the 10 Digit NPI ID">
                                                 @if($errors->has('professional_npi'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('professional_npi') }}</strong>
@@ -274,7 +273,7 @@
                                         </div>
                                             <div class="form-group col-md-2">
                                                 <label for="">DOL Provider Number <span class="required">* </span> </label>
-                                                <input type="text" name="dol_provider_name" class="form-control" >
+                                                <input type="text" name="dol_provider_name" class="form-control" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit DOL Number" >
                                                 @if($errors->has('dol_provider_name'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('dol_provider_name') }}</strong>
@@ -337,7 +336,7 @@
 
                                                 <div class="form-group col-md-2">
                                                     <label for="">Zip Code </label>
-                                                    <input type="text" name="professional_zipcode1" class="form-control">
+                                                    <input type="text" name="professional_zipcode1" class="form-control"  data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit ZIP Code No.">
                                                     @if($errors->has('professional_zipcode1'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('professional_zipcode1') }}</strong>
@@ -410,7 +409,7 @@
 
                                                 <div class="form-group col-md-2">
                                                     <label for=""> Telephone </label>
-                                                    <input type="text" name="billProvider_namebox_33_telephone" class="form-control" maxLength="5">
+                                                    <input type="text" name="billProvider_namebox_33_telephone" class="form-control" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{10}$" maxLength="10" data-validation-error-msg="Please Enter the 10 Digit Telephone Number">
                                                     @if($errors->has('billProvider_namebox_33_telephone'))
                                                     <span class="invalid-feedback" style="display:block" role="alert">
                                                         <strong>{{ $errors->first('billProvider_namebox_33_telephone') }}</strong>
@@ -472,7 +471,7 @@
 
                                                 <div class="form-group col-md-2">
                                                     <label for="">Zip Code </label>
-                                                    <input type="text" name="billProvider_namebox_33_zipCode" class="form-control">
+                                                    <input type="text" name="billProvider_namebox_33_zipCode" class="form-control" data-mask="99999-9999" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit ZIP Code No.">
                                                     @if($errors->has('billProvider_namebox_33_zipCode'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('billProvider_namebox_33_zipCode') }}</strong>
@@ -487,7 +486,7 @@
                                         </div>
                                             <div class="form-group col-md-2">
                                                 <label for=""> NPI  <span class="required">* </span> </label>
-                                                <input type="text" name="billProvider_namebox_33_npi" class="form-control " maxLength="12" >
+                                                <input type="text" name="billProvider_namebox_33_npi" class="form-control" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{10}$" maxLength="10" data-validation-error-msg="Please Enter the 10 Digit NPI ID">
                                                 @if($errors->has('billProvider_namebox_33_npi'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('billProvider_namebox_33_npi') }}</strong>
@@ -550,7 +549,7 @@
 
                                                 <div class="form-group col-md-2">
                                                     <label for="">Zip Code </label>
-                                                    <input type="text" name="billProvider_namebox_33_a_zipcode" class="form-control">
+                                                    <input type="text" name="billProvider_namebox_33_a_zipcode" class="form-control" data-mask="99999-9999" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit ZIP Code No.">
                                                     @if($errors->has('billProvider_namebox_33_a_zipcode'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('billProvider_namebox_33_a_zipcode') }}</strong>
@@ -576,32 +575,7 @@
                                                 @endif
                                             </div>
                                         </div>
-                                </div>
-                                @if(count($users) > 0)
-                                <div class="col-xs-12 col-sm-12 col-md-12 border-bottom2">
-                                    <div class="form-row col-md-12">
-                                        <div class="col-md-2 title">
-                                            <label>Billing Provider<br>User Access</label>
-                                        </div>
-                                            <div class="form-group col-md-2">
-                                                <label for=""> Users with Access <span class="required">* </span> </label>
-                                                <select name="professional_user_with_access[]"  multiple="multiple"
-                                                class="form-control 4col formcls" 
-                                            id="professional_user_with_accessId" data-validation-event="change" data-validation="required"
-                                                data-validation-error-msg="">
-                                                    @foreach ($users as $user)
-                                                    <option value="{{$user["id"]}}"> {{$user["name"]}}</option>
-                                                    @endforeach
-                                                </select>
-                                                @if($errors->has('professional_user_with_access'))
-                                                <span class="invalid-feedback" style="display:block" role="alert">
-                                                    <strong>{{ $errors->first('professional_user_with_access') }}</strong>
-                                                </span>
-                                                @endif
-                                            </div>
-                                    </div>
-                                </div>
-                                @endif
+                                </div> 
                                 <div class="col-xs-12 col-sm-12 col-md-12 border-bottom2">
                                     <div class="form-row col-md-12">
                                         <div class="col-md-2 title">
@@ -609,7 +583,7 @@
                                         </div>
                                             <div class="form-group col-md-2">
                                                 <label for="">Fax Number <span class="required">* </span> </label>
-                                                <input type="text" name="professional_fax_number" class="form-control " data-mask="999-999-9999">
+                                                <input type="text" name="professional_fax_number" class="form-control " data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{10}$" maxLength="10" data-validation-error-msg="Please Enter the 10 Digit Fax No.">
                                                 @if($errors->has('professional_fax_number'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('professional_fax_number') }}</strong>
@@ -630,7 +604,7 @@
                                         </div>
                                             <div class="form-group col-md-2">
                                                 <label for=""> Tax ID <span class="required">* </span> </label>
-                                                <input type="text" name="pharmacy_tax_id" class="form-control " data-mask="99-9999999">
+                                                <input type="text" name="pharmacy_tax_id" class="form-control " data-validation-event="keypress"   data-validation="custom"  data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit Tax ID ">
                                                 @if($errors->has('pharmacy_tax_id'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('pharmacy_tax_id') }}</strong>
@@ -724,7 +698,7 @@
 
                                                 <div class="form-group col-md-2">
                                                     <label for="">Zip Code </label>
-                                                    <input type="text" name="pharmacy_zipcode" class="form-control">
+                                                    <input type="text" name="pharmacy_zipcode" class="form-control" data-mask="99999-9999" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit ZIP Code No.">
                                                     @if($errors->has('pharmacy_zipcode'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('pharmacy_zipcode') }}</strong>
@@ -741,7 +715,7 @@
                                         </div>
                                             <div class="form-group col-md-2">
                                                 <label for=""> Telephone <span class="required">* </span> </label>
-                                                <input type="text" name="pharmacy_telephone" class="form-control " data-mask="(999) 999-9999">
+                                                <input type="text" name="pharmacy_telephone" class="form-control " data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{10}$" maxLength="10" data-validation-error-msg="Please Enter the 10 Digit Telephone Number">
                                                 @if($errors->has('pharmacy_telephone'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('pharmacy_telephone') }}</strong>
@@ -775,7 +749,7 @@
                                         </div>
                                             <div class="form-group col-md-2">
                                                 <label for=""> NPI <span class="required">* </span> </label>
-                                                <input type="text" name="pharmacy_npi" class="form-control ">
+                                                <input type="text" name="pharmacy_npi" class="form-control" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{10}$" maxLength="10" data-validation-error-msg="Please Enter the 10 Digit NPI ID">
                                                 @if($errors->has('pharmacy_npi'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('pharmacy_npi') }}</strong>
@@ -843,7 +817,7 @@
 
                                                 <div class="form-group col-md-2">
                                                     <label for="">Zip Code </label>
-                                                    <input type="text" name="pharmacy_billing_zipcode" class="form-control">
+                                                    <input type="text" name="pharmacy_billing_zipcode" class="form-control" data-mask="99999-9999" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit ZIP Code No.">
                                                     @if($errors->has('pharmacy_billing_zipcode'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('pharmacy_billing_zipcode') }}</strong>
@@ -900,7 +874,7 @@
                                         </div>
                                             <div class="form-group col-md-2">
                                                 <label for="">Fax Number <span class="required">* </span> </label>
-                                                <input type="text" name="pharmacy_billing_fax_number" class="form-control " data-mask="99-9999999">
+                                                <input type="text" name="pharmacy_billing_fax_number" class="form-control " data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{10}$" maxLength="10" data-validation-error-msg="Please Enter the 10 Digit Fax No.">
                                                 @if($errors->has('pharmacy_billing_fax_number'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('pharmacy_billing_fax_number') }}</strong>
@@ -940,7 +914,7 @@
                                                 </div>
                                                 <div class="form-group col-md-2">
                                                     <label for=""> Telephone </label>
-                                                    <input type="text" name="institution_telephone" class="form-control" maxLength="5">
+                                                    <input type="text" name="institution_telephone" class="form-control" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{10}$" maxLength="10" data-validation-error-msg="Please Enter the 10 Digit Telephone Number">
                                                     @if($errors->has('institution_telephone'))
                                                     <span class="invalid-feedback" style="display:block" role="alert">
                                                         <strong>{{ $errors->first('institution_telephone') }}</strong>
@@ -1008,7 +982,7 @@
 
                                                 <div class="form-group col-md-2">
                                                     <label for="">Zip Code </label>
-                                                    <input type="text" name="institution_zipCode" class="form-control">
+                                                    <input type="text" name="institution_zipCode" class="form-control" data-mask="99999-9999" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit ZIP Code No.">
                                                     @if($errors->has('institution_zipCode'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('institution_zipCode') }}</strong>
@@ -1076,7 +1050,7 @@
 
                                                 <div class="form-group col-md-2">
                                                     <label for="">Zip Code </label>
-                                                    <input type="text" name="institution_zipCode1" class="form-control">
+                                                    <input type="text" name="institution_zipCode1" class="form-control" data-mask="99999-9999" data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit ZIP Code No.">
                                                     @if($errors->has('institution_zipCode1'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('institution_zipCode1') }}</strong>
@@ -1093,7 +1067,7 @@
                                         </div>
                                             <div class="form-group col-md-2">
                                                 <label for=""> Tax ID <span class="required">* </span> </label>
-                                                <input type="text" name="institution_tax_id" class="form-control " data-mask="99-9999999">
+                                                <input type="text" name="institution_tax_id" class="form-control " data-validation-event="keypress"   data-validation="custom"  data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit Tax ID ">
                                                 @if($errors->has('institution_tax_id'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('institution_tax_id') }}</strong>
@@ -1110,7 +1084,7 @@
                                         </div>
                                             <div class="form-group col-md-2">
                                                 <label for=""> NPI  <span class="required">* </span> </label>
-                                                <input type="text" name="institution_npi" class="form-control " data-mask="99-9999999">
+                                                <input type="text" name="institution_npi" class="form-control " data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{10}$" maxLength="10" data-validation-error-msg="Please Enter the 10 Digit NPI ID">
                                                 @if($errors->has('institution_npi'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('institution_npi') }}</strong>
@@ -1228,7 +1202,7 @@
                                         </div>
                                             <div class="form-group col-md-2">
                                                 <label for="">Fax Number <span class="required">* </span> </label>
-                                                <input type="text" name="institution_fax_number" class="form-control " data-mask="99-9999999">
+                                                <input type="text" name="institution_fax_number" class="form-control " data-validation-event="keypress" data-validation="custom"  data-validation-regexp="^[0-9]{10}$" maxLength="10" data-validation-error-msg="Please Enter the 10 Digit Fax No.">
                                                 @if($errors->has('institution_fax_number'))
                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                     <strong>{{ $errors->first('institution_fax_number') }}</strong>
@@ -1263,8 +1237,8 @@
 @endsection
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
-<script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
-<script src="{{ asset('js/controller/master_for_all.js') }}"></script>
+<script src="{{ asset('public/js/bootstrap-inputmask.js') }}"></script>
+<script src="{{ asset('public/js/controller/master_for_all.js') }}"></script>
 
 <!-- MDB -->
 <link rel="stylesheet" type="text/css" href="{{ url('new_assets/app-assets/css/jquery.multiselect.css') }}">
@@ -1276,7 +1250,7 @@ $( document ).ready(function() {
     $("#injury_state_id").change(function(){
         showOtherInputs($(this).find(":selected").val());
     });
-    
+    showOtherInputsFOrBillType('Professional'); 
 });
 function showOtherInputs(val){
     console.log('val#',val);
@@ -1288,7 +1262,7 @@ function showOtherInputs(val){
     }
 }
     function showOtherInputsFOrBillType(val){
-        console.log('val',val);
+        console.log('val',val); 
         if(val == 'Professional'){
             $("#professhionalDiv").removeClass('d-none');
             $("#pharmacyDiv").addClass('d-none');
@@ -1339,4 +1313,10 @@ jax(document).ready(function() {
 
 }); 
 </script>
+ 
+   <script>
+   
+    
+  </script> 
+
 

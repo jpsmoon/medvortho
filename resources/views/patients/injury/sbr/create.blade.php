@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
         
 <!-- START: Breadcrumbs-->
@@ -23,30 +23,28 @@
         {{ session()->get('success') }}
     </div>
 @endif
+
+<div class="col-xl-12 col-lg-12 bg-white">
     <div class="row">
-        <div class="col-9 mt-4">
+        <div class="col-9 mt-1">
+             <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+               <div class="w-sm-100 mr-auto margin05">
+                   <h2 class="heading">Add Second Review</h2>
+                </div>
+                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                    <li class="breadcrumb-item" style="padding-bottom:10px">
+                       <a class="btn btn-primary" href="{{url('/injury/view')}}/{{$injuryId}}/{{$patientId}}"> Back</a>
+                    </li>
+               </ol>
+            </div>
             <div class="card row-background">
                 <div class="card-content">
                     <div class="card-body">
                         <form action="{{url('/patientinjuries/create')}}" enctype="multipart/form-data" id="patientInjuryFrm" class="form-horizontal ladda-form'" method="POST">
                         @csrf
                             <div class="row">
-                                <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
-                                <div class="w-sm-100 mr-auto">
-                                    <h2 class="heading">Add Second Review</h2></div>
-                
-                                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                                <li class="breadcrumb-item" style="padding-bottom:10px">
-                                    <a class="btn btn-primary" href="{{url('/injury/view')}}/{{$injuryId}}/{{$patientId}}"> Back</a>
-                                </li>
-                                </ol>
-                            </div>
-                            
-                                <div class="col-xs-12 col-sm-12 col-md-12">
-                                    
-                                <!--@include('patients.injury.patient_injury')-->
-                                    
-                                    <div class="row border-bottom2">
+                                <div class="col-xs-12 col-sm-12 col-md-12"> 
+                                    <div class="row2 border-bottom2">
                                     <div class="col-12"> 
                                     <div class="form-row">
                                                 <div class="form-group col-md-3">
@@ -88,7 +86,7 @@
                                     </div>
                                     </div>
                                     
-                                    <div class="row border-bottom2">
+                                    <div class="2 border-bottom2">
                                     <div class="col-12">  
                                     <h2>Service Line Item #1</h2>
                                     <div class="form-row">                                        
@@ -144,7 +142,7 @@
                                     </div>        
                                     </div> 
                                     
-                                    <div class="row border-bottom2">
+                                    <div class="row2 border-bottom2">
                                     <div class="col-12">   
                                     <h2>Service Line Item #2</h2>
                                     <div class="form-row">
@@ -201,7 +199,7 @@
                                     </div>        
                                     </div> 
                                     
-                                     <div class="row border-bottom2">
+                                     <div class="row2 border-bottom2">
                                     <div class="col-12">   
                                     <h2>Service Line Item #2</h2>
                                     
@@ -231,19 +229,19 @@
                     </div>
                 </div>
             </div>
+            </div>
+        <div class="col-3 mt-1 rightside sticky">
+            @if($patient)
+                @include('patients.show-patient-info')
+            @endIf
         </div>
-        <div class="col-3 mt-4 rightside">
-        @include('patients.show-patient-info')
-        </div>
+      </div>
     </div>
-
 @endsection
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
 <script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
 <script src="{{ asset('js/controller/master_for_all.js') }}"></script>
-
-
 <script>
 $( document ).ready(function() {
     let divId = "<?php echo ($pInjuries) ? $pInjuries->financial_class : 1;?>";

@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 <style>
     .provider_heading_type {
         color: #858585;

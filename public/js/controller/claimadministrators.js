@@ -35,7 +35,8 @@ function addMailCtrl(last_index = 1){
 function removeCtrl(idx){
     if(document.getElementById(idx)){
         // document.getElementById(idx).innerHTML ='';
-        document.getElementById(idx).style.display ='none';
+        //document.getElementById(idx).style.display ='none';
+        document.getElementById(idx).remove(); 
     }
 }
 function save_claim(step, formIndex){

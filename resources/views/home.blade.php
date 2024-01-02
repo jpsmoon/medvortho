@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 
 @section('content')
     <style>
@@ -108,89 +108,123 @@
 
     <!-- START: Card Data-->
     <div class="row">
-        <div class="col-12 col-sm-6 col-xl-3 mt-3">
+        <div class="col-12 col-sm-6 col-xl-3 mt-3 pl-1 pr-1">
             <div class="card">
                 <div class="card-body">
-                    <div class='d-flex px-0 px-lg-2 py-2 align-self-center bg-primary text-white dashboard-boxes'>
-                        <!--<i class="icon-basket icons card-liner-icon mt-2"></i>-->
-                        <div class='card-liner-content'>
-                            <h2 class="card-liner-title">{{$totalBProviders}}</h2>
-                            <h6 class="card-liner-subtitle">Total Billing Providers</h6>
+                    <div class='dashboard-boxes pb-0'>
+                        <h4>Ready to Send</h4>
+                        <div class="d-flex align-self-flex-end justify-content-space-between">
+                        <div class='card-liner-content dashbox'>
+                            <h6 class="card-liner-subtitle">Count</h6>
+                            <h2 class="card-liner-title">0</h2>
+                        </div>
+                        <div class='card-liner-content dashbox'>
+                            <h6 class="card-liner-subtitle">Amount</h6>
+                            <h2 class="card-liner-title"><span class="card-liner-icon mt-1">$</span> 0</h2>
+                        </div>
                         </div>
                     </div>
 
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-xl-3 mt-3">
+        <div class="col-12 col-sm-6 col-xl-3 mt-3 pl-0 pr-1">
             <div class="card">
                 <div class="card-body">
-                    <a href="{{ route('patients.index') }}">
-                        <div class='d-flex px-0 px-lg-2 py-2 align-self-center text-white bg-warning dashboard-boxes'>
-                            <!-- <i class="icon-user icons card-liner-icon mt-2"></i>-->
-                            <div class='card-liner-content'>
-                                <h2 class="card-liner-title">{{ $totalPatients }}</h2>
-                                <h6 class="card-liner-subtitle">Total Patients</h6>
-                            </div>
+                     <div class='dashboard-boxes pb-0'>
+                        <h4>Not posted</h4>
+                        <div class="d-flex align-self-flex-end justify-content-space-between">
+                        <div class='card-liner-content dashbox'>
+                            <h6 class="card-liner-subtitle">Remittence</h6>
+                            <h2 class="card-liner-title"><span class="card-liner-icon mt-1">$</span> 0</h2>
                         </div>
-
-                    </a>
+                        <div class='card-liner-content dashbox'>
+                            <h6 class="card-liner-subtitle">Receipt</h6>
+                            <h2 class="card-liner-title"><span class="card-liner-icon mt-1">$</span> 0</h2>
+                        </div>
+                        <div class='card-liner-content dashbox'>
+                            <h6 class="card-liner-subtitle">Total</h6>
+                            <h2 class="card-liner-title"><span class="card-liner-icon mt-1">$</span> 0</h2>
+                        </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-xl-3 mt-3">
+        <div class="col-12 col-sm-6 col-xl-3 mt-3 pl-0 pr-1">
             <div class="card">
                 <div class="card-body">
-                    <div class='d-flex px-0 px-lg-2 py-2 align-self-center text-white bg-danger dashboard-boxes'>
-                        <!--<i class="icon-bag icons card-liner-icon mt-2"></i>-->
-                        <div class='card-liner-content'>
-                            <h2 class="card-liner-title">{{$totalInjury}}</h2>
-                            <h6 class="card-liner-subtitle">Total Injuries</h6>
+                     <div class='dashboard-boxes pb-0'>
+                        <h4>Collection Today</h4>
+                        <div class="d-flex align-self-flex-end justify-content-space-between">
+                        <div class='card-liner-content dashbox'>
+                            <h6 class="card-liner-subtitle">Copay</h6>
+                            <h2 class="card-liner-title">0</h2>
+                        </div>
+                        <div class='card-liner-content dashbox'>
+                            <h6 class="card-liner-subtitle">Remittence</h6>
+                            <h2 class="card-liner-title"><span class="card-liner-icon mt-1">$</span> 0</h2>
+                        </div>
+                        <div class='card-liner-content dashbox'>
+                            <h6 class="card-liner-subtitle">Receipt</h6>
+                            <h2 class="card-liner-title"><span class="card-liner-icon mt-1">$</span> 0</h2>
+                        </div>
                         </div>
                     </div>
 
                 </div>
             </div>
         </div>
-        <div class="col-12 col-sm-6 col-xl-3 mt-3">
+        <div class="col-12 col-sm-6 col-xl-3 mt-3 pl-0 pr-1">
             <div class="card">
                 <div class="card-body">
-                    <div class='d-flex px-0 px-lg-2 py-2 align-self-center bg-primary text-white dashboard-boxes'>
-                        <!--<span class="card-liner-icon mt-1">$</span>-->
-                        <div class='card-liner-content'>
-                            <h2 class="card-liner-title">{{$totalBills}}</h2>
-                            <h6 class="card-liner-subtitle">Total Bills</h6>
+                    <div class='dashboard-boxes pb-0 '>
+                        <h4>Outstanding Claims</h4>
+                        <div class="d-flex align-self-flex-end justify-content-space-between">
+                        <div class='card-liner-content dashbox'>
+                            <h6 class="card-liner-subtitle">Insurance</h6>
+                            <h2 class="card-liner-title">0</h2>
+                        </div>
+                        <div class='card-liner-content dashbox'>
+                            <h6 class="card-liner-subtitle">Patient</h6>
+                            <h2 class="card-liner-title"><span class="card-liner-icon mt-1">$</span> 0</h2>
+                        </div>
+                        <div class='card-liner-content dashbox'>
+                            <h6 class="card-liner-subtitle">Total</h6>
+                            <h2 class="card-liner-title"><span class="card-liner-icon mt-1">$</span> 0</h2>
+                        </div>
                         </div>
                     </div>
 
                 </div>
             </div>
         </div>
+        
         <div class="col-12  col-md-12 ">
             <div class="card">
-                <!-- <div class="card-header  bg-primary  justify-content-between align-items-center">
-                        <h4 class="card-title text-warning">{{ __('Dashboard: My Tasks') }}</h4>
-                    </div> -->
-                <div class="card-body customBoxHeight2">
-                    <div class="wizard mb-4">
+                 <!--<div class="card-header  bg-primary  justify-content-between align-items-center">-->
+                 <!--       <h4 class="card-title text-warning">{{ __('Dashboard: My Tasks') }}</h4>-->
+                 <!--   </div>-->
+                <div class="card-body customBoxHeight5">
+                    <div class="wizard mb-1">
                         <div class="connecting-line"></div>
                         <div class="row">
-                            <div class="col-8  col-md-8 mt-3">
+                            <div class="col-12  col-md-12 mt-0">
                                 <nav>
                                     <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
                                         <a class="nav-item nav-link active" id="nav-task-tab" data-toggle="tab"
-                                            href="#nav-task" role="tab" aria-controls="nav-task"
-                                            aria-selected="true"><i class="fa-solid fa-list-check"></i> Task</a>
-                                        <a class="nav-item nav-link" id="nav-stats-tab" data-toggle="tab" href="#nav-stats"
-                                            role="tab" aria-controls="nav-stats" aria-selected="false"><i class="fa-solid fa-signal"></i> Stats</a>
+                                            href="#nav-appointment" role="tab" aria-controls="nav-appointment"
+                                            aria-selected="true"><i class="fa-solid fa-list-check"></i> Appointment</a>
+                                        <a class="nav-item nav-link" id="nav-task-tab" data-toggle="tab" href="#nav-task"
+                                            role="tab" aria-controls="nav-task" aria-selected="false"><i class="fa-solid fa-signal"></i> Task</a>
 
-                                        <!--<a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a>-->
+                                       <a class="nav-item nav-link" id="nav-task-tab" data-toggle="tab" 
+                                       href="#nav-stats" role="tab" aria-controls="nav-stats" aria-selected="false"><i class="fa-solid fa-list-check"></i> Stats</a>
                                         <!--<a class="nav-item nav-link" id="nav-about-tab" data-toggle="tab" href="#nav-about" role="tab" aria-controls="nav-about" aria-selected="false">About</a>-->
                                     </div>
                                 </nav>
                                 <div class="tab-content  " id="nav-tabContent">
-                                    <div class="tab-pane fade show active" id="nav-task" role="tabpanel"
-                                        aria-labelledby="nav-task-tab">
+                                    <div class="tab-pane fade show active" id="nav-appointment" role="tabpanel" aria-labelledby="nav-task-tab">
                                         <div id="accordion2" class="accordion-alt tabContentDiv" role="tablist">
                                             <?php $i = 1; ?>
                                             @foreach ($statuses as $status)
@@ -235,62 +269,64 @@
                                             @endforeach
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="nav-stats" role="tabpanel"
-                                        aria-labelledby="nav-stats-tab">
+                                    <div class="tab-pane fade" id="nav-task" role="tabpanel" aria-labelledby="nav-task-tab">
+                                        Meraki rcm Task
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-stats" role="tabpanel" aria-labelledby="nav-task-tab">
                                         Meraki rcm stats
                                     </div>
 
                                 </div>
                             </div>
-                            <div class="col-4  col-md-4">
-                                <div class="card mt-3">
-                                    <div class="card-header  showButtonColor justify-content-between align-items-center">
-                                        <h5 class="card-title text-warning"><i class="fa-solid fa-hospital-user"></i> Patients Appointment</h5>
-                                    </div>
-                                    <div class="card-body text-center border-primary table-responsive scroll-h" id="sowPatintInfoRit">
-                                            <div id="accordion23" class="accordion-alt  tabContentDiv" role="tablist">
-                                                <?php $i=1;?>
-                                                @foreach($patients as $patient)
+                            <!--<div class="col-4  col-md-4">-->
+                            <!--    <div class="card mt-0">-->
+                            <!--        <div class="card-header  showButtonColor justify-content-between align-items-center">-->
+                            <!--            <h5 class="card-title text-warning"><i class="fa-solid fa-hospital-user"></i> Patients Appointment</h5>-->
+                            <!--        </div>-->
+                            <!--        <div class="card-body text-center border-primary table-responsive scroll-h" id="sowPatintInfoRit">-->
+                            <!--                <div id="accordion23" class="accordion-alt  tabContentDiv" role="tablist">-->
+                            <!--                    <?php $i=1;?>-->
+                            <!--                    @foreach($patients as $patient)-->
                                                
-                                                    <div class="col-md-12">
-                                                        <h6 class="mb-0">
-                                                            <a  class="text-uppercase fw-bold d-block sowAccordianSelectBorder sowAccordianSelect" data-toggle="collapse" href="#collapseSchedular_{{$patient->id}}" aria-expanded="true" aria-controls="collapseSchedular_{{$patient->id}}">
-                                                            {{$patient->first_name}}
-                                                            </a>
-                                                        </h6>
-                                                        <div id="collapseSchedular_{{$patient->id}}" class="collapse appointmentDiv setMinheight {{((count($mytasks) > 0) && $i==1) ? 'show' : ''}} " role="tabpanel" data-parent="#accordion23">
-                                                            <table class="a">
-                                                                <thead>
-                                                                    <th>Date/Time</th>
-                                                                    <th>Type</th>
-                                                                    <th>Reason</th>
-                                                                    <th>Duration</th>
-                                                                    <th>Resource</th> 
-                                                                </thead>
-                                                                <tbody>
-                                                                    @if($patient->getAppointments)
-                                                                    @inject('testClass', 'App\Http\Controllers\HomeController')
-                                                                    @foreach($patient->getAppointments as $appointment)
-                                                                     <tr>
-                                                                        <td>{{ ($appointment->appointment_date) ? date('m-d-Y', strtotime($appointment->appointment_date)) : '' }}/{{$appointment->appointment_time}}</td>
-                                                                        <td>{{ ($appointment->meeting_type == 1) ? 'In Office' : 'On Phone' }}</td>
-                                                                        <td>{{($appointment->appointment_reason) ? $testClass->getAppointReasonFromModel($appointment->appointment_reason) : ''}}</td>
-                                                                        <td>{{($appointment->duration) ? $testClass->convertToHoursMins($appointment->duration, '%02d hours %02d minutes') : 0}}</td>
-                                                                        <td>{{ ($appointment->resource) ? $appointment->resource : '' }}</td> 
-                                                                    </tr>
-                                                                    @endforeach
-                                                                    @endif
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
+                            <!--                        <div class="col-md-12">-->
+                            <!--                            <h6 class="mb-0">-->
+                            <!--                                <a  class="text-uppercase fw-bold d-block sowAccordianSelectBorder sowAccordianSelect" data-toggle="collapse" href="#collapseSchedular_{{$patient->id}}" aria-expanded="true" aria-controls="collapseSchedular_{{$patient->id}}">-->
+                            <!--                                {{$patient->first_name}}-->
+                            <!--                                </a>-->
+                            <!--                            </h6>-->
+                            <!--                            <div id="collapseSchedular_{{$patient->id}}" class="collapse appointmentDiv setMinheight {{((count($mytasks) > 0) && $i==1) ? 'show' : ''}} " role="tabpanel" data-parent="#accordion23">-->
+                            <!--                                <table class="a">-->
+                            <!--                                    <thead>-->
+                            <!--                                        <th>Date/Time</th>-->
+                            <!--                                        <th>Type</th>-->
+                            <!--                                        <th>Reason</th>-->
+                            <!--                                        <th>Duration</th>-->
+                            <!--                                        <th>Resource</th> -->
+                            <!--                                    </thead>-->
+                            <!--                                    <tbody>-->
+                            <!--                                        @if($patient->getAppointments)-->
+                            <!--                                        @inject('testClass', 'App\Http\Controllers\HomeController')-->
+                            <!--                                        @foreach($patient->getAppointments as $appointment)-->
+                            <!--                                         <tr>-->
+                            <!--                                            <td>{{ ($appointment->appointment_date) ? date('m-d-Y', strtotime($appointment->appointment_date)) : '' }}/{{$appointment->appointment_time}}</td>-->
+                            <!--                                            <td>{{ ($appointment->meeting_type == 1) ? 'In Office' : 'On Phone' }}</td>-->
+                            <!--                                            <td>{{($appointment->appointment_reason) ? $testClass->getAppointReasonFromModel($appointment->appointment_reason) : ''}}</td>-->
+                            <!--                                            <td>{{($appointment->duration) ? $testClass->convertToHoursMins($appointment->duration, '%02d hours %02d minutes') : 0}}</td>-->
+                            <!--                                            <td>{{ ($appointment->resource) ? $appointment->resource : '' }}</td> -->
+                            <!--                                        </tr>-->
+                            <!--                                        @endforeach-->
+                            <!--                                        @endif-->
+                            <!--                                    </tbody>-->
+                            <!--                                </table>-->
+                            <!--                            </div>-->
+                            <!--                        </div>-->
                                             
-                                                    <?php $i++; ?>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            <!--                        <?php $i++; ?>-->
+                            <!--                    @endforeach-->
+                            <!--                </div>-->
+                            <!--            </div>-->
+                            <!--        </div>-->
+                            <!--    </div>-->
                             </div>
                         </div>
                     </div>

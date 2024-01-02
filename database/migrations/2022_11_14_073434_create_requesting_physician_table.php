@@ -16,7 +16,7 @@ class CreateRequestingPhysicianTable extends Migration
         Schema::create('requesting_physician', function (Blueprint $table) {
             $table->id();
             $table->string('npi')->nullable();
-            $table->string('npi')->nullable();
+            $table->string('physican_signature')->nullable();
             $table->timestamps();
         });
     }

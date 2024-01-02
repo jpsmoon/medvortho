@@ -100,7 +100,7 @@ class UserInviteController extends Controller
                     //create a new invite record
                     $providers = null;
                     if(isset($request->billingProviders)){
-                       $providers =  $implode(',', $request->billingProviders);
+                       $providers =  implode(',', $request->billingProviders);
                     }
                 
                     $inviteUsers = UserInvite::create([

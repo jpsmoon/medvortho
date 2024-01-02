@@ -4,7 +4,7 @@ use App\Http\Controllers\{HomeController, RoleController, ProductController, Bil
 ClaimAdministratorController,BillingProviderController,HealthProviderController, MedicalProviderController, BillingLetterController,
 TaxonomyCodeController,  DiagnosisCodeController,  ServiceCodeController, CompanyTypeController, ClaimStatusController,
 PayerTypeController, CountryController, StateController, CityController, TaskController, StatusController, UserTaskController,
-BillingCustomSettingController, UserInviteController, MasterHolidayController, MasterCrudController
+BillingCustomSettingController, UserInviteController, MasterHolidayController, MasterCrudController, TallyFormController, PdfMergerController
 };
 /*
 |--------------------------------------------------------------------------
@@ -20,30 +20,33 @@ BillingCustomSettingController, UserInviteController, MasterHolidayController, M
 Route::get('/', function () {
 return redirect(route('login'));
 }); 
-Route::get('bill-submissions/letters/demand-letter/{providerId}', [BillingLetterController::class, 'viewDemandLetter']);
+Route::get('bill-submissions/letters/demand-letter/{providerId?}/{billId?}', [BillingLetterController::class, 'viewDemandLetter']);
 
-Route::get('bill-submissions/letters/sbr-letter/{providerId}', [BillingLetterController::class, 'viewSbrLetter']);
+Route::get('bill-submissions/letters/sbr-letter/{providerId?}/{billId?}', [BillingLetterController::class, 'viewSbrLetter']);
 
-Route::get('bill-submissions/letters/rfa-letter/{providerId}', [BillingLetterController::class, 'viewRFALetter']);
+Route::get('bill-submissions/letters/rfa-letter/{providerId?}/{billId?}', [BillingLetterController::class, 'viewRFALetter']);
 
-Route::get('bill-submissions/letters/resubmission-letter/{providerId}', [BillingLetterController::class, 'viewResubmissionLetter']);
+Route::get('bill-submissions/letters/resubmission-letter/{providerId?}/{billId?}', [BillingLetterController::class, 'viewResubmissionLetter']);
 
-Route::get('bill-submissions/letters/pr2-letter/{providerId}', [BillingLetterController::class, 'viewPr2Letter']);
+Route::get('bill-submissions/letters/pr2-letter/{providerId?}/{billId?}', [BillingLetterController::class, 'viewPr2Letter']);
 
-Route::get('bill-submissions/letters/authorization-letter/{providerId}', [BillingLetterController::class, 'viewAuthorizationLetter']);
+Route::get('bill-submissions/letters/authorization-letter/{providerId?}/{billId?}', [BillingLetterController::class, 'viewAuthorizationLetter']);
 
+Route::post('tally/form', [TallyFormController::class, 'tallyForm']);
 
-
+Route::post('test/form', [PatientController::class, 'testForm']);
 
 Auth::routes();
     //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-   
+    
+    Route::get('/home-new', [HomeController::class, 'index2'])->name('home-new');
 
-
+    Route::post('showTodayPatientAppointment',[HomeController::class, 'showTodayAppointmentList']);
 
     Route::group(['middleware' => ['auth']], function() {
+        Route::get('bill-submissions/letters/coversheet/{billId?}', [BillingLetterController::class, 'coversheet']);
         Route::get('logout', [LoginController::class, 'logout']);
         Route::post('healthproviders/restore/{id}', [HealthProviderController::class, 'restore'])->name('healthproviders.restore');
         Route::resource('healthproviders', HealthProviderController::class);
@@ -105,6 +108,9 @@ Auth::routes();
                 Route::post('patient/injury/diagnosis/code/add/update', [PatientController::class, 'patientInjuryDiagnosisCodeAddUpdate']);
                 Route::post('ajaxPatientInjury',[BillingProviderController::class, 'ajaxPatientInjury']);
                 Route::post('deleteDocument',[PatientController::class, 'deleteDocument']);
+                Route::post('addDocumentForBillServiceProcedure',[PatientController::class, 'saveBillServiceProcedureDoc']);
+                Route::post('showAllBillDocuments',[PatientController::class, 'getAllDocuementsByBillId']);
+                Route::post('downloadPdfForBill',[PatientController::class, 'downloadBillPdf']);
             });
 
             Route::group(['middleware' => ['permission:publish bill-process-list|bill-process-create|bill-process-edit|bill-process-delete']], function () {
@@ -118,6 +124,7 @@ Auth::routes();
                 Route::post('claimadministrators/restore/{id}', [ClaimAdministratorController::class, 'restore'])->name('claimadministrators.restore');
                 Route::resource('claimadministrators', ClaimAdministratorController::class);
                 Route::post('searchClaimsAdministrator', [PatientController::class, 'searchClaimsAdministrator']);
+                Route::post('claimadministrators' , [ClaimAdministratorController::class, 'storeClaimAdminInfo'])->name('storeClaimAdminInfo');
             });
 
             Route::group(['middleware' => ['permission:publish billing-provider-list|billing-provider-list|billing-provider-edit|billing-provider-edit']], function () {
@@ -177,7 +184,8 @@ Auth::routes();
                 Route::get('billing/provider/cms-1500-form/{providerId?}', [BillingProviderController::class, 'createCmsForm']);
                 Route::get('billing/provider/preview/cms/form/{providerId}', [BillingProviderController::class, 'previewViewCmsFormForBillingProvider'])
                 ->name('viewBillingCMS');
-            
+                Route::post('assign/task/to/user', [BillingProviderController::class, 'assignTaskToUser']);
+                
                 Route::get('billing/provider/task/assignment/preferences/{providerId}', [BillingProviderController::class, 'viewAssignTaskForBillingProvider']);
                 Route::get('provider-bill-write-off-reason/{providerId}/{type}', [BillingCustomSettingController::class, 'providerBillWriteOfReason']);
                 Route::post('save-bill-write-of-reason', [BillingCustomSettingController::class, 'storeBillWriteOfReasonData'])->name('saveBillWriteOfReason');
@@ -187,7 +195,7 @@ Auth::routes();
             
                 Route::get('setting/billing/provider/add/practice/charge/{providerId}/{ctype?}', [BillingProviderController::class, 'createPracticeCharge']);
                 Route::post('save-practice-charge', [BillingProviderController::class, 'storePracticeCharge'])->name('savePracticeCharge');
-                Route::get('/settings/charges/{chargeId}', [BillingProviderController::class, 'settingCharge']);
+                Route::get('/settings/charges/{chargeId}/{providerId?}', [BillingProviderController::class, 'settingCharge']);
                 Route::post('/settings/save/procedure/code', [BillingProviderController::class, 'saveProcedureCode'])->name('saveProcedureCode'); 
                 Route::get('/settings/providers/expected/reimbursements/{providerId}/{ctype?}', [BillingProviderController::class, 'createBillingCharge']);
                 Route::get('setting/billing/provider/charge/add/{providerId}/{ctype?}',[BillingProviderController::class, 'createBillingCharge']);
@@ -209,6 +217,12 @@ Auth::routes();
                 Route::get('billing/providers/holidays/{providerId}',[BillingProviderController::class, 'billingProviderHolidayList']);
                 Route::post('billing/save/holiday', [BillingProviderController::class, 'storeBillingProviderHolidays']);
                 Route::post('billing/delete/holiday', [BillingProviderController::class, 'deleteBillingProviderHolidays']);
+                Route::post('billing/provider/practice/charge', [BillingProviderController::class, 'billProviderPracticeChargeImport']);
+                Route::post('import/procedure/code', [BillingProviderController::class, 'importProcedureCode']);
+                //Route::post('setProviderTabIdInSession', [BillingProviderController::class, 'saveProviderTabIdInSession']);
+                Route::post('matchICDCOdeWithAllDiagCode', [PatientController::class, 'getDiagnosisCodesForDC']); 
+                Route::post('searchProcedureCodeForAutoSearch', [BillingProviderController::class, 'searchProcedureCodeForAutoSearch']);
+
 
             });
             Route::group(['middleware' => ['permission:publish service-code-list|service-code-create|service-code-edit|service-code-delete']], function () {
@@ -241,6 +255,7 @@ Auth::routes();
                 // Route::get('state/restore/{id}', [StateController::class, 'restore'])->name('states.restore');
                 Route::post('state/restore', [StateController::class, 'restore'])->name('states.restore');
                 Route::post('get-states-by-country', [StateController::class, 'getStatesByCountry']);
+                Route::post('delete/state', [StateController::class, 'destroyState']);
                 Route::resource('states', StateController::class);
             });
             Route::group(['middleware' => ['permission:publish city-list|city-create|city-edit|city-delete']], function () {
@@ -250,6 +265,10 @@ Auth::routes();
                 Route::post('get-cities-state-by-zipCode', [CityController::class, 'getCitiesStateByZipCode']);
                 Route::post('get-state-by-country', [CityController::class, 'getStateByCountry']);
                 Route::post('get-cities-by-state-code', [CityController::class, 'getCityByStateCode']);
+                Route::get('get-city-list', [CityController::class, 'getCities']);
+                Route::post('delete/city', [CityController::class, 'deleteCity']);
+                Route::post('get/city/byId', [CityController::class, 'getCityById']);
+                Route::post('update/city', [CityController::class, 'updateCity']);
             });
             Route::group(['middleware' => ['permission:publish task-list|task-create|task-edit|task-delete']], function () {
                 Route::resource('tasks', TaskController::class);
@@ -295,17 +314,52 @@ Auth::routes();
                 Route::get('view/bill/letter/demand/{patientId?}',[BillInfoController::class, 'demandLetter']); 
                 Route::get('view/bill/letter/authorization/{patientId?}',[BillInfoController::class, 'authorizationLetter']);
                 Route::get('bill/list/status/wise/{statusId}/{statusType}',[BillInfoController::class, 'billListStatusWise']);
+                Route::post('bill/sent/to/provider',[BillInfoController::class, 'billSentProcess']);
+                Route::post('get-second-review-text-by-id',[BillingProviderController::class, 'getSecondReviewInfoById']); 
+                Route::post('storeBillSbr',[BillingProviderController::class, 'saveBillSecondSBR']); 
+                Route::post('checkICDForBill',[PatientController::class, 'getICDTypeForBill']);
+                Route::post('genrateAndDownloadBillPacketForSend',[PdfMergerController::class, 'billPacketForSendBill']);
+                Route::get('showCoversheet/{bill_id}',[PdfMergerController::class, 'showCover']);
+                Route::get('showCMS/{bill_id}',[PdfMergerController::class, 'showCMSFOrm']);
+                Route::get('downloadCoverSheet/{bill_id}',[PdfMergerController::class, 'downloadCoverSheet']);
+                Route::post('bill/add/diagnosis/code',[PatientController::class, 'storeBillDianosisCode'])->name('addDiagnosisCode');
+                Route::post('bill/add/procedure/code',[PatientController::class, 'storeBillProcedureCodeManual'])->name('addProcedureCode');
+                Route::post('store/write/reason/for/bill/cose',[PatientController::class, 'storeWitreOfReasonForBillClose'])->name('addbillWriteOfReasonForCloseBill');
+                Route::post('generateCMSForPacket',[PdfMergerController::class, 'generateCMSForPacket']);
+                Route::get('bill/payment/postings/new/first/{billId?}/{id?}',[PatientController::class, 'addBillPaymentEORSingle']); 
+                Route::get('bill/payment/postings/new/multiple/{billId?}/{id?}/{pType?}',[PatientController::class, 'addBillPaymentEORMultiple']); 
+                Route::post('save/single/bill/payment',[PatientController::class, 'saveSingleBillPayment']);
+                Route::get('bill/payment/postings/update/first/{billId?}/{id}',[PatientController::class, 'addBillPaymentEORSingle']);  
+                Route::get('collection/eor/bills',[BillingCustomSettingController::class, 'eorBills']);
+                Route::get('collection/br/bills',[BillingCustomSettingController::class, 'brills']);
+                Route::post('save/multiple/first/step',[PatientController::class, 'saveMultiFIrstStep']);
+                Route::post('save/multiple/bill/payment',[PatientController::class, 'saveMultiBillPayment']);
+                Route::get('bill/payment/postings/submission/multiple/{billId?}/{id}',[PatientController::class, 'addBillEORSubmissionMultiple']);
+                Route::get('search/bill/eor/multiple/{id}',[PatientController::class, 'searchBillForEORMultiple']);
+                Route::get('add/multiple/bill/payment/post/{billId?}/{paymentId}',[PatientController::class, 'storeBillPaymentPCDAMount']);
+                Route::post('save/multiple/bill/payment/post',[PatientController::class, 'saveMultiBillPaymentPost']);
+                Route::get('review/multiple/bill/payment/{paymentId}',[PatientController::class, 'reviewStoremultipleBillPayment']);
+                Route::post('get/total/payment/for/this/bill/',[PatientController::class, 'returnTotalPaymentForThisBill']);
+                Route::get('edit/multiple/bill/payment/post/{paymentId}',[PatientController::class, 'editPaymentPosting']);
+                Route::post('update/multiple/bill/payment/post',[PatientController::class, 'editMultiBillPaymentPost']);
+                Route::post('add/bill/payment/post/document',[PatientController::class, 'addBillPaymentDocument']); 
+                Route::get('delete/multiple/bill/payment/post/{id}/{paymentId}',[PatientController::class, 'deletePaymentPost']);
+                Route::post('remove/all/payment/data/change/tab',[PatientController::class, 'deleteAllDataInTabChange']);
+                Route::post('delete/bill/diagonisis',[PatientController::class, 'deleteBillDiagnosis']);
+                 
             }); 
             Route::group(['middleware' => ['permission:publish taxonomy-code-list|taxonomy-code-create|taxonomy-code-edit|taxonomy-code-delete']], function () {
                 Route::post('taxonomycodes/restore/{id}', [TaxonomyCodeController::class, 'restore'])->name('taxonomycodes.restore');
                 Route::resource('taxonomycodes', TaxonomyCodeController::class);
                 Route::post('taxonomycodes/update', [TaxonomyCodeController::class, 'updateTaxnomyCode'])->name('updatedTaxnoMyCode');
                 Route::post('taxonomycodes/delete', [TaxonomyCodeController::class, 'deleteTaxnomy'])->name('deleteTaxnoMyCode');
+                Route::post('taxonomycodes/importCode', [TaxonomyCodeController::class, 'importTaxonomyCode'])->name('importTaxonomyCode');
             }); 
             Route::group(['middleware' => ['permission:publish report-type-list|report-type-create|report-type-edit|report-type-delete']], function () {
-                Route::get('document/reprt/type',[MasterCrudController::class, 'reprtTypeList']);
+                Route::get('reprt/type',[MasterCrudController::class, 'reprtTypeList']);
                 Route::post('save/reprt/type', [MasterCrudController::class, 'storeReportType']); 
                 Route::post('delete/reprt/type', [MasterCrudController::class, 'deleteReportType']);
+                Route::get('bill/error',[MasterCrudController::class, 'billErrorList']);
             }); 
 
         //Permission routes end here//

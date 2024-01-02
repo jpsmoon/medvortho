@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class InjuryDiagnosis extends Model
 {
     use HasFactory;
-    protected $fillable = [ 'injury_claim_id' ];
+    protected $table = 'injury_diagnoses';
+    protected $fillable = [ 'injury_claim_id', 'diagnosis_code_id', 'is_active' ];
 
     public function injury_claim(){
         return $this->belongsTo(InjuryClaim::class, 'injury_claim_id', 'id');

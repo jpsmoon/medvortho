@@ -1,5 +1,4 @@
-@extends('layouts.home-app')
-
+@extends('layouts.home-new-app')
 @section('content')
 <!-- START: Breadcrumbs-->
     <div class="row ">
@@ -9,8 +8,8 @@
 
                 <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                     <li class="breadcrumb-item">
-                         <a class="btn btn-success"  href="{{url('/setting/billing/provider/charge/add',$providerId)}}"
-                         >Add charge </a>
+                         <a class="btn btn-success"  href="{{url('/setting/billing/provider/charge/add',$providerId)}}">
+                             Add charge </a>
                     </li>
                 </ol>
             </div>

@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
 <?php $billingId = 1;
 if (isset($id)){
@@ -14,7 +14,7 @@ $billingId = $bRenderings->provider_type;
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
                     <ul>
                         @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
+                        <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
@@ -24,12 +24,12 @@ $billingId = $bRenderings->provider_type;
     @endif
     <div class="row">
         <div class="col-1 mt-4"></div>
-        <div class="col-10 mt-4">
+        <div class="col-12 mt-4">
             <div class="card row-background" style="min-height: 565px;">
                 <!-- START: Breadcrumbs-->
                 <div class="row">
                     <div class="col-12  align-self-center">
-                        <div class="sub-header mt-3 py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
+                        <div class="sub-header mt-4 py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
                             <div style="padding-top:10px; padding-left:20px;" class="w-sm-100 mr-auto">
                                 <h2 class="heading">Add RFA Template </h2>
                             </div>

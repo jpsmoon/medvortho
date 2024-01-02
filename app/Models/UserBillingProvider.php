@@ -9,7 +9,7 @@ class UserBillingProvider extends Model
 {
     use HasFactory;
     protected $table = "user_billing_providers";
-    protected $fillable = ['id','provider_id','user_id','created_by'];
+    protected $fillable = ['id','provider_id','user_id','created_by', 'is_active'];
 
     public function getBillingProvider()
      {

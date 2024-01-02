@@ -1,163 +1,46 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
-
-<style>
-@import url(https://fonts.googleapis.com/css?family=Audiowide);
- .table td, .table th {
-    border-bottom: 1px solid #E3EBF3;
-    padding: 0.25rem 0.25rem;
-}  
- 
- 
-.toolTipDiv *, *:before, *:after {
-    box-sizing: inherit;
-} 
-.toolTipDiv span {
-    color: #e91e63;
-    font-family: monospace;
-    white-space: nowrap;
-}
-
-.toolTipDiv span:after {
-    font-family: Arial, sans-serif;
-    text-align: left;
-    white-space: normal;
-}
-
-.toolTipDiv span:focus {
-    outline: none;
-}
- 
-
-/*== start of code for tooltips ==*/
-.tool {
-    cursor: help;
-    position: relative;
-    top:5px;
-}
-
-
-/*== common styles for both parts of tool tip ==*/
-.tool::before,
-.tool::after {
-    left: 50%;
-    opacity: 0;
-    position: absolute;
-    z-index: -100;
-}
-
-.tool:hover::before,
-.tool:focus::before,
-.tool:hover::after,
-.tool:focus::after {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-    z-index: 100; 
-}
-
-
-/*== pointer tip ==*/
-.tool::before {
-    border-style: solid;
-    border-width: 1em 0.75em 0 0.75em;
-    border-radius:4%;
-    border-color: #3E474F transparent transparent transparent;
-    bottom: 100%;
-    content: "";
-    margin-left: -0.5em;
-    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26), opacity .65s .5s;
-    transform:  scale(.6) translateY(-90%);
-} 
-
-.tool:hover::before,
-.tool:focus::before {
-    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26) .2s;
-}
-
-
-/*== speech bubble ==*/
-.tool::after {
-    background: #3E474F;
-    border-radius: .25em;
-    bottom: 178%;
-    color: #EDEFF0;
-    content: attr(data-tip);
-    line-height: 1.2;
-    margin-left: -8.75em;
-    padding: 1em;
-    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26) .2s;
-    transform:  scale(.6) translateY(50%);  
-    width: 17.5em;
-}
-
-.tool:hover::after,
-.tool:focus::after  {
-    transition: all .65s cubic-bezier(.84,-0.18,.31,1.26);
-}
-
-@media (max-width: 760px) {
-  .tool::after { 
-        font-size: .75em;
-        margin-left: -5em;
-        width: 10em; 
-  }
-}
-
-
-</style>
-
 <!-- START: Breadcrumbs-->
-    <div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto">
-                <!--<ol class="breadcrumb">-->
-                <!--  <li class="breadcrumb-item"><a href="index.html">Home</a>-->
-                <!--  </li>-->
-                <!--  <li class="breadcrumb-item"><a href="#">Navbars</a>-->
-                <!--  </li>-->
-                <!--  <li class="breadcrumb-item active">Fixed Navigation-->
-                <!--  </li>-->
-                <!--</ol>-->
+<style>
+.mt-1, .my-1{
+    margin-top:0.5rem!important;
+}
+</style>
+        <div class="row mt-0">
+         <div class="col-12 align-self-center">
+            <div class="sub-header mt-0 py-3 pl-2 align-self-center d-sm-flex w-100 rounded heading-background">
+                <div class="w-sm-100 mr-auto margin05">
+                   <h2><i class="fa-solid fa-id-card-clip"></i> Appointments</h2>
                 </div>
-                
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                    <li class="breadcrumb-item">
-                        @can('patient-create')
-                        <a class="btn btn-primary"href="{{ url('/patient/create/schedular') }}"> Add Appointment</a>
-                        @endcan
-                    </li>
-                </ol>
+                <div align="right" class="w-sm-100 ">
+                    <ol class="list-inline breadcrumb bg-transparent align-self-center m-0 p-0">
+                       <li class="list-inline-item">
+                            @can('patient-create')
+                               <a class="btn btn-primary"href="{{ url('/patient/create/schedular') }}"> Add Appointment</a>
+                            @endcan
+                        </li>
+                        <li class="list-inline-item">
+                            <span id="showBulkLableBtn">
+                                <button type="button" onClick="changeBillStatus( 'billStatus', 'APPOINTMENT_BILL_STATUS_READY_TO_BILL');" class="btn btn-primary">Ready to bill</button>
+                            </span>
+                        </li>
+                    </ol>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- END: Breadcrumbs-->
-    <div class="row">
-        <div class="col-12 mt-3">
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-        </div>
-    </div>
-     <div class="row">
-        <div class="col-12 mt-3">
-            <div class="card">
-                <div class="card-body">
+<!-- END: Breadcrumbs-->      
+         <div class="col-12">
+            <div class="card customBoxHeight p-0">
+              <div class="card-body ">  
                 {!! Form::open(['class' => 'form-horizontal','id' => 'patientAppointmentListFrm','method'=>"get"]) !!}
-                <div class="row row-xs ml-1">
-                        <div class="col-md-3 mt-2" id="keywordDiv">
+                  <div class="row row-xs m-0 d-flex justify-content-center align-self-center">
+                       <div class="col-md-2 mt-2" id="keywordDiv">
                             <input type="text" value="{{$searchKey}}"   name="keyword" class="form-control" maxlength="200" id="keyword" placeholder="search by patient name, id" value="">
                             @if($errors->has('keyword'))
-                        <span class="invalid-feedback" style="display:block" role="alert">
-                            <strong>{{ $errors->first('keyword') }}</strong>
-                        </span>
-                        @endif
+                                <span class="invalid-feedback" style="display:block" role="alert">
+                                    <strong>{{ $errors->first('keyword') }}</strong>
+                                </span>
+                            @endif
                         </div>
                         
                         <div class="col-md-2 mt-2" id="renderingDiv">
@@ -186,16 +69,17 @@
                                 </span>
                             @endif
                         </div>
-                        <div class="col-md-2 mt-2" id="datepickerDiv">
-                         <input value="{{$durationDate}}" placeholder="Choose date"   autocomplete="off"  type="text" id="duration_date" name="duration_date" class="form-control" maxlength="100">
+                        <div class="col-md-2 mt-2 input-icons2" id="datepickerDiv">
+                         <input value="{{$durationDate}}" placeholder="Choose date"  autocomplete="off"  type="text" id="duration_date" name="duration_date" class="form-control" maxlength="100">
                             <i class="icon-calendar"></i>  
                             @if($errors->has('duration_date'))
                                 <span class="invalid-feedback" style="display:block" role="alert">
                                     <strong>{{ $errors->first('duration_date') }}</strong>
                                 </span>
                             @endif
+
                         </div>
-                         <div class="col-md-1 mt-2" id="resaonDiv">
+                         <div class="col-md-2 mt-2" id="resaonDiv">
                              <select name="appointment_meeting_Type" class="form-control">
                                 <option value=''>-Select Meeting Type-</option>
                                 @foreach ($meetingTypes as $meetingT)
@@ -209,38 +93,18 @@
                             @endif
                         </div>
 
-                        <div class="col-md-2 mt-2">
+                        <div class="col-md-2 col-2 mt-2 text-center">
                             <label for="">&nbsp;</label>
-                            <button type="submit" id="patient_Btn" class="btn btn-primary filter_patient">Search</button>
-                            <button type="button" onClick="resetFrm();" class="btn btn-primary">Reset</button>
+                            <button type="submit" id="patient_Btn" class="btn text-center btn-primary filter_patient appoint_btn">Search</button>
+                            <button type="button" onClick="resetFrm();" class="btn btn-primary appoint_btn">Reset</button>
                         </div>
                     </div>
                 {!! Form::close() !!}
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-            <div class="col-12 mt-3">
-                <div class="card">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-10">Appointments </div>
-                        <div class="col-2">
-                            <span id="showBulkLableBtn">
-                                <button type="button" onClick="changeBillStatus( 'billStatus', 'APPOINTMENT_BILL_STATUS_READY_TO_BILL');" class="btn btn-primary">Ready to bill</button>
-                            </span>
-                        </div>
-                    </div> 
-                </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="margin:4px; width:99.6%">
                         <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th><label><input type="checkbox" id="checkAll" /> Select All</label></th>
+                                        <th> <label class="mb-0"><input type="checkbox" id="checkAll" /> Select All</label></th>
                                         <th scope="col">Visit ID</th>
                                         <th scope="col">Visit Date</th>
                                         <th scope="col">Visit Time</th>
@@ -258,19 +122,18 @@
                                         @inject('testPatientClass', 'App\Http\Controllers\PatientController')
                                             @foreach ($patientAppointment as $appountment)
                                                 <tr>
-                                                    <td> 
-                                                     @if($appountment->getBill && $appountment->getBill->getStatus && $appountment->getBill->getStatus->slug_name && $appountment->getBill->getStatus->slug_name != 'COMPLETE_BILL')
-                                                        @if($appountment->getStatus && $appountment->getStatus->slug_name && $appountment->getStatus->slug_name == 'APPOINTMENT_VISIT_STATUS_COMPLETE')
+                                                <td> 
+                                                    @if($appountment->getStatus && $appountment->getStatus->slug_name && $appountment->getStatus->slug_name == 'APPOINTMENT_VISIT_STATUS_COMPLETE')
+                                                        @if(!$appountment->getBill)
                                                             <label><input class="chk" type="checkbox" name=appointItem[] value="{{$appountment->id}}" /> </label>
                                                         @endif
                                                     @endif
-                                                     </td>
-                                               
+                                                </td>
                                                  <td> <a  href="javascript:void(0)"  data-toggle="modal" data-target="#appointmentInfoModal_{{$appountment->id}}">
                                                              {{($appountment->appointment_no && $appountment->appointment_no != "") ? $appountment->appointment_no : ''}}
                                                   </a></td>
                                                     <td>{{ ($appountment->appointment_date) ? date('m-d-Y', strtotime($appountment->appointment_date)) : ''}}</td>
-                                                    <td>{{ ($appountment->appointment_time) ? $appountment->appointment_time : ''}}</td>
+                                                    <td>{{ ($appountment->appointment_time) ? date('h:i A', strtotime($appountment->appointment_time)) : ''}}</td>
                                                     <td class="toolTipDiv"><a  href="javascript:void(0)"  data-toggle="modal" data-target="#patientInfoModal_{{$appountment->getPatient->id}}"
 
                                                     >{{($appountment->getPatient) ? $appountment->getPatient->first_name : ''}} {{($appountment->getPatient) ? $appountment->getPatient->mi : ''}} {{($appountment->getPatient) ? $appountment->getPatient->last_name : ''}} </a> 

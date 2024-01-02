@@ -22,7 +22,7 @@ class CreateInjuryClaimsTable extends Migration
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->integer('claim_admin_id')->nullable();
-            $table->integer('no_any_claim', array('1', '0'))->default('0');
+            $table->enum('no_any_claim', array('1', '0'))->default('0');
             $table->integer('payer_id')->nullable();
             $table->string('claim_no', 55)->nullable();
             $table->string('claim_status_id')->nullable();

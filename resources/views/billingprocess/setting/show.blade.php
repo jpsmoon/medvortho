@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 <style>
     .step .fa {
         padding-top: 13px !important;
@@ -21,8 +21,8 @@
             </div>
         </div>
     @endif
-    <div class="row mt-2">
-        <div class="col-md-12 mt-4">
+    <div class="row mt-0">
+        <div class="col-md-12 mt-0">
             <div class="card row-background customBoxHeight">
                 <div class="row ">
                     <div class="col-md-12  align-self-center">
@@ -32,7 +32,7 @@
                             </div>
                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                                 <li style="padding-bottom:10px" class="breadcrumb-item">
-                                    <a class="btn btn-primary" href="{{ route('billingproviders.index') }}">Back</a>
+                                    <a class="btn btn-primary" href="{{url('/billing/providers/setting',$billingProviders->id)}}">Back</a>
                                 </li>
                             </ol>
                         </div>
@@ -47,10 +47,12 @@
                             </div>
                             <div class="col-md-8">
                                 <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                                <li style="padding-bottom:10px" class="breadcrumb-item">
-                                <span>
-                                <a class="btn btn-primary" href="{{ url('/edit/billing/provider',$billingProviders->id)}}"><i class="icon-pencil"></i> Edit</a></span>
-                                </li>
+                                @can('billing-provider-edit')
+                                    <li style="padding-bottom:10px" class="breadcrumb-item">
+                                    <span>
+                                    <a class="btn btn-primary" href="{{ url('/edit/billing/provider',$billingProviders->id)}}"><i class="icon-pencil"></i> Edit</a></span>
+                                    </li>
+                                @endcan
                                 </ol>
                             </div>
                         </div>
@@ -112,19 +114,19 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <label class="bold" for=""> Physical Address </label><br>
-                                     <span >{{$billingProviders->professional_address1}} - {{$billingProviders->professional_address2}}
-                                    {{$billingProviders->professional_city1}}
-                                   
-                                   {{strtoupper( substr( $billingProviders->professional_state, 0, 2 ) ) }}
-                                   
-                                   {{$billingProviders->professional_zipcode1}}
+                                     <span>
+                                        {{ ($billingProviders->professional_address1) ? $billingProviders->professional_address1 : ''}}
+                                        {{ ($billingProviders->professional_address2) ? ', '.$billingProviders->professional_address2 : '' }}
+                                        {{ ($billingProviders->professional_city1) ? ', '.$billingProviders->professional_city1 : ''}}
+                                        {{ ($billingProviders->professional_state) ? ', '.strtoupper( substr( $billingProviders->professional_state, 0, 2 )) : ''}} 
+                                        {{ $billingProviders->professional_zipcode1 }}
                                     </span>
                                    
                                 </div>
                                 <div class="col-md-4">
                                     <label class="bold" for=""> Pay To Address </label><br>
                                     <span>
-                                        {{$billingProviders->professional_addres1}} - {{$billingProviders->professional_addres2}}
+                                   {{$billingProviders->professional_addres1}} - {{$billingProviders->professional_addres2}}
                                    {{$billingProviders->professional_city}}
                                    
                                    {{strtoupper( substr( $billingProviders->professional_state1, 0, 2 ) ) }}

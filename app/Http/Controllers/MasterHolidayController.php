@@ -31,7 +31,7 @@ class MasterHolidayController extends Controller
     }
     public function storeHoliday(Request $request)
     {
-       try {
+       //try {
             DB::beginTransaction();
                 $this->saveMasterHoliday($request);
             DB::commit();
@@ -40,10 +40,12 @@ class MasterHolidayController extends Controller
                 $msg = 'Holiday updated successfully';
             }
             return  $this->redirectToRoute('/master/holidays', $msg, 'success', ["positionClass" => "toast-top-center"]);
-        } catch (\Exception $e) {
-             DB::rollback(); 
-            return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
-        }
+       // } 
+        //catch (\Exception $e) 
+        //{
+        //      DB::rollback(); 
+        //     return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
+        // }
     }
     public function deleteHoliday(Request $request)
     {

@@ -21,7 +21,7 @@ class InjuryBill extends Model
     }
     public function getRenderinProvider()
     {
-        return $this->hasOne(RenderinProvider::class, 'id', 'bill_rendering_provider');
+        return $this->hasOne(BillReferingOrderProvider::class, 'id', 'bill_rendering_provider');
     }
     
     public function getInjury()
@@ -53,5 +53,17 @@ class InjuryBill extends Model
     public function getStatus()
     {
         return $this->hasOne(Status::class, 'id', 'bill_status');
+    }
+    public function getSendBillDate()
+    {
+        return $this->hasOne(SentBill::class, 'bil_id', 'id');
+    }
+    public function getBillPaymentInfo()
+    {
+        return $this->hasOne(BillPaymentInformation::class, 'bill_id', 'id');
+    } 
+    public function getBillDocForPayment()
+    {
+        return $this->hasOne(AllDocument::class, 'injury_id', 'id')->where('doc_type', 'BILLEOR');
     }
 }

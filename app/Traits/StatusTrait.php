@@ -20,7 +20,7 @@ trait StatusTrait
                 'status_name' => $request->status_name,
                 'display_order'=> $request->display_order,
                 'description' => $request->description,
-                'status_type' => $request->status_type
+                //'status_type' => $request->status_type
             );        
             return Status::where("id", $id)->update($updateArr);
         }

@@ -8,14 +8,19 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Toastr;
 use DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\TaxonomyCodesImport;
+
 
 class TaxonomyCodeController extends Controller
 {
     public function index()
     {
-        $taxonomy_codes = Taxonomy_code::withTrashed()->paginate(15);
+        $taxonomy_codes = Taxonomy_code::where('is_active', 1)->get();
+        //dd($taxonomy_codes);
         //var_dump($taxonomy_codes); die();
-        return view('masters.taxonomycodes.index', compact('taxonomy_codes'))->with('i', (request()->input('page', 1) - 1) * 15);
+        //return view('masters.taxonomycodes.index', compact('taxonomy_codes'))->with('i', (request()->input('page', 1) - 1) * 15);
+        return view('masters.taxonomycodes.index', compact(['taxonomy_codes']));
     }
 
     public function store(Request $request)
@@ -24,7 +29,7 @@ class TaxonomyCodeController extends Controller
          request()->validate(['name' => 'required', 'code' => 'required']);
          $taxonomycode = Taxonomy_code::where('name', $request->name)->where('code', $request->code)->first();
          if($taxonomycode){
-          return  $this->redirectToRoute('/taxonomycodes', 'This taxonomy codes  already exist', 'success', ["positionClass" => "toast-top-center"]);
+          return  $this->redirectToRoute('/taxonomycodes', 'This taxonomy codes  already exist', 'error', ["positionClass" => "toast-top-center"]);
          }
         $taxonomy_codes = new Taxonomy_code();
         $taxonomy_codes->name = $request->name;
@@ -85,5 +90,39 @@ class TaxonomyCodeController extends Controller
       $taxonomycode =  Taxonomy_code::where("id", $request->id)->first();        
       $taxonomycode->delete();
          return  $this->redirectToRoute('/taxonomycodes', 'Taxonomy codes  deleted successfully', 'success', ["positionClass" => "toast-top-center"]);
+    }
+
+    public function importTaxonomyCode(Request $request)
+    {
+      // echo "<pre>";
+      // print_r($request->all());exit;
+      try {
+            DB::beginTransaction();
+              if(isset($request->import_file)){ 
+                $imported_Code = (new TaxonomyCodesImport)->toArray(request()->file('import_file'));
+                $fullArray = $imported_Code[1];
+                  //dd( $fullArray);
+                  foreach($fullArray as $taxCode){
+                     //echo $taxCode[0];
+                    $checkTaxCOde = Taxonomy_code::where('code', $taxCode[0])->first();
+                    if($checkTaxCOde){
+                      $checkTaxCOde->code = $taxCode[0];
+                      $checkTaxCOde->name = $taxCode[1];
+                      $checkTaxCOde->update();
+                    }
+                    else{
+                      $newTaxCode = new Taxonomy_code();
+                      $newTaxCode->code = $taxCode[0];
+                      $newTaxCode->name = $taxCode[1];
+                      $newTaxCode->save();
+                    }
+                  }  
+              }
+            DB::commit();
+            return $this->redirectToRoute('taxonomycodes', 'Taxonomy code import', 'success', ["positionClass" => "toast-top-center"]);
+          } catch (\Exception $e) {
+            DB::rollback();   
+            return $this->redirectToRoute(redirect()->back(), 'Bill created successfully', 'error', ["positionClass" => "toast-top-center"]);
+        }
     }
 }

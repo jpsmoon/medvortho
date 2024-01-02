@@ -1,162 +1,48 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
 <style>
-        footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
-        .card-content {
-            min-height: 490px;
-        }
-
-        .autoCompete-css {
-            list-style: none;
-            padding: 0px;
-            width: 83%;
-            position: absolute;
-            margin: 0;
-            top: 86%;
-            border: solid 1px #a9bed6;
-            z-index: 999999 !important;
-            display: none;
-        }
-
-        .autoCompete-css li {
-            background: #fff;
-            padding: 9px;
-        }
-
-        .autoCompete-css li:nth-child(even) {
-            background: #007bff;
-            color: white;
-        }
-
-        .autoCompete-css li:hover,
-        li b:hover {
-            cursor: pointer;
-        }
-
-        #searchDrop-Down .dropdown-menu {
-            font-size: 13px;
-            min-width: 525px !important;
-            border-top: none !important;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            margin-top: -1.5px;
-            box-shadow: none;
-        }
-
-        .topSearch .select2-selection__arrow {
-            display: none !important;
-        }
-
-        .swal-wide {
-            width: 255px !important;
-            height: 154px !important;
-        }
-
-        .swal2-container {
-            top: -20% !important;
-        }
-
-        .swal2-button {
-            border: 1px dashed #333; font-size: 13px;
-
-        }
-
-        /*  style cancel buttons */
-        .swal2-button--cancel {
-            color: #333; 
-        }
-
-        .swal2-button--confirm {
-            color: green
-        }
-
-        .swal2-button--danger {
-            color: red;
-        }
-        .list-group-item 
-        {
-        position: relative;
-        display: block;
-        padding: 0.25rem;
-        margin-bottom: -1px;
-        background-color: #FFF;
-        border: 1px solid #E4E7ED;
-        }
-        
-        label
-        {
-         margin-bottom: 0.2rem;
-        }
-        .form-horizontal .form-group 
-        {
-        margin-left: 0;
-        margin-right: 0;
-        margin-bottom: 7px;
-        }
-        .modal-footer
-        {
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: -moz-box;
-        display: -ms-flexbox;
-        -webkit-align-items: center;
-        -moz-box-align: center;
-        -ms-flex-align: center;
-        -moz-box-pack: end;
-        -ms-flex-pack: end;
-        justify-content: center;
-        border-top: 1px solid #ECEEEF;
-        }
-        .swal2-title {
-            color: #595959;
-            font-size: 13px;
-        }
-    </style>
+.mt-1, .my-1{
+    margin-top:0.5rem!important;
+}
+</style>
     <!-- END: Breadcrumbs-->
-    <div class="row">
-        <div class="col-1 mt-4"></div>
-        <div class="col-10 mt-4">
-            <div class="card row-background">
+    <div class="row mt-0">
+        <div class="col-12">
                 <!-- START: Breadcrumbs-->
-                <div class="row ">
-                    <div class="col-12  align-self-center">
-                        <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                <div class="row">
+                    <div class="col-md-12  align-self-center">
+                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
                             <div style="padding-top:10px" class="w-sm-100 mr-auto">
-                                <h2 class="heading"> <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 34 34" class="left"><title>icon_patient</title><path d="M20.983 16.793L19.32 23.2h-1.857c-.825.017-1.48.654-1.463 1.425l.005.21c.017.758.682 1.365 1.495 1.365h5.147c.977 0 1.829-.617 2.07-1.5l.269-.977a.392.392 0 0 0 .014-.104c0-.231-.2-.418-.448-.418h-.753l-1.085-6.853c.258.077.501.185.73.324.517.314.933.72 1.248 1.216.314.497.573 1.094.777 1.791.203.698.343 1.39.418 2.079.075.688.113 1.42.113 2.194 0 .993-.277 1.846-.83 2.557-.553.71-1.22 1.066-1.999 1.066H11.83c-.78 0-1.446-.355-1.999-1.066-.553-.711-.83-1.564-.83-2.557 0-.775.038-1.506.113-2.194.075-.689.215-1.381.418-2.079.204-.697.463-1.294.777-1.79.315-.497.73-.903 1.249-1.217.518-.315 1.113-.472 1.786-.472 1.16 1.167 2.546 1.75 4.157 1.75 1.31 0 2.472-.386 3.483-1.157zm-.58 6.623l1.423-5.602.791 5.602h-2.213zM22.5 12c0 1.38-.488 2.559-1.465 3.535C20.06 16.512 18.88 17 17.5 17c-1.38 0-2.559-.488-3.535-1.465C12.988 14.56 12.5 13.38 12.5 12c0-1.38.488-2.559 1.465-3.535C14.94 7.488 16.12 7 17.5 7c1.38 0 2.559.488 3.535 1.465C22.012 9.44 22.5 10.62 22.5 12z" fill="#3A3A3A" fill-rule="evenodd"></path></svg>Schedular</h2>
+                                <h2 class="heading"><i class="fa-solid fa-calendar-days"></i> Schedular</h2>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- END: Breadcrumbs-->
+                <div class="row">
+                <div class="col-md-12 mt-0">
+            <div class="card setMinheight p-0">
+              <div class="card-body2"> 
                 <div class="card-content" style="z-index: 0;">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-4 col-md-4">
-                                <div class="row">
+                            <div class="col-4 col-md-3">
                                     <div class="col-12 col-md-12">
-                                        <div>
                                             <div class="card-header  showButtonColor justify-content-between align-items-center">
-                                                <h5 class="card-title text-warning">Current Month Calendar</h5>
+                                                <h5 class="card-title text-warning"><i class="fa-solid fa-calendar-week"></i> Current Month Calendar</h5>
                                             </div>
                                             <div class="card-body text-center border-primary table-responsive" id="sowPatintInfoRit">
                                                  <div id="datepicker-center">
                                                     <div id='calendar-month'></div>
                                                 </div>
                                             </div>
-                                        </div>
                                     </div>
-                                </div>
-                                <div class="row">
+                            
                                     <div class="col-12 col-md-12">
                                         @if($patientInfo)
                                         <div class="card">
                                             <div class="card-header  showButtonColor justify-content-between align-items-center">
-                                                <h5 class="card-title text-warning">Patient Summary</h5>
+                                                <h5 class="card-title text-warning"><i class="fa-solid fa-hospital-user"></i> Patient Summary</h5>
                                             </div>
                                             <div class="card-body border-primary table-responsive" id="sowPatintInfoRit">
                                                 <ul class="list-inline">
@@ -179,12 +65,11 @@
                                         </div>
                                         @endif
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 col-md-12">
+                               
+                                    <div class="col-12 col-md-12 mt-0">
                                          <div>
                                             <div class="card-header showButtonColor justify-content-between align-items-center">
-                                                <h5 class="card-title text-warning">Patient List</h5>
+                                                <h5 class="card-title text-warning"><i class="fa-regular fa-address-book"></i> Patient List</h5>
                                             </div>
                                             <div class="border-primary table-responsive showOverFlow">
                                                 <ul class="list-group">
@@ -198,10 +83,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                                 
                             </div>
-                            <div class="col-8 col-md-8">
+                            <div class="col-9 col-md-9">
                                 <div class="row"> 
                                     <div class="col-12">
                                         <div id='calendar-div' class="h-100"> </div>
@@ -211,206 +95,16 @@
                         </div>
                     </div>
                 </div>
+             </div>
             </div>
-            <div class="col-1 mt-4"></div>
+            </div>
+            </div>
         </div>
     </div>
     <div id="calendarModal" class="modal fade">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <form id="schedularFrm" action="{{ route('savePatientSchedular') }}" enctype="multipart/form-data" class="form-horizontal ladda-form'" method="POST">
-                    <div class="modal-header">
-                        <h4 align="center" id="modalTitle" class="modal-title">Add Appointment</h4>
-                        <button type="button" onclick="hideModel();" class="close" data-dismiss="modal">&times;</button>                        
-                    </div>
-                    <div id="modalBody" class="modal-body" style="overflow-y: scroll !important; height:580px; ">
-                        @csrf
-                         <div class="row">
-                            <div class="form-group col-md-6">
-                                <label for="patientSearchId"> Patient<span class="required">* </span></label>
-                                <input autocomplete="off"   type="hidden" name="patientId" id="showPatientId" class="form-control" >
-                                <input autocomplete="off" placeholder="Enter patient name, patient id" type="text" name="patientSearchId" id="patientSearchId" class="form-control" data-validation-event="change" data-validation="required" data-validation-error-msg="">
-                                <ul id="searchPatientDiv" class="autoCompete-css"></ul>
-                                @if($errors->has('patientId'))
-                                <span class="invalid-feedback" style="display:block" role="alert">
-                                    <strong>{{ $errors->first('patientId') }}</strong>
-                                </span>
-                                @endif
-                           </div>
-                        </div> 
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="appointment_date"> Appointment Date</label>
-                                    <input autocomplete="off"  placeholder="Select appointment date" type="text" name="appointment_date" id="appointment_date" class="form-control" data-validation-event="change" data-validation="required" data-validation-error-msg="">
-                                    <span id="showHolidayError" class="" style="display:none" role="alert"><strong></strong> </span>
-                                    @if($errors->has('appointment_date'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_date') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="appointment_time"> Appointment Time</label>
-                                    <input autocomplete="off" type="text" name="appointment_time" class="form-control timepicker" data-validation-event="change" data-validation="required" data-validation-error-msg="">
-                                    @if($errors->has('appointment_time'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_time') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="appointment_provider">Billing Provider<span class="required">* </span></label>
-                                    <select onchange="getProviderServiceLocation(this.value);" id="appointment_provider" name="appointment_provider" class="form-control 4col formcls" data-validation-event="change" data-validation="required" data-validation-error-msg="">
-                                        
-                                    </select>
-                                    @if($errors->has('appointment_provider'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_provider') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="appointment_location"> Rendering Provider</label>
-                                    <select id="apt_rendering_id" name="apt_rendering_id" class="form-control">
-                                        <option value=''>-Select-</option>
-                                    </select>
-
-                                    @if($errors->has('appointment_location'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_location') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>                   
-                            </div>
-                            <div class="row"> 
-                                <div class="form-group col-md-6">
-                                    <label for="appointment_location"> Practice Location</label>
-                                    <select id="apt_loc_id" name="appointment_location" class="form-control 4col formcls">
-                                        <option value=''>-Select-</option>
-                                    </select> 
-                                    @if($errors->has('appointment_location'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_location') }}</strong>
-                                    </span>
-                                    @endif
-                                </div> 
-                                <div class="form-group col-md-6">
-                                    <label for="appointment_resource"> Resource</label>
-                                    <input autocomplete="off" type="text" name="appointment_resource" class="form-control">
-                                    @if($errors->has('appointment_resource'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_resource') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="appointment_case">Case No</label>
-                                    <select id="appointment_case_id" name="appointment_case" class="form-control 4col formcls">
-                                        <option value=''>-Select-</option>  
-                                </select>
-                                    @if($errors->has('appointment_case'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_case') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="appointment_resource">Authorization</label>
-                                    <input autocomplete="off" type="text" name="appointment_authorization" id="appointment_authorization" class="form-control">
-                                    @if($errors->has('appointment_authorization'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_authorization') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="appointment_resason"> Reason</label>
-                                    <select id="appointment_resason_id" name="appointment_resason" class="form-control 4col formcls" data-validation-event="change" data-validation="required" data-validation-error-msg="">
-                                        <option value=''>-Select-</option> 
-                                </select>
-                                    @if($errors->has('appointment_reason'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_reason') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="appointment_meeting_Type"> Meeting Type</label>
-                                    <select name="appointment_meeting_Type" class="form-control" data-validation-event="change" data-validation="required" data-validation-error-msg="">
-                                        <option value=''>-Select-</option>
-                                        @foreach ($meetingTypes as $meetingType)
-                                            <option value="{{$meetingType['id'] }}">{{$meetingType['name'] }}</option>
-                                        @endforeach
-                                    </select>
-                                    @if($errors->has('appointment_meeting_Type'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_meeting_Type') }}</strong>
-                                    </span>
-                                    @endif
-                                </div> 
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="mi"> Duration</label>
-                                    <select name="appointment_duration" class="form-control 4col formcls" data-validation-event="change" data-validation="required" data-validation-error-msg="">
-                                        <option value=''>-Select-</option>
-                                        <?PHP for ($j = 5; $j <= 200; $j += 5) {?>
-                                        <option value="<?PHP echo $j; ?>">{{$j}}</option>
-                                        <?php }?>
-                                    </select>
-                                    @if($errors->has('appointment_meeting_Type'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_meeting_Type') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                                
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    <label for="appointment_recurrene"></label>
-                                    <input type="checkbox" class="largerCheckbox" name="appointment_recurrene"> <span style="vertical-align:top"> Recurrene</span>
-                                    @if($errors->has('appointment_recurrene'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_recurrene') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                                <div class="form-group col-md-3">
-                                    <label for="appointment_interpreter"></label>
-                                    <input type="checkbox" class="largerCheckbox" name="is_interpreter"> <span style="vertical-align:top"> Interpreter</span>
-                                    @if($errors->has('is_interpreter'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('is_interpreter') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <label for="appointment_additionInfo">Addition Information</label>
-                                     <textarea class="form-control" id="appointment_additionInfo" name="appointment_additionInfo" rows="4" cols="50"> </textarea> 
-                                    @if($errors->has('appointment_additionInfo'))
-                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                        <strong>{{ $errors->first('appointment_additionInfo') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button  type="submit"  id="sendFormAppointment" class="btn btn-primary ladda-button"><span class="ladda-label">Schedule</span></button>
-                        <button type="button" class="btn btn-default"  onclick="hideModel();">Cancle</button>
-                    </div>
-                </form>
+        <div class="modal-dialog modal-lg  modal-dialog-centered">
+            <div class="modal-content"> 
+                @include('patients.schedular.create',['patientInfo' =>$patient, 'urlFrom'=>'2']);
             </div>
         </div>
     </div>
@@ -463,9 +157,9 @@
             </div>
         </div>
     </div> 
-@endsection
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<!-- START: Page Vendor JS-->
+    @endsection
+   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- START: Page Vendor JS-->
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
         <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js" defer=""></script> 
         <style type="text/css">
@@ -475,6 +169,18 @@
         <script>
         
         $(document).ready(function() { 
+            <?php if($patientInfo) {
+            $fullName = '';
+            $fullName = $patientInfo->first_name;
+            if($fullName != ''){
+                $fullName .= ' ';
+            }
+            if($patientInfo->last_name != ''){
+                $fullName .= $patientInfo->last_name;
+            }
+            ?>
+            getBillingProviderByPatientId(<?php echo $patientInfo->id; ?>,'<?php echo $fullName; ?>')
+            <?php }?>
             $("#patientSearchId").keypress(function() {
                 addPatientSearch();
             })
@@ -888,7 +594,6 @@
                             
                     },
                 });
-
                 calendar.render();
             }
         }

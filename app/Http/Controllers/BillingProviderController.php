@@ -7,8 +7,11 @@ use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use Illuminate\Support\Facades\LOWER;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\BillingPracticeChargeImport;
 
-use App\Models\{BillingProviderHoliday, MasterHoliday, BillingProviderRecurrence, AppointmentReason, BillingProviderChargeProcedureCode, BillingProviderCharge,City,State, BillReferingOrderProvider,BillingProvider, Taxonomy_code, User,BillPlaceService, 
+use App\Models\{BillSecondSbr, WriteOffReason, Role, Task, Status, BillingProviderHoliday, MasterHoliday, BillingProviderRecurrence, AppointmentReason, BillingProviderChargeProcedureCode, BillingProviderCharge,City,State, BillReferingOrderProvider,BillingProvider, Taxonomy_code, User,BillPlaceService, 
     PlaceOfServiceCode,PlaceOfServices, MasterPlaceOfService, RequestingPhysician,MasterSpecility, PractceLocation, PracticeContact,
     MasterProviderCharge, BillModifier, InjuryBill, Patient_injury};
 
@@ -17,10 +20,10 @@ class BillingProviderController extends Controller
     protected $bPModel;
     public function __construct(BillingProvider $billProviderMod )
     {
-        $this->middleware('permission:patient-list|patient-create|patient-edit|patient-delete', ['only' => ['index', 'show']]);
-        $this->middleware('permission:patient-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:patient-edit', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:patient-delete', ['only' => ['destroy']]);
+        $this->middleware('permission:billing-provider-list|billing-provider-create|billing-provider-edit|billing-provider-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:billing-provider-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:billing-provider-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:billing-provider-delete', ['only' => ['destroy']]);
         $this->bPModel = $billProviderMod;
     }
     
@@ -184,48 +187,9 @@ class BillingProviderController extends Controller
         $bRenderings = (count($rendering) > 0 ) ? $rendering : [];
         return view('billingprocess.billRendering.index',compact('bRenderings','id'));
     }
-    public function createBillingRendering(Request $request)
-    {
-        // echo "<pre>";
-        // print_r($request->all());exit;
-        $providerId = $request->providerId;
-        $bRenderings = [];
-        $id = $request->id;
-        $taxonomy_codes = Taxonomy_code::where('is_active', 1)->orderBy('name')->orderBy('code')->get();
-        if($id != null){
-        $render = BillReferingOrderProvider::with('state','taxonomyCode')->where('billing_provider_id',$providerId);
-        $bRenderings =   $render->first();
-        }
-        
-
-        $masterData = $this->showStateCityCountry();
-        $countris = $masterData['countris'];
-        $states = $masterData['states'];
-        $pType = 4;
-        return view('billingprocess.billRendering.create',compact('pType','bRenderings','providerId','id','states','taxonomy_codes'));
-    }
     
-    public function storeBillRender(Request $request)
-    {
-        try {
-            $id = ($request->renderProviderId) ? $request->renderProviderId : null;
-            $this->storeBillReferringProvider($request,$id);
-            if($id != null){
-                $message= 'Bill referring provider updated successfully';
-            }
-            else{
-                $message= 'Bill referring provider created successfully';
-            }
-            $toastr_title=trans('messages.toastr_success');
-            Toastr::success($message,'',["positionClass" => "toast-top-center"]);
-            return redirect('billing/rendering/' . $request->billingProviderId);
-        } catch (\Exception $e) {
-                $message= $e->getMessage();
-                $toastr_title=trans('messages.toastr_error');
-                Toastr::error($message,'',["positionClass" => "toast-top-center"]);
-                return redirect()->back();
-        }
-    }
+    
+    
     public function viewBillingRendering(Request $request)
     {
         $id = $request->id;
@@ -273,38 +237,7 @@ class BillingProviderController extends Controller
        }
         return view('masters.billingproviders.edit',compact('billingprovider','id','states','users','editUsers'));
     }
-    public function storeBillingProvider(Request $request)
-    {
-        //dd($request->all());exit;
-        request()->validate(['injury_state_id' => 'required']);
-        try {
-            $resons = $this->bPModel->getProviderResaons();
-            $response = $this->storeBillProviderProvider($request, $resons);
-            if($response == 1){
-                if(!$request->providerId){
-                    $message= 'Bill provider created successfully';
-                }
-                else{
-                    $message= 'Bill provider updated successfully';
-                }
-               
-                $toastr_title=trans('messages.toastr_success');
-                Toastr::success($message,'',["positionClass" => "toast-top-center"]);
-                return redirect('/billingproviders');
-            }
-            else{
-                $toastr_title=trans('messages.toastr_error');
-                Toastr::error("This Provider already exist",'',["positionClass" => "toast-top-center"]);
-                 return redirect()->back();
-            }
-            
-        } catch (\Exception $e) {
-            $message= $e->getMessage();
-            $toastr_title=trans('messages.toastr_error');
-            Toastr::error($message,'',["positionClass" => "toast-top-center"]);
-            return redirect()->back();
-        }
-}
+
 public function placesOfServices(Request $request)
     {
         $providerId = $request->providerId;
@@ -428,16 +361,8 @@ public function placesOfServices(Request $request)
         $countris = $masterData['countris'];
         $states = $masterData['states'];
         return view('billingprocess.charges.index',compact('id','states','bRenderings','providerId'));
-    }
-
+    } 
     
-    public function billingProvidersSetting(Request $request)
-    {
-        $id =  $request->id;
-        $bRenderings = [];
-        $billingP = BillingProvider::where('id' ,$id)->first();
-        return view('billingprocess.setting.index', compact('id','bRenderings', 'billingP'));
-    }
     public function requestingPhysicians(Request $request)
     {
         $bRenderings = [];
@@ -590,20 +515,7 @@ public function placesOfServices(Request $request)
             return redirect()->back();
         }
     } 
-    public function searchProcedureCodeForUnit(Request $request)
-    {
-        $billingProviderId = 1; $result =  [];
-        $checkProviderCharge = BillingProviderCharge::where('provider_id', $billingProviderId)->first();
-        if($checkProviderCharge){
-            $checkModify = BillingProviderChargeProcedureCode::where('billing_provider_charge_id',$checkProviderCharge->id)->where('status',1);
-            if(isset($request->prCode) && isset($request->prCode)){
-                $checkModify =   $checkModify->where('procedure_code', $request->prCode)->where('modifiers',$request->modefiyer);
-            }
-            $checkModify =  $checkModify->first();
-           if($checkModify) {  $result = array($checkModify); }
-           return $result;
-        }
-    }
+    
     public function createCmsForm(Request $request)
     {
         
@@ -623,34 +535,18 @@ public function placesOfServices(Request $request)
         $masterData = $this->showStateCityCountry();
         $states = $masterData['states'];
         return view('billingprocess/cmsForm1500.index', compact('bRenderings','id','cmsform','providerId','renderings', 'placeOfServices', 'states'));
-    }
-    
-    
-    public function createPracticeCharge(Request $request)
-    {
-        $providerId = $request->providerId; 
-        $ctype = $request->ctype;
-        $id = null;
-        $masterData = $this->showStateCityCountry();
-        $countris = $masterData['countris'];
-        $states = $masterData['states'];
-        $stateCode = null;
-        $modifiersArray = BillModifier::where('status', 1)->get();
-        $providerInfo = BillingProvider::where('id',$providerId)->first();
-        $checkMasterCharge = MasterProviderCharge::where('provider_id',$providerId)->first();
-
-        return view('billingprocess.charges.create-practice',compact('ctype','id','providerId','states','providerInfo','modifiersArray','checkMasterCharge'));
-    }
+    } 
     
     public function settingCharge(Request $request)
     {
         $chargeId = $request->chargeId; 
-        $checkMasterCharge = BillingProviderCharge::with('getChargesProcedureCode')->where('id',$chargeId)->first();
+        $providerId = $request->providerId; 
+        $checkMasterCharge = BillingProviderCharge::with('getChargesProcedureCode')->where('id',$chargeId)->where('provider_id',$providerId)->first();
         $modifiersArray = BillModifier::where('status', 1)->get();
         $masterData = $this->showStateCityCountry();
         $countris = $masterData['countris'];
         $states = $masterData['states'];
-        return view('billingprocess.charges.show',compact('states','chargeId','checkMasterCharge', 'modifiersArray'));
+        return view('billingprocess.charges.show',compact('providerId','states','chargeId','checkMasterCharge', 'modifiersArray'));
     } 
     public function saveProcedureCode(Request $request)
     {
@@ -674,48 +570,16 @@ public function placesOfServices(Request $request)
             Toastr::error($message,'',["positionClass" => "toast-top-center"]);
             return redirect()->back();
         }
-    } 
-    
-    public function storePracticeCharge(Request $request, $id = null){
-        try {
-                $id = ($request->practiceChargeId) ? $request->practiceChargeId : null;
-                $billingProviderId = ($request->billingProviderId) ? $request->billingProviderId : null;
-                $produdeCode = BillingProviderChargeProcedureCode::where('id', $id)->first();
-                $this->addPracticeChargeProcedureCode($request); 
-                // echo "<==>";
-                // print_r($request->all());
-                // exit;
-                $url = null;
-                if($request->chargeId != " "){
-                    $message= "Provider's practice charge updated successfully";
-                    $url = 'settings/charges/' . $request->chargeId;
-                }
-                else{
-                    $message= "Provider's practice charge added successfully";
-                    $url = 'setting/billing/provider/charge/add/' . $billingProviderId;
-                    if(isset($request->ctype)) {
-                        $url = 'setting/billing/provider/charge/add/' . $billingProviderId."/".$request->ctype; 
-                    }
-                }
-                $toastr_title=trans('messages.toastr_success');
-                Toastr::success($message,'',["positionClass" => "toast-top-center"]); 
-            return redirect($url); 
-        } catch (\Exception $e) {
-                $message= $e->getMessage();
-                $toastr_title=trans('messages.toastr_error');
-                Toastr::error($message,'',["positionClass" => "toast-top-center"]);
-                return redirect()->back();
-        }
-    }
+    }  
     public function addPracticeContact(Request $request)
     {
         $providerId = $request->providerId; $bPracticeContact = null;
         $id = $request->id;
-        $title = 'Add Place of Service';
+        $title = 'Add Practice Contact';
          
         if($id != null){
-            $title = 'Edit Place of Service'; 
-            $bPracticeContact = PracticeContact::where('billing_provider_id',$providerId)->where('id',$id)->first(); 
+        $title = 'Edit Practice Contact'; 
+        $bPracticeContact = PracticeContact::where('billing_provider_id',$providerId)->where('id',$id)->first(); 
         } 
 
         $masterData = $this->showStateCityCountry();
@@ -831,7 +695,7 @@ public function placesOfServices(Request $request)
             }
                           
         }
-        return view('billingprocess/cmsForm1500.show', compact('diagnosisCodeNumbers','injuryBillInfo','totForm','billCharge','mm', 'yy', 'dd','inj_mm', 'inj_dd', 'inj_yy','stateCode','isOtherForm','otherServiceForForm','serviceForForm'));
+        return view('billingprocess.cmsForm1500.show', compact('diagnosisCodeNumbers','injuryBillInfo','totForm','billCharge','mm', 'yy', 'dd','inj_mm', 'inj_dd', 'inj_yy','stateCode','isOtherForm','otherServiceForForm','serviceForForm'));
     }
     public function createBillingCharge(Request $request)
     {
@@ -985,5 +849,358 @@ public function placesOfServices(Request $request)
              DB::rollback(); 
             return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
         }
+    }
+    
+    public function getTasksByStatusId($statusId){
+         $tasks = Task::where('status_id', $statusId)->get();
+         return  $tasks;
+    }
+     
+    public function viewAssignTaskForBillingProvider(Request $request){
+        $providerId = $request->providerId;
+        $billStatuss = Status::with('getTasks')->where('status_type', 3)->get();
+        $roles = Role::whereNotIn('name', ['Admin', 'super-admin'])->get();
+         $users = User::whereDoesntHave('roles', function ($q) {
+            $q->whereIn('name', ['Admin','super-admin']);
+        })->get();
+        
+        return view('billingprocess.assignTask.index', compact(['providerId', 'billStatuss', 'roles', 'users']));
+    }
+    public function assignTaskToUser(Request $request){
+        // echo "<pre>";
+        // print_r($request->all());exit;
+        try {
+            $task = Task::where('id', $request->task_id)->first();
+            if($task){
+                if($request->task_assign_type == 1){
+                    $role = $request->assign_role_name;
+                    $users = User::whereHas(
+                        'roles', function($q) use($role){
+                            $q->where('role_id', $role);
+                        }
+                    )->get();
+                    if(count($users) > 0){
+                        foreach($users as $user){
+                            $this->assignNewTaskToUser($user->id, $task, $request);
+                        }
+                    } 
+                }
+                else if($request->task_assign_type == 2){
+                    $user = $request->user_id;
+                    $this->assignNewTaskToUser($user, $task, $request);
+                } 
+            }
+            $redirectUrl = '/billing/provider/task/assignment/preferences/'.$request->providerId;
+            return $this->redirectToRoute($redirectUrl, 'Task Assigned successfully', 'success', ["positionClass" => "toast-top-center"]);
+        } catch (\Exception $e) {
+            return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
+        }
+    }
+    public function getSecondReviewInfoById(Request $request){
+        $sReviewid = $request->secondReviewId;
+        return WriteOffReason::where('id', $sReviewid)->first();
+    }
+    public function saveBillSecondSBR(Request $request){
+        // echo "<pre>";
+        // print_r($request->billSbrArray); 
+        try {
+            DB::beginTransaction();
+            $this->storeBillSecondRevies($request);
+            $redirectUrl = 'view/patient/injury/bill/info/'.$request->selectedBillId;
+            DB::commit();
+            return $this->redirectToRoute($redirectUrl, 'Bill send sbr added successfully', 'success', ["positionClass" => "toast-top-center"]);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
+        } 
+    }
+    public function createBillingRendering(Request $request)
+    {
+        // echo "<pre>";
+        // print_r($request->all());exit;
+        $providerId = $request->providerId;
+        $bRenderings = [];
+        $id = $request->id;
+        $taxonomy_codes = Taxonomy_code::where('is_active', 1)->orderBy('name')->orderBy('code')->get();
+        if($id != null){
+        $render = BillReferingOrderProvider::with('state','taxonomyCode')->where('id',$id);
+            $bRenderings =   $render->first();
+        }
+        //dd($bRenderings);
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+        $pType = 4;
+        return view('billingprocess.billRendering.create',compact('pType','bRenderings','providerId','id','states','taxonomy_codes'));
+    }
+    
+    public function billProviderPracticeChargeImport(Request $request){
+        try {
+            DB::beginTransaction();
+            $checkMasterCharge = MasterProviderCharge::where('provider_id',$request->providerId)->first();
+            //dd($checkMasterCharge);
+            if($checkMasterCharge){
+                $checkPracticeName = BillingProviderCharge::where('id', $checkMasterCharge->id)->where('provider_id', $request->providerId)->first();
+                //dd($checkPracticeName);
+                if($checkPracticeName){
+                    $checkPracticeName->charge_id           = $checkMasterCharge->id;
+                    $checkPracticeName->practice_name       = $request->practice_charge_name_import;
+                    $checkPracticeName->states_code         = 'CA';
+                    $checkPracticeName->effective_dos       = $request->effective_dos_import;
+                    $checkPracticeName->expiration_dos      = $request->expiration_dos_import;
+                    $checkPracticeName->created_by          = Auth::user()->id;
+                    $checkPracticeName->status              = 1;
+                    $checkPracticeName->ctype               = $request->ctype;
+                    $checkPracticeName->update();
+                    if($checkPracticeName->id){
+                        $this->storeProviderPracticeCharge($checkPracticeName->id, $request);
+                    }
+                }
+                else{
+                    $billingPracticeCharge =  new BillingProviderCharge();
+                    $billingPracticeCharge->provider_id         = $request->providerId;
+                    $billingPracticeCharge->charge_id           = $checkMasterCharge->id;
+                    $billingPracticeCharge->ctype               = $request->ctype;
+                    $billingPracticeCharge->practice_name       = $request->practice_charge_name_import;
+                    $billingPracticeCharge->states_code         =  'CA';
+                    $billingPracticeCharge->effective_dos       = $request->effective_dos_import;
+                    $billingPracticeCharge->expiration_dos      = $request->expiration_dos_import;
+                    $billingPracticeCharge->created_by          = Auth::user()->id;
+                    $billingPracticeCharge->status          = 1;
+                    $billingPracticeCharge->save();
+                    if($billingPracticeCharge->id){
+                        $this->storeProviderPracticeCharge($billingPracticeCharge->id, $request);
+                    }
+                } 
+            } 
+            
+            DB::commit();
+            $url = '/setting/billing/provider/charge/add/'.$request->providerId;
+            return $this->redirectToRoute( $url, 'Charges added for this provider code import', 'success', ["positionClass" => "toast-top-center"]);
+          } catch (\Exception $e) {
+            DB::rollback();   
+            return $this->redirectToRoute(redirect()->back(), 'Bill created successfully', 'error', ["positionClass" => "toast-top-center"]);
+        }
+    }
+    public function importProcedureCode(Request $request){
+        try {
+            DB::beginTransaction(); 
+            $this->storeProviderPracticeCharge($request->masterChargeId, $request); 
+            DB::commit();
+            $url = '/settings/charges/'.$request->masterChargeId."/".$request->providerId;
+            return $this->redirectToRoute( $url, 'Charges added for this provider code import', 'success', ["positionClass" => "toast-top-center"]);
+          } catch (\Exception $e) {
+            DB::rollback();   
+            return $this->redirectToRoute(redirect()->back(), 'Bill created successfully', 'error', ["positionClass" => "toast-top-center"]);
+        }
+    }
+    public function billingProvidersSetting(Request $request)
+    {
+        $id =  $request->id;
+        $bRenderings = [];
+        $billingProviders = BillingProvider::where('id',$id)->orderBy('id', 'desc')->first();
+        $billingP = BillingProvider::where('id' ,$id)->first();
+       return view('billingprocess.setting.index', compact('id','bRenderings', 'billingP', 'billingProviders'));
+    } 
+    public function createPracticeCharge(Request $request)
+    {
+        $providerId = $request->providerId; 
+        $ctype = $request->ctype;
+        $id = null;
+        $masterData = $this->showStateCityCountry();
+        $countris = $masterData['countris'];
+        $states = $masterData['states'];
+        $stateCode = null;
+        $modifiersArray = BillModifier::where('status', 1)->get();
+        $providerInfo = BillingProvider::where('id',$providerId)->first();
+        $checkMasterCharge = MasterProviderCharge::where('provider_id',$providerId)->first(); 
+        return view('billingprocess.charges.create-practice',compact('ctype','id','providerId','states','providerInfo','modifiersArray','checkMasterCharge'));
+    }
+    public function storePracticeCharge(Request $request, $id = null){
+       try {
+                DB::beginTransaction();
+                $id = ($request->practiceChargeId) ? $request->practiceChargeId : null;
+                $billingProviderId = ($request->billingProviderId) ? $request->billingProviderId : null;
+                $produdeCode = BillingProviderChargeProcedureCode::where('id', $id)->first();
+                $this->addPracticeChargeProcedureCode($request); 
+                DB::commit();
+                $url = 'setting/billing/provider/charge/add/' . $billingProviderId;
+                if($request->chargeId != " "){
+                    $message= "Provider's practice charge updated successfully";
+                    //$url = 'settings/charges/' . $request->chargeId;
+                }
+                else{
+                    $message= "Provider's practice charge added successfully";
+                    // $url = 'setting/billing/provider/charge/add/' . $billingProviderId;
+                    // if(isset($request->ctype)) {
+                    //     $url = 'setting/billing/provider/charge/add/' . $billingProviderId."/".$request->ctype; 
+                    // }
+                }
+                 return $this->redirectToRoute($url, $message, 'success', ["positionClass" => "toast-top-center"]);
+        } catch (\Exception $e) {
+                    DB::rollback();
+                $message= $e->getMessage();
+                $toastr_title=trans('messages.toastr_error');
+                Toastr::error($message,'',["positionClass" => "toast-top-center"]);
+                return redirect()->back();
+        }
+    }
+    public function searchProcedureCodeForUnit(Request $request)
+    {
+        //$billingProviderId = 1; 
+        //echo "<pre>";
+        //print_r($request->modefiyer);exit;
+        $result =  [];
+        $injury = Patient_injury::where('id', $request->injuryId)->first();
+        if($injury){
+            $checkProviderCharge = BillingProviderCharge::where('provider_id', $injury->patient->billing_provider_id)->first();
+            if($checkProviderCharge){
+                $checkModify = BillingProviderChargeProcedureCode::where('billing_provider_charge_id',$checkProviderCharge->id)->where('status',1);
+                if(isset($request->prCode) || isset($request->modefiyer)){
+                    if(isset($request->prCode)){
+                        $checkModify =   $checkModify->where('procedure_code', $request->prCode); 
+                    }
+                    if(isset($request->modefiyer)){
+                        $checkModify =   $checkModify->whereIn('modifiers',$request->modefiyer);
+                    }
+                    $checkModify =  $checkModify->first();
+                }   
+            if($checkModify) {  $result = array($checkModify); } 
+            } 
+        } 
+        return $result;
+    }
+    public function searchProcedureCodeForAutoSearch(Request $request)
+    {
+        //$billingProviderId = 1; 
+        $result =  [];
+
+        $injury = Patient_injury::where('id', $request->injuryId)->first();
+        if($injury){ 
+            $checkProviderCharge = BillingProviderCharge::where('provider_id', $injury->patient->billing_provider_id)->first();
+            if($checkProviderCharge){
+                $checkModify = BillingProviderChargeProcedureCode::where('billing_provider_charge_id',$checkProviderCharge->id)->where('status',1);
+                if(isset($request->str) && isset($request->str)){ 
+                    $checkModify =   $checkModify->where('procedure_code', 'LIKE', "%{$request->str}%");
+                }
+                $checkModify =  $checkModify->get();
+            if($checkModify) {  $result = $checkModify; } 
+            } 
+        } 
+        return $result;
+    }
+    public function storeBillingProvider(Request $request)
+    {
+        //dd($request->all());exit;
+        //request()->validate(['injury_state_id' => 'required']);
+        try {
+            $resons = $this->bPModel->getProviderResaons();
+            $providerFName = null; $providerLName = null;
+            if($request->bill_type == 'Professional'){
+                if($request->provider_type == 'Organization'){
+                    $providerFName = $request->professional_provider_name;                       
+                }else{
+                    $providerFName = $request->billProvider_namebox_33_first_name;    
+                    $providerLName = $request->billProvider_namebox_33_last_name;    
+                }
+            }
+            if($request->bill_type == 'Pharmacy'){
+                $providerFName = $request->pharmacy_billing_provider_name; 
+            }
+            if($request->bill_type == 'Institutional'){
+                $providerFName = $request->institution_provider_name;  
+            }
+            //echo "##".$providerFName;exit;
+             
+            if($request->providerId == ''){
+                $isFoundProvider = BillingProvider::where(DB::raw('lower(professional_provider_name)'), strtolower($providerFName))->first();
+                //dd($isFoundProvider);
+                if($isFoundProvider){
+                    $toastr_title=trans('messages.toastr_error');
+                    Toastr::error("This provider already exist",'',["positionClass" => "toast-top-center"]);
+                     return redirect()->back();
+                }
+                else{
+                    $response = $this->storeBillProviderProvider($request, $resons);
+                    if($response == 1){
+                        if(!$request->providerId){
+                            $message= 'Bill provider created successfully';
+                        }
+                        else{
+                            $message= 'Bill provider updated successfully';
+                        } 
+                        $toastr_title=trans('messages.toastr_success');
+                        Toastr::success($message,'',["positionClass" => "toast-top-center"]);
+                        return redirect('/billingproviders');
+                    }
+                } 
+
+            } 
+            else{
+                 $response = $this->storeBillProviderProvider($request, $resons);
+                if($response == 1){
+                    if(!$request->providerId){
+                        $message= 'Bill provider created successfully';
+                    }
+                    else{
+                        $message= 'Bill provider updated successfully';
+                    }
+                   
+                    $toastr_title=trans('messages.toastr_success');
+                    Toastr::success($message,'',["positionClass" => "toast-top-center"]);
+                    return redirect('/billingproviders');
+                }
+            } 
+            
+        } catch (\Exception $e) {
+            $message= $e->getMessage();
+            $toastr_title=trans('messages.toastr_error');
+            Toastr::error($message,'',["positionClass" => "toast-top-center"]);
+            return redirect()->back();
+        }
+    }
+    public function storeBillRender(Request $request)
+    {
+        //try {
+            $id = ($request->renderProviderId) ? $request->renderProviderId : null;
+            if($id == null){
+                $isFoundRendering = BillReferingOrderProvider::where(DB::raw('lower(referring_provider_first_name)'), strtolower($request->fName))->first();
+                //dd($isFoundProvider);
+                if($isFoundRendering){
+                    $toastr_title=trans('messages.toastr_error');
+                    Toastr::error("This provider already exist",'',["positionClass" => "toast-top-center"]);
+                        return redirect()->back();
+                }
+                else{
+                    $this->storeBillReferringProvider($request,$id);
+                    if($id != null){
+                        $message= 'Bill referring provider updated successfully';
+                    }
+                    else{
+                        $message= 'Bill referring provider created successfully';
+                    }
+                    $toastr_title=trans('messages.toastr_success');
+                    Toastr::success($message,'',["positionClass" => "toast-top-center"]);
+                    return redirect('billing/rendering/' . $request->billingProviderId);
+                }
+            } 
+            else{
+                $this->storeBillReferringProvider($request,$id);
+                if($id != null){
+                    $message= 'Bill referring provider updated successfully';
+                }
+                else{
+                    $message= 'Bill referring provider created successfully';
+                }
+                $toastr_title=trans('messages.toastr_success');
+                Toastr::success($message,'',["positionClass" => "toast-top-center"]);
+                return redirect('billing/rendering/' . $request->billingProviderId);
+            }
+        // } catch (\Exception $e) {
+        //         $message= $e->getMessage();
+        //         $toastr_title=trans('messages.toastr_error');
+        //         Toastr::error($message,'',["positionClass" => "toast-top-center"]);
+        //         return redirect()->back();
+        // }
     }
 }

@@ -1,40 +1,27 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
-<style>
-#myDIV {
-  width: 100%;
-  padding: 10px 0;
-}
-#exampleModalBill .close
-{
-         border:none !important;
-         outline: none!important;
-}
-</style>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<?php $billingId = 1;
-?>
-<!-- START: Breadcrumbs-->
-    <div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mt-3">{{$title}}</h4> </div>
-                    <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                        <li class="breadcrumb-item">
-                            <a class="btn btn-primary" href="javascript:void(0)" data-toggle="modal" data-target="#exampleModalBill"> {{$btnHeading}}</a>
-                        </li>
-                        <li class="breadcrumb-item">
-                        <a class="btn btn-primary" href="{{ url('/billing/providers/setting', $providerId) }}"> Back</a>
-                        </li>
-                    </ol>
-                </div>
-            </div>
-        </div>
+    <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
-<!-- END: Breadcrumbs-->
+    
+  <style>
+      .dataTables_length
+        {
+          padding-top: 2%;  
+        } 
+        .checkbox
+        {
+            width: 18px;
+            height: 18px;
+            
+            position: relative;
+            top: 5px;
+        }
+    
+    
+  </style>  
+    
     @if ($errors->any())
-        <div class="row ">
+        <div class="row mt-2 customBox">
             <div align="center" class="col-12  align-self-center">
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -45,14 +32,41 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-1 mt-4"></div>
         </div>
-    @endif 
-    </div>
-    <div class="row">
+    @endif
+    <div class="row mt-0 ">
+        <div class="col-md-12 mt-4">
+            <div class="card row-background customBoxHeight">
+                <!-- START: Breadcrumbs-->
+                <div class="row ">
+                    <div class="col-12  align-self-center">
+                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div style="padding-top:10px" class="w-sm-100 mr-auto">
+                                <h2 class="heading">{{$title}}</h2>
+                            </div>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                             <li class="breadcrumb-item">
+                            
+                            <a class="btn btn-primary" href="javascript:void(0)" data-toggle="modal" data-target="#exampleModalBill"> {{$btnHeading}}</a>
+                           
+                            </li>  
+                                 
+                            <li class="breadcrumb-item">
+                                <a class="btn btn-primary" href="{{ url('/billing/providers/setting', $providerId) }}"> Back</a>
+                            </li>
+                        </ol> 
+                        </div>
+                    </div>
+                </div>
+                
+                
+                <!-- END: Breadcrumbs-->
+                <div class="card-content">
+                    <div class="col-md-12 col-12">
+                        <div class="row">
             <div class="col-12 mt-3">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body2">
                         <div class="table-responsive">
                             <table id="example" class="table layout-secondary table-striped table-bordered">
                                 <thead class="thead-dark">
@@ -108,9 +122,13 @@
                             </div>
                             <div class="form-group">
                                 <label for="message-text" class="col-form-label">Text:</label>
-                                <textarea name="reason" id="message-text" data-validation="required, length"  data-validation-length="2-100" rows="6" class="form-control"></textarea>
+                                <textarea name="reason" id="message-text" data-validation="required, length"  data-validation-length="2-2000" rows="6" class="form-control"></textarea>
                             </div>
                             <div>
+                             
+                             <input type="checkbox" class="checkbox" id="1" name="for_all_providers" value="1">
+                             <label for="vehicle1">For All Providers</label>
+
                             <button type="submit" class="btn btn-primary" style="min-width:100px;" id="sendBtn">Add</button>
                             <button type="button" class="btn btn-secondary closeBtn" data-dismiss="modal" style="min-width:100px;">Cancel</button>
                         </div>
@@ -119,43 +137,15 @@
                 </div>
               </div>
     </div>
-
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 mt-4"></div>
+        </div>
+    </div>
 @endsection
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
 <script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
 <script src="{{ asset('js/controller/master_for_all.js') }}"></script>
-
-<script>
-var reasonType = '';
-var reasonBtn = 'Add';
-<?php if($type == 1){?>
-reasonType = 'Add Bill Write Off Reason'; 
-<?php } if($type == 2){?>
-reasonType = 'Add Second Review Reasons'; 
-<?php } if($type == 3){?>
-reasonType = 'Add Box 19 Reasons';
-<?php }?>
-
-function setValForUpdate(data){
-    <?php if($type == 1){?>
-    reasonType = 'Update Bill Write Off Reason'; 
-    <?php } if($type == 2){?>
-    reasonType = 'Update Second Review Reasons'; 
-    <?php } if($type == 3){?>
-    reasonType = 'Update Box 19 Reasons';
-    <?php }?>
-    $("#reasonId").val(data.id);
-    $("#sendBtn").text('Update');
-    $("#exampleModalLabel").text(reasonType);
-    $("#description").val(data.description);
-    $("#message-text").val(data.reason_text);
-}
-$(document).ready(function() {
-  $(".closeBtn").on("click", function() {
-        $("#reasonFrmId").trigger('reset');
-        $("#sendBtn").text('Add');
-        $("#exampleModalLabel").text(reasonType);
-  });
-});
-</script>
+<script></script>

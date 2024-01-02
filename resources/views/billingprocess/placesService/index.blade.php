@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
     <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
@@ -24,22 +24,22 @@
             </div>
         </div>
     @endif
-    <div class="row mt-2 ">
-        <div class="col-md-12 mt-4">
-            <div class="card row-background customBoxHeight">
+    <div class="row mt-0">
+        <div class="col-md-12 mt-0">
+            <div class="card row-background customBoxHeight5">
                 <!-- START: Breadcrumbs-->
                 <div class="row ">
                     <div class="col-12  align-self-center">
                         <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
-                            <div style="padding-top:10px" class="w-sm-100 mr-auto">
+                            <div style="padding-top:5px" class="w-sm-100 mr-auto">
                                 <h2 class="heading">Place of Services</h2>
                             </div>
                              <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                             <li class="breadcrumb-item">
-                            
-                            <a class="btn btn-primary"  href="{{ url('/add/places-of-service', $providerId) }}"> Add Place Of Service</a>
-                           
-                            </li>  
+                             @can('place-of-service-create')
+                                <li class="breadcrumb-item"> 
+                                    <a class="btn btn-primary" href="{{ url('/add/places-of-service', $providerId) }}"> Add Place Of Service</a> 
+                                </li> 
+                            @endcan 
                                  
                             <li class="breadcrumb-item">
                                 <a class="btn btn-primary" href="{{ url('/billing/providers/setting', $providerId) }}"> Back</a>
@@ -51,7 +51,7 @@
                 <!-- END: Breadcrumbs-->
                 <div class="card-content">
                     <div class="col-md-12 col-12">
-                        <div class="row">
+                     <div class="row">
             <div class="col-12">
                 <div class="card">
                         <div class="table-responsive">
@@ -66,6 +66,7 @@
                                         <th scope="col">Active</th>
                                     </tr>
                                 </thead>
+                                @can('place-of-service-list')
                                     <tbody>
                                             @if (count($placeOfService))
                                             @foreach ($placeOfService as $service)
@@ -75,7 +76,14 @@
                                                     <td>{{ $service->nick_name ? $service->nick_name : '-' }}</td>
                                                     <td>{{ $service->placeOfServiceCode ? $service->placeOfServiceCode->name : '-' }} </td>
                                                     <td>{{ $service->npi ? $service->npi : '-' }}</td>
-                                                    <td>{{ $service->address_line1 ? $service->address_line1 : '-' }}{{ $service->address_line2 ? ' - ' . $service->address_line2 : '-' }} </td>
+                                                    <td> 
+                                                    {{ ($service->address_line1) ? $service->address_line1 : ''}}
+                                                    {{ ($service->address_line2) ? ', '.$service->address_line2 : '' }}
+                                                    {{ ($service->city_id) ? ', '.$service->city_id : ''}}
+                                                    {{ ($service->state_id) ? ', '.strtoupper( substr( $service->state_id, 0, 2 )) : ''}} 
+                                                    {{ $service->zipcode }}
+                                                    
+                                                    </td>
                                                     <td>{{ ($service->is_active == 1) ? 'Yes' : 'No'  }}</td>
                                                 </tr>
                                             @endforeach
@@ -84,7 +92,8 @@
                                                     <td colspan="10">No Records Found.</td>
                                                 </tr>
                                             @endif
-                                        </tbody>
+                                    </tbody>
+                                @endcan
                                 </table>
                         </div>
                 </div>

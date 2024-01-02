@@ -21,7 +21,7 @@ class MasterCrudController extends Controller
     protected $patientModel;
     public function __construct(Patient $patientMod )
     {
-        $this->middleware('permission:patient-list|patient-create|patient-edit|patient-delete', ['only' => ['index', 'show']]);
+        $this->middleware('permission:report-type-list|report-type-create|report-type-edit|report-type-delete', ['only' => ['index', 'show']]);
         $this->middleware('permission:patient-create', ['only' => ['create', 'store']]);
         $this->middleware('permission:patient-edit', ['only' => ['edit', 'update']]);
         $this->middleware('permission:patient-delete', ['only' => ['destroy']]);
@@ -32,22 +32,37 @@ class MasterCrudController extends Controller
         $reportTypes = ReportType::where('is_active',1)->orderBy('id', 'desc')->get();
         return view('masters.reportType.index', compact('reportTypes'));
     }
+    
     public function storeReportType(Request $request)
     {
+        
       try {
             DB::beginTransaction();
-                $this->saveReportType($request);
+            if(isset($request->report_type_id)){
+                $this->saveReportType($request);  
+            }
+            else{
+                $reportType = ReportType::where('report_name', $request->name)->orWhere('report_code', $request->report_code)->first();
+                 if($reportType){
+                  return  $this->redirectToRoute('/reprt/type', 'This Report type code  already exist', 'error', ["positionClass" => "toast-top-center"]);
+                 }
+                 else{
+                   
+                   $this->saveReportType($request);  
+                 } 
+            } 
             DB::commit();
             $msg = 'Report type added successfully';
             if(isset($request->holiday_id)){
-                $msg = 'Report type updated successfully';
+            $msg = 'Report type updated successfully';
             }
-            return  $this->redirectToRoute('/document/reprt/type', $msg, 'success', ["positionClass" => "toast-top-center"]);
+            return  $this->redirectToRoute('/reprt/type', $msg, 'success', ["positionClass" => "toast-top-center"]);
         } catch (\Exception $e) {
              DB::rollback(); 
             return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
         }
     }
+    
     public function deleteReportType(Request $request)
     {
        try {
@@ -55,10 +70,15 @@ class MasterCrudController extends Controller
              $this->deleteRow(new ReportType(), $request->id); 
             DB::commit();
            $msg = 'Report type deleted successfully'; 
-           return  $this->redirectToRoute('/document/reprt/type', $msg, 'success', ["positionClass" => "toast-top-center"]);
+           return  $this->redirectToRoute('/reprt/type', $msg, 'success', ["positionClass" => "toast-top-center"]);
         } catch (\Exception $e) {
              DB::rollback(); 
             return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
         }
+    }
+    public function billErrorList(Request $request)
+    {
+        $reportTypes = ReportType::where('is_active',1)->orderBy('id', 'desc')->get();
+        return view('masters.reportType.index', compact('reportTypes'));
     }
 }

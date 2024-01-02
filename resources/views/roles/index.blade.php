@@ -1,25 +1,24 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
 
 <!-- START: Breadcrumbs-->
-    <div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mt-3">Role Management</h4>
-                 
-                </div>
-                
+    <div class="row">
+        <div class="col-12">
+            <div class="sub-header py-4 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                <div class="w-sm-100 mr-auto margin05"><h2 class="mb-0 heading">Role Management</h2></div>
+
                 <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                     <li class="breadcrumb-item">
-                         <a class="btn btn-primary" href="{{ route('roles.create') }}"> Create New Role</a> 
+                        <a class="btn btn-primary" href="{{ route('roles.create') }}"> Create New Role</a>
                     </li>
                 </ol>
             </div>
         </div>
     </div>
     <!-- END: Breadcrumbs-->
+
     <!-- <div class="row">
-        <div class="col-12 mt-3">
+        <div class="col-12">
             <div class="card">
                 <div class="card-body">
                 {!! Form::open(['class' => 'form-horizontal','id' => 'patientListFrm','method'=>"get"]) !!}
@@ -42,9 +41,9 @@
     </div> -->
 
     <div class="row">
-            <div class="col-12 mt-3">
-                <div class="card">
-                    <div class="card-body">
+            <div class="col-12">
+                <div class="card ">
+                    <div class="card-body p-0">
                         <div class="table-responsive">
                         <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
                                 <thead class="thead-dark">
