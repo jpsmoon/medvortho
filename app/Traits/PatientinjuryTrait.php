@@ -550,49 +550,7 @@ trait PatientinjuryTrait
             }
         }
     }
-    public function storeInjuryDocuments($request) {
-        
-        // echo "<pre>";
-        // print_r($request->all());exit; 
-
-        $injuryDocument = AllDocument::where('id', $request->injuryDocumentId)->first();
-        $provider_id = ($request->providerId) ? $request->providerId : null; 
-        if($injuryDocument){
-            $injuryDocument->injury_id              = $request->injuryId;
-            $injuryDocument->provider_id            = $provider_id;
-            if($request->docType != 'Bill'){
-              $injuryDocument->reporting_type         = $request->injury_reporting_type;
-              $injuryDocument->description            = $request->description3;  
-            } 
-           // $injuryDocument->injury_document	    = $document_path;
-            $injuryDocument->is_active	            =  1;
-            $injuryDocument->added_by               = Auth::user()->id;
-            $injuryDocument->update();
-            $this->checkTaskForBillDocuments($request);
-            $injury_id = $request->injury_id;
-            $this->addGlobalAllLog('INJURY_DOCUMENT_UPDATED','App\AllDocument','Updated Injury Document',$injuryDocument->injury_id);
-            return $injury_id;
-        }
-        else{
-            $injuryDocumentId1 = AllDocument::where('id', $request->tempInjuryDocumentId)->first();
-
-            //$injuryDocumentId1 = new AllDocument();
-            $injuryDocumentId1->injury_id               = $request->injuryId;
-            $injuryDocumentId1->doc_type                = $request->docType;
-            $injuryDocumentId1->provider_id             = $provider_id;
-            if($request->docType != 'Bill'){ 
-                $injuryDocumentId1->reporting_type          = $request->injury_reporting_type;
-                $injuryDocumentId1->description             = $request->description3;
-            }
-           // $injuryDocumentId1->injury_document	        = $document_path;
-            $injuryDocumentId1->is_active	            =  1;
-            $injuryDocumentId1->added_by                = Auth::user()->id;
-            $injuryDocumentId1->save();
-            $this->checkTaskForBillDocuments($request);
-            $this->addGlobalAllLog('INJURY_DOCUMENT_CREATED','App\AllDocument','Created Injury Document',$injuryDocumentId1->injury_id);
-            return $injuryDocumentId1->injury_id;
-        }
-    }
+    
     public function storeTepInjuryDocuments($request) {
         
         // echo "<pre>";
@@ -632,6 +590,86 @@ trait PatientinjuryTrait
             $injuryDocumentId1->added_by                = Auth::user()->id;
             $injuryDocumentId1->save();
             return $injuryDocumentId1->id;
+        }
+    }
+    public function storeInjuryDocuments($request) {
+        
+        // echo "<pre>";
+        // print_r($request->all());exit; 
+
+        $injuryDocument = AllDocument::where('id', $request->injuryDocumentId)->first();
+        $provider_id = ($request->providerId) ? $request->providerId : null;  
+        $doc_type_msg = '';
+        if($injuryDocument){
+            $injuryDocument->injury_id              = $request->injuryId;
+            $injuryDocument->provider_id            = $provider_id;
+            if($request->docType != 'Bill'){
+              $injuryDocument->reporting_type         = $request->injury_reporting_type;
+              $injuryDocument->description            = $request->description3;  
+            } 
+           // $injuryDocument->injury_document	    = $document_path;
+            $injuryDocument->is_active	            =  1;
+            $injuryDocument->added_by               = Auth::user()->id;
+            $injuryDocument->update();
+            $this->checkTaskForBillDocuments($request);
+            $injury_id = $request->injury_id;
+            $doc_type_msg = 'Updated '. $request->docType. 'Document';
+            $this->addGlobalAllLog('INJURY_DOCUMENT_UPDATED','App\AllDocument',$doc_type_msg,$injuryDocument->injury_id);
+            return $injury_id;
+        }
+        else{
+            $docId = null;  $injury_id =  null;
+            $doc_type_msg = 'Created '. $request->docType. 'Document';
+            if(isset($_REQUEST['documentGallaryid'])){
+                if(count($_REQUEST['documentGallaryid']) > 0){
+                    foreach($_REQUEST['documentGallaryid'] as $gallaryId){
+                        $billDocument = AllDocument::where('id', $gallaryId)->first();
+                        if($billDocument){
+                            $file       = $billDocument->injury_document;
+                            $randomStr   = Str::random(12); 
+                            $ex = explode('.', $file); 
+                            if($ex){
+                                $destinationPath     = public_path('injury_document');
+                                $newfile           = $randomStr . '.' . $ex[1];
+                                if (file_exists($destinationPath."/".$file)){  
+                                    if (copy($destinationPath."/".$file, $destinationPath."/".$newfile)) {
+                                        $newDocument = new AllDocument(); 
+                                        $newDocument->injury_id                 = $request->injuryId;
+                                        $newDocument->doc_type                  = $request->docType;
+                                        $newDocument->provider_id               = $provider_id;
+                                        $newDocument->is_active	                =  1;
+                                        $newDocument->added_by                  = Auth::user()->id;
+                                        $newDocument->injury_document	        = $newfile; 
+                                        $newDocument->save();
+                                        $docId = $newDocument->id;
+                                        $injury_id = $newDocument->injury_id; 
+                                    } 
+                                } 
+                            }    
+                        }
+                    }
+                }
+            }
+            else{
+                $injuryDocumentId1 = AllDocument::where('id', $request->tempInjuryDocumentId)->first();
+                $injuryDocumentId1->injury_id               = $request->injuryId;
+                $injuryDocumentId1->doc_type                = $request->docType;
+                $injuryDocumentId1->provider_id             = $provider_id;
+                if($request->docType != 'Bill'){ 
+                    $injuryDocumentId1->reporting_type          = $request->injury_reporting_type;
+                    $injuryDocumentId1->description             = $request->description3;
+                }
+                    // $injuryDocumentId1->injury_document	        = $document_path;
+                $injuryDocumentId1->is_active	            =  1;
+                $injuryDocumentId1->added_by                = Auth::user()->id;
+                $injuryDocumentId1->save();
+                $docId = $injuryDocumentId1->id;
+                $injury_id = $injuryDocumentId1->injury_id;
+            }
+            
+            $this->checkTaskForBillDocuments($request);
+            $this->addGlobalAllLog('INJURY_DOCUMENT_CREATED','App\AllDocument',$doc_type_msg, $docId);
+            return $injury_id;
         }
     }
 }

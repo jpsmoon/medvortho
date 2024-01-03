@@ -38,4 +38,21 @@ class Handler extends ExceptionHandler
             //
         });
     }
+    public function render($request, Throwable $exception)
+    {
+        // if ($exception instanceof \Illuminate\Auth\Access\AuthorizationException) {
+        //      return response()->view('errors.permission', [], 403);
+        // }
+
+        // return parent::render($request, $exception);
+        if ($exception instanceof CustomException) {
+            return response()->view('errors.permission', [], 500);
+        }
+    
+        if ($exception instanceof \Spatie\Permission\Exceptions\UnauthorizedException) {
+            return response()->view('errors.permission', [], 403);
+        }
+        return parent::render($request, $exception);
+
+    } 
 }

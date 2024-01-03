@@ -1,38 +1,51 @@
 @extends('layouts.home-app')
 @section('content')
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <link href="{{ asset('css/step-content.css') }}" rel="stylesheet">
-    @if ($message = Session::get('success'))
-    <div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="alert alert-success">
-                <p>{{ $message }}</p>
+    <!-- START: Breadcrumbs-->
+    <!-- END: Breadcrumbs-->
+    
+  <style>
+      .dataTables_length
+        {
+          padding-top: 2%;  
+        }  
+  </style>  
+    
+    @if ($errors->any())
+        <div class="row mt-2 customBox">
+            <div align="center" class="col-12  align-self-center">
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
     @endif
-    <div class="row">
-        <div class="col-1 mt-4"></div>
-                <div class="col-10 mt-4">
-                    <div class="card">
-                        <div class="row">
-                            <div class="col-12  align-self-center">
-                                <div class="sub-header mt-3 py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
-                                    <div style="padding-top:10px; padding-left:20px;" class="w-sm-100 mr-auto">
-                                        <h2 class="heading">CMS 1500 Forms</h2>
-                                    </div>
-                                    <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                                        <li style="padding-bottom:10px" class="breadcrumb-item">
-                                            <a class="btn btn-primary" href="{{ url('/billing/providers/setting', $providerId) }}"> Back</a>
-                                        </li>
-                                    </ol>
-                                </div>
+    <div class="row mt-2 ">
+        <div class="col-md-12 mt-4">
+            <div class="card row-background customBoxHeight">
+                <!-- START: Breadcrumbs-->
+                <div class="row ">
+                    <div class="col-12  align-self-center">
+                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div style="padding-top:10px" class="w-sm-100 mr-auto">
+                                <h2 class="heading">CMS 1500 Forms</h2>
                             </div>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                            <li class="breadcrumb-item">
+                                <a class="btn btn-primary" href="{{ url('/billing/providers/setting', $providerId) }}"> Back</a>
+                            </li>
+                        </ol> 
                         </div>
-                        <div class="card-content">
-                            <div class="card-body">
+                    </div>
+                </div>
+                <!-- END: Breadcrumbs-->
+                <div class="card-content">
+                    <div class="card-content">
+                            <div class="card-body2">
                             <form method="GET" action="{{ route('viewBillingCMS', $providerId) }}"  id="formView">
                                     <div class="form-row col-md-12">
                                         <div class="col-md-12">
@@ -150,8 +163,14 @@
                         </div>     
                     </div>
                 </div>
+                </div>
             </div>
+            <div class="col-1 mt-4"></div>
         </div>
-        <div class="col-1 mt-4"></div>
-    </div> 
+    </div>
 @endsection
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+<script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
+<script src="{{ asset('js/controller/master_for_all.js') }}"></script>
+<script></script>

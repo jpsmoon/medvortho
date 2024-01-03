@@ -247,10 +247,11 @@
                                     <div class="card-header  showButtonColor justify-content-between align-items-center">
                                         <h5 class="card-title text-warning"><i class="fa-solid fa-hospital-user"></i> Patients Appointment</h5>
                                     </div>
-                                    <div class="card-body text-center border-primary table-responsive" id="sowPatintInfoRit">
-                                            <div id="accordion23" class="accordion-alt scroll-h tabContentDiv" role="tablist">
+                                    <div class="card-body text-center border-primary table-responsive scroll-h" id="sowPatintInfoRit">
+                                            <div id="accordion23" class="accordion-alt  tabContentDiv" role="tablist">
                                                 <?php $i=1;?>
                                                 @foreach($patients as $patient)
+                                               
                                                     <div class="col-md-12">
                                                         <h6 class="mb-0">
                                                             <a  class="text-uppercase fw-bold d-block sowAccordianSelectBorder sowAccordianSelect" data-toggle="collapse" href="#collapseSchedular_{{$patient->id}}" aria-expanded="true" aria-controls="collapseSchedular_{{$patient->id}}">
@@ -283,6 +284,7 @@
                                                             </table>
                                                         </div>
                                                     </div>
+                                            
                                                     <?php $i++; ?>
                                                 @endforeach
                                             </div>

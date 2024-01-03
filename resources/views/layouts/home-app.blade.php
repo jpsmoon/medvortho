@@ -157,6 +157,7 @@
      <!-- END: Page CSS-->
     @php
         $sidebar_active = '';
+        $coantainCls ='mainSec';
     @endphp
     @if (request()->is('create/patients/injury/*') ||
             request()->is('edit/patients/injury/*') ||
@@ -165,6 +166,9 @@
         @php
             $sidebar_active = 'active';
         @endphp
+    @endif
+    @if (request()->is('patients/view/*'))
+        @php  $coantainCls ='full-width';  @endphp
     @endif
 
 </head>
@@ -197,7 +201,7 @@
                                     <div class="input-group topSearch" id="adv-search" style="border:#888686">
                                         <input type="text" id="searchInputId" autocomplete="off" name="serachInput"
                                             class="form-control" autocomplete="off"
-                                            placeholder="Search with Patient ID">
+                                            placeholder="Search with Patient Name or Patient ID">
                                         <ul id="searchResult" class="autoCompete-css"></ul>
                                         <div class="input-group-btn">
                                             <div class="btn-group" role="group">
@@ -454,7 +458,7 @@
                                 @inject('statusClass', 'App\Http\Controllers\StatusController')
                                  @if($statusClass->getBillStatuss())
                                 @foreach ($statusClass->getBillStatuss() as $status)
-                                <li><a href="{{ url('/bills/list/',$status->id)}}">{{$status->status_name}}</a></li> 
+                                    <li><a href="{{ url('bill/list/status/wise')}}/{{$status->id}}/{{$status->slug_name}}">{{$status->status_name}}</a></li> 
                                 @endforeach
                                 @endif 
                             </ul>
@@ -466,51 +470,54 @@
             <li><a href="javascript:void(0)"><i class="fa-solid fa-sack-dollar"></i> Collection</a></li>
             
             <li><a href="javascript:void(0)"><i class="icon-settings"></i> Billing Provider</a>
-            
-            
-                <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
-                            <li class="scrollable-container media-list w-100" style="position: initial !important;">
+             <ul>
+                      <li class="customSec">
                              @if(Auth::user()->getUserBillingProviders)
-                                <div class="row">
-                                     @foreach (Auth::user()->getUserBillingProviders as $usBilling)
-                                    <div class="col-md-10">
-                                        <span> 
-                                            <a  href="{{ url('/billing/providers/setting/' . $usBilling->provider_id) }}">
-                                                <div class="media">
-                                                    <div class="media-left align-self-center"><i class="ft-plus-square icon-bg-circle bg-cyan"></i></div>
-                                                    <div class="media-body">
-                                                        <h6 class="media-heading">{{ ($usBilling->getBillingProvider && $usBilling->getBillingProvider->professional_provider_name) ? $usBilling->getBillingProvider->professional_provider_name : ''}}</h6> 
-                                                        <p class="notification-text font-small-3 text-muted"></p> 
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </span> 
-                                        
-                                        
-                                         
-                                    </div>
-                                    <div class="col-md-2 mt-2">
-                                        <span>
-                                             <a  href="{{ url('/view/billing/provider/' . $usBilling->provider_id) }}"> <i class="icon-settings"></a></i>
-                                         </span>
-                                    </div>
-                                    @endforeach
-                                </div>
-                                @endif 
-                                <div class="row">
-                                    <div class="col-md-12">
+                              @foreach (Auth::user()->getUserBillingProviders as $usBilling)
+                              <div class="row">
+                                     <div class="col-12 customSecMenu">
+                                         <span>
+                                        <a href="{{ url('/billing/providers/setting/' . $usBilling->provider_id) }}">
+                                            <div class="media menuList">
+                                             <div class="media-left"><i class="fa-solid fa-user-doctor"></i></div>
+                                              <div class="media-body"> 
+                                                 <span class="media-heading">{{ ($usBilling->getBillingProvider && $usBilling->getBillingProvider->professional_provider_name) ? mb_strimwidth($usBilling->getBillingProvider->professional_provider_name, 0, 30, "...") : ''}}</span>
+                                                 <!--<p class="notification-text font-small-3 text-muted"></p>-->
+                                              </div>
+                                            </div>
+                                         </a>
+                                        <a href="{{ url('/view/billing/provider/' . $usBilling->provider_id) }}"> <i class="icon-settings"></i></a>
+                                         </span>    
+                                       
+                                      </div>
+                                     
+                             
+                          </div>
+                           @endforeach
+                       @endif
+                       <div class="row">
+                                    <div class="col-md-12 customSecMenu ">
+                                         <span class="b-top">
                                          <a  href="{{ url('/billingproviders') }}">
-                                             <h6 class="media-heading pl-2">Manage Billing Providers</h6> 
+                                              <div class="media menuList">
+                                             <div class="media-left"><i class="fa-solid fa-user-group"></i></div>
+                                             
+                                             <span class="media-body media-heading">Manage Billing Providers</span> 
+                                             </div>
                                          </a> 
+                                         <a href="{{ url('/view/billing/provider/' . $usBilling->provider_id) }}"> <i class="icon-settings"></i></a>
+                                          </span>
                                     </div> 
                                 </div>
-                            </li> 
-                        </ul> 
+                   </li>
+             </ul>
+            
+            
             </li>
             
-            <li><a href="javascript:void(0)"><i class="icon-settings"></i> Setting</a>
+           <li><a href="javascript:void(0)"><i class="icon-settings"></i> Setting</a>
             
-                <ul>
+          <ul>
                      
                      <li><a href="javascript:void(0)">Custom Settings</a>
                          <ul>
@@ -521,7 +528,7 @@
                             <li><a href="{{ route('claimadministrators.index') }}">Claim Administrator</a></li>
                             <li><a href="{{ route('taxonomycodes.index') }}" >Taxonomy Codes</a></li>
                             <li><a href="{{ url('/master/holidays') }}" >Holidays</a></li>
-                            <li><a href="{{ url('/document/reprt/type') }}">Reporting Type</a></li>
+                            <li><a href="{{ url('/document/report/type') }}">Reporting Type</a></li>
                             <li><a href="{{ route('statuses.index') }}">Status</a></li>
                         </ul>
                      </li>
@@ -754,7 +761,7 @@
     </div>
     <!-- Horizontal navigation-->
 
-    <div class="app-content container-fluid mainSec">
+    <div class="app-content container-fluid {{$coantainCls}}">
         <div class="content-wrapper">
             <div class="content-header row">
             </div>
@@ -1021,7 +1028,40 @@
         $(function() {
             $("#example").dataTable();
         });
-
+        function deleteDocument(id, type) { 
+                    swal.fire({
+                        title: 'Are you sure you want to delete?',
+                        text: "You won't be able to revert this!",
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085D6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, Delete it!',
+                        customClass: {
+                            confirmButton: "btn btn-primary",
+                            cancelButton: "btn btn-danger",
+                            popup: 'swal-wide',
+                        }
+                    }).then((result) => { // Use .then() to handle the user's response
+                        if (result.isConfirmed) { // Only proceed if the user clicked the confirm button
+                            let _url     = `/deleteDocument/`;
+                            $.ajax({
+                                url: _url,
+                                type: 'POST',
+                                data: {
+                                    _token: token,
+                                    id: id,
+                                    docType:type
+                                },
+                                success: function(response) { 
+                                    location.reload();
+                                },
+                                error: function(response) {
+                                    swal.fire(response.responseJSON.message, '', 'error');
+                                }
+                            });
+                        }
+                    });
+                }
     </script>
 
     {!! Toastr::message() !!}

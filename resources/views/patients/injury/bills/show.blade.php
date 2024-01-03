@@ -161,7 +161,7 @@ nav > div a.nav-item.nav-link:focus
                                                     @endphp
                                                         <tr>
                                                             <td><a href="{{url('/view/patient/injury/bill/info')}}/{{$bill->id}}">{{'Bill00'.$bill->id}}</a></td>
-                                                            <td>{{date('Y-m-d',strtotime($bill->dos))}}</td>
+                                                            <td>{{date('m-d-Y',strtotime($bill->dos))}}</td>
                                                             <td>{{($bill->getRenderinProvider) ? $bill->getRenderinProvider->name : 'NA' }}</td>
                                                             <!--<td></td>-->
                                                             <td>{{$bill->totalCharge}}</td>

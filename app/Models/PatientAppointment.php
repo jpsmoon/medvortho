@@ -43,5 +43,13 @@ class PatientAppointment extends Model
             $model->update();
         });
     }
+    public function getBillStatus()
+    {
+        return $this->hasOne(Status::class, 'id', 'bill_status');
+    }
+    public function getBill()
+    {
+        return $this->hasOne(InjuryBill::class, 'appointment_id', 'id');
+    }
 
 }

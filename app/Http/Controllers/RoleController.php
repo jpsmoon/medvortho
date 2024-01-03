@@ -160,6 +160,7 @@ class RoleController extends Controller
   }
   public function deletePermission(Request $request){
     $pId = $request->id;
+    DB::table("role_has_permissions")->where("role_has_permissions.role_id",$pId)->delete(); 
     $checkPermission = Permission::where('id',$pId)->delete(); 
   }
   public function checkRoleBeforeDelete($rId){

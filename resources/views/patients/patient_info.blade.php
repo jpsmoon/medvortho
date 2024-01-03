@@ -82,7 +82,7 @@
     <div class="form-group col-md-4">
         <label for="gender">Gender<span class="required">* </span> </label>
         <select name="gender" class="form-control" data-validation-event="change" data-validation="required" data-validation-error-msg="">
-            <option value="" class="option">Select</option>
+            <option value="" class="option">Select2</option>
             <option value="Male" {{($patient && $patient->gender == 'Male') ? 'selected' : '' }}> Male</option>
             <option value="Female" {{($patient && $patient->gender == 'Female') ? 'selected' : ''}}> Female</option>
         </select>

@@ -17,6 +17,8 @@ class AddColoumnToInjuryBills extends Migration
             //
             $table->string('dos_end')->nullable();
             $table->string('bill_provider_name')->nullable();
+            $table->integer('task_status', 11)->nullable();
+            $table->integer('bill_status', 11)->nullable();
         });
     }
 
@@ -31,6 +33,8 @@ class AddColoumnToInjuryBills extends Migration
             //
             $table->string('dos_end')->nullable();
             $table->string('bill_provider_name')->nullable();
+            $table->integer('task_status', 11)->nullable();
+            $table->integer('bill_status', 11)->nullable();
         });
     }
 }

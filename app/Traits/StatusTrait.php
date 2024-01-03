@@ -11,6 +11,7 @@ trait StatusTrait
             $statuses->display_order = $request->display_order;
             $statuses->description = $request->description;
             $statuses->status_type = $request->status_type;
+            $statuses->slug_name = $request->status_aliase;
             $statuses->save();
             return $statuses;
         }else{ //Update here

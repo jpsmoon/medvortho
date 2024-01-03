@@ -133,75 +133,7 @@ class PatientController extends Controller
     }
 
     
-    public function savePatientAppointment(Request $request)
-    {
-        // echo "<pre>";
-        // print_r($request->all());exit;
-         try {
-            if(isset($request->patientId)){
-                $newAppoint =  date('Y-m-d');
-                if(isset($request->appointment_date)){
-                $reqDob =  $request->appointment_date;
-                $exDate = explode('/', $reqDob);
-                $newBreakDate = $exDate[2]."-".$exDate[0]."-".$exDate[1];
-                //$reverDate = implode('-', array_reverse($exDate));
-                $newAppoint =  date('Y-m-d',strtotime($newBreakDate));
-                }
-            
-                $checkApoint = PatientAppointment::where('patient_id', $request->patientId)->where('appointment_date', $newAppoint)->first();
-                if ($checkApoint) {
-                     $checkApoint->billing_provider_id = $request->appointment_provider;
-                    $checkApoint->rendering_provider_id= $request->apt_rendering_id;
-                    $checkApoint->appointment_date = $newAppoint;
-                    $checkApoint->appointment_time = $request->appointment_time;
-                    $checkApoint->location = $request->appointment_location;
-                    $checkApoint->resource = $request->appointment_resource;
-                    $checkApoint->recurrene = $request->appointment_recurrene;
-                    $checkApoint->appointment_reason = $request->appointment_resason;
-                    $checkApoint->meeting_type = $request->appointment_meeting_Type;
-                    $checkApoint->duration = $request->appointment_duration;
-                    $checkApoint->status = $request->appointment_status; 
-                    $checkApoint->case_id= $request->appointment_case;
-                    $checkApoint->authorised= $request->appointment_authorization;
-                    $checkApoint->appointment_addition_info = $request->appointment_additionInfo;
-                    $checkApoint->is_interpreter= $request->is_interpreter;
     
-                    $checkApoint->update();
-                    return  $this->redirectToRoute('/patient/create/schedular', "Patient appointment updated successfully", 'success', ["positionClass" => "toast-top-center"]);
-                } else { 
-                    $pAppoint = new PatientAppointment();
-                    $pAppoint->patient_id = $request->patientId;
-                    $pAppoint->billing_provider_id = $request->appointment_provider;
-                    $pAppoint->rendering_provider_id= $request->apt_rendering_id;
-                    $pAppoint->appointment_date = $newAppoint;
-                    $pAppoint->appointment_time = $request->appointment_time;
-                    $pAppoint->location = $request->appointment_location;
-                    $pAppoint->resource = $request->appointment_resource;
-                    $pAppoint->recurrene = $request->appointment_recurrene;
-                    $pAppoint->appointment_reason = $request->appointment_resason;
-                    $pAppoint->meeting_type = $request->appointment_meeting_Type;
-                    $pAppoint->duration = $request->appointment_duration;
-                    $pAppoint->status = $request->appointment_status; 
-                    $pAppoint->case_id= $request->appointment_case;
-                    $pAppoint->authorised= $request->appointment_authorization;
-                    $pAppoint->appointment_addition_info = $request->appointment_additionInfo;
-                    $pAppoint->is_interpreter= $request->is_interpreter;
-    
-                    // $pAppoint->arrival_time  = $request->patientId;
-                    // $pAppoint->notes  = $request->patientId;
-                    $pAppoint->save();
-                    //return redirect('/patient/create/schedular/' . $request->patientId);
-                    return  $this->redirectToRoute('/patient/create/schedular', "Patient appointment added successfully", 'success', ["positionClass" => "toast-top-center"]);
-                }  
-            } 
-            else{
-                return $this->redirectToRoute(redirect()->back(), 'something went wrong', 'error', ["positionClass" => "toast-top-center"]);
-            }
-            
-        } catch (\Exception $e) {
-            return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
-        }
-    }
 
     public function edit(Request $request)
     {
@@ -227,31 +159,7 @@ class PatientController extends Controller
 
     
 
-    public function viewPatientInjuryBillInfomation(Request $request)
-    {
-        $billId = $request->route()->parameter('id');
-        $injuryBillInfo = InjuryBill::with('getBillServices', 'getRenderinPlaceServices', 'getRenderinProvider','getBillDocuments','getBillDiagnosis')->where('id', $billId)->first();
-        if($injuryBillInfo){
-            $patientId = $injuryBillInfo->patient_id;
-            $injuryId = $injuryBillInfo->injury_id;
-        }
-        $patient = $this->setSidebarPatient($patientId);
-        $injury = $this->setSidebarInjury($injuryId);
-        $diagnos = null; $prefix ='';
-        if($injuryBillInfo->getBillDiagnosis && count($injuryBillInfo->getBillDiagnosis) > 0){ 
-            foreach($injuryBillInfo->getBillDiagnosis as $dg){
-                $diagnos .= $prefix . $dg->getBillDiagnosisName->diagnosis_code;
-                $prefix = ', ';
     
-                // if($diagnos){
-                //   $diagnos =  $diagnos->getBillDiagnosisName->diagnosis_code.","; 
-                // } 
-            }
-        }
-        $billLogs = MasterDataLog::where('data_id', $billId)->get();
-        //$billLogs = $injuryBillInfo->getBillHistory;
-        return view('patients.injury.bills.show-info', compact('billLogs','diagnos','patientId', 'injuryId', 'patient', 'injury','billId','injuryBillInfo'));
-    }
     public function ajaxViewEvents(Request $request)
     {
         //$patientId = $request->patientId;
@@ -386,7 +294,7 @@ class PatientController extends Controller
                     $patients = [];
                 }
                 else{
-                   
+
                     $patientsInfo = Patient::with('getBillingProvider');
                     if (isset($request->patientName)) {
                         //echo "@@###";exit;
@@ -505,7 +413,7 @@ class PatientController extends Controller
     }
     public function savePatienInjurytBill(Request $request)
     {
-         //try {
+         try {
             DB::beginTransaction();
             $bill_Id = $this->storeInjuryBillInfo($request); 
             DB::commit();
@@ -518,32 +426,13 @@ class PatientController extends Controller
             $url =  'view/patient/injury/bill/' .  $request->injuryId; 
             return $this->redirectToRoute($url, $message, 'success', ["positionClass" => "toast-top-center"]);
            
-        // } catch (\Exception $e) {
-        //     DB::rollback();   
-        //     return $this->redirectToRoute(redirect()->back(), 'Bill created successfully', 'error', ["positionClass" => "toast-top-center"]);
-        // }
-    }
-
-    public function viewPatientInjuryBill(Request $request)
-    {
-        // echo "<pre>";
-        // print_r($request->all());exit;
-        $patientId = null; $patient = null; $injury = null; $patientInjury = []; $injuryBill = []; $totalServiceUnit = 0; $providerId = Null;
-        $billServices = [];
-        $injuryId = $request->route()->parameter('injuryId');
-        $injuiryInfo =  Patient_injury ::where('id',$injuryId)->first();
-        
-        if($injuiryInfo){
-            $patientId =   $injuiryInfo->patient_id;
-            $patient = $this->setSidebarPatient($patientId);
-            $injury = $this->setSidebarInjury($injuryId);
+        } catch (\Exception $e) {
+            DB::rollback();   
+            return $this->redirectToRoute(redirect()->back(), 'Bill created successfully', 'error', ["positionClass" => "toast-top-center"]);
         }
-
-        $bills = $this->getBillListByInjuryId($injuryId, $patientId);
-        $billServices =  $bills['services'];
-        $injuryBill = $bills['bills'];
-        return view('patients.injury.bills.show', compact('injuryBill','patientId', 'injuryId','patient','injury','billServices'));
     }
+
+    
     
     public static function changeUnderScoreToSpace($str){
         $changedStr =  ucfirst(strtolower(str_replace('_', ' ', $str)));
@@ -648,7 +537,7 @@ class PatientController extends Controller
         //InjuryDocument
        //dd($request->all());exit;
        
-       try {
+       //try {
         DB::beginTransaction();
         $this->storeInjuryDocuments($request);
         DB::commit();
@@ -666,11 +555,10 @@ class PatientController extends Controller
             }
             return $this->redirectToRoute($url, 'Document created successfully', 'success', ["positionClass" => "toast-top-center"]);
         }
-       // 
-        } catch (\Exception $e) {
-           DB::rollback(); 
-            return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
-        }
+        // } catch (\Exception $e) {
+        //    DB::rollback(); 
+        //     return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
+        // }
     }
     public function patientInjuryContactDelete(Request $request){ 
     try {
@@ -934,54 +822,7 @@ class PatientController extends Controller
             return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
         }
     }   
-    public function addDocuments(Request $request, Patient $patient)
-    {
-        // echo  "<pre>";
-        // print_r($request->id);exit;
-        //echo "###".$request->pid."==".$request->id;exit; 
-        
-        try {
-            $head = 'Add '; $documents = []; $id= null; $providerId = null;
-            if(isset($request->id)){
-                $head = 'Update ';
-                $id= $request->id;
-                $documents = AllDocument::where("id", $request->id)->where('is_active',1)->first();
-            }
-            $title = ($request->type) ? $head.$request->type.'  Document' : null;
-            
-            $injuryId = null; $patient = []; $pInjuries = [];  $injury  = []; $typdocTypee = "";
-             
-            $docType = ($request->type) ? $request->type : null;
-            $injuryId = $request->injuryId;
-            if (isset($request->injuryDocumentId)) {
-                $title = 'Update Injury Document';
-                $id = $request->injuryDocumentId;
-            }
-            if($request->type == 'Injury'){
-                $injury  = Patient_injury::with('getInjuryClaim','getInjuryDocuments')->where('id', $injuryId)->first();
-                if($injury ){
-                    $patient = $this->setSidebarPatient($injury->patient_id);
-                    $providerId = ($injury->patient && $injury->patient->billing_provider_id) ? $injury->patient->billing_provider_id : null;
-                }
-            }
-            if($request->type == 'Bill'){
-                $providerId = null;
-            }
-            if($request->type == 'Provider'){
-                $providerId = $request->injuryId;
-            }
-             $uu = ($request->type == 'Provider')  ? '/billing/providers/setting/' :  (($request->type == 'Bill') ? '/view/patient/injury/bill/info/' : '/injury/view/');
-            $url = $uu.$injuryId;
-            
-            
-            $reportType = ReportType::orderBy('id', 'desc')->get();
-            $allDocuments = AllDocument::where('doc_type', $request->type)->where('injury_id', $injuryId)->get();
-
-             return view('patients.injury.documents.create', compact('allDocuments','url','providerId','documents','docType','id','injuryId','title','reportType' ,'patient', 'injury'));
-        } catch (\Exception $e) {
-            return $this->redirectToRoute(redirect()->back(), 'Something went wrong', 'error', ["positionClass" => "toast-top-center"]);
-        }
-    }
+    
     
     public function saveTempDocumentForAllDocuments(Request $request){
         //InjuryDocument
@@ -1037,16 +878,320 @@ class PatientController extends Controller
     {
         $reasons = AppointmentReason::where('provider_id',$request->providerid)->orderBy('id', 'desc')->get();
         return $reasons;
+    } 
+    function appointmentDelete(Request $request){
+         $appointment = PatientAppointment::where('id', $request->id)->first();
+        if($appointment){
+            $this->addGlobalAllLog('APPOINTMENT_DELETE','App\PatientAppointment','Patient appointment deleted', $appointment->id); 
+            $appointment->delete();
+        }  
     }
+    function getApointmentInfoById(Request $request){
+         $appountment = PatientAppointment::where('id', $request->eventId)->first();
+        if($appountment){
+            $fRenderingProvider = null;  $fpatientName = null; $durationData = null;
+            $fRenderingProvider = ($appountment->getRenderingProvider && $appountment->getRenderingProvider->referring_provider_first_name) ? $appountment->getRenderingProvider->referring_provider_first_name : '';
+            
+            if($appountment->getRenderingProvider && $appountment->getRenderingProvider->referring_provider_middle_name){
+                if ($fRenderingProvider !== '') {
+                    $fRenderingProvider .= ' ';
+                }
+                $fRenderingProvider .=  $appountment->getRenderingProvider->referring_provider_middle_name;
+            }
+            if($appountment->getRenderingProvider && $appountment->getRenderingProvider->referring_provider_last_name){
+                if ($fRenderingProvider !== '') {
+                    $fRenderingProvider .= ' ';
+                }
+                $fRenderingProvider .=  $appountment->getRenderingProvider->referring_provider_last_name;
+            }
+            $fpatientName = ($appountment->getPatient && $appountment->getPatient->first_name) ? $appountment->getPatient->first_name : '';
+            
+            if($appountment->getPatient && $appountment->getPatient->mi){
+                if ($fpatientName !== '') {
+                    $fpatientName .= ' ';
+                }
+                $fRenderingProvider .=  $appountment->getPatient->mi;
+            }
+            if($appountment->getPatient && $appountment->getPatient->last_name){
+                if ($fpatientName !== '') {
+                    $fpatientName .= ' ';
+                }
+                $fpatientName .=  $appountment->getPatient->last_name;
+            }
+            $durationData = $this->catculateTotalHours($appountment->duration);
+            $appountment->appointmentNo         = $appountment->appointment_no;
+            $appountment->appointmentDate       = ($appountment->appointment_date) ? date('m-d-Y', strtotime($appountment->appointment_date)) : '';
+            $appountment->meetingType           = $this->getMeetingType($appountment->meeting_type);
+            $appountment->renderingProvider     = $fRenderingProvider;
+            $appountment->resource              = ($appountment  && $appountment->resource ) ? $appountment->resource : '';
+            $appountment->authorised            = ($appountment  && $appountment->authorised ) ? $appountment->authorised : '';
+            $appountment->statusDivId           = ($appountment->getStatus && $appountment->getStatus->status_name) ? $appountment->getStatus->status_name : '';
+            $appountment->recurreneId             = ($appountment->recurrene && $appountment->recurrene == 'on') ? 'Yes' : 'No';
+            $appountment->patientNameId           =  $fpatientName;
+            $appountment->appointmentTime       = ($appountment->appointment_time) ? $appountment->appointment_time : '';
+            $appountment->billingProvider       = ($appountment->getBillingProvider && $appountment->getBillingProvider->professional_provider_name) ? $appountment->getBillingProvider->professional_provider_name : '';
+            $appountment->locationID            = ($appountment->getLocation && $appountment->getLocation->nick_name) ? $appountment->getLocation->nick_name : '';
+            $appountment->claimNo               = ($appountment->getInjury && $appountment->getInjury->getInjuryClaim && $appountment->getInjury->getInjuryClaim->claim_no) ? $appountment->getInjury->getInjuryClaim->claim_no : '';
+            $appountment->resaonsId             =  ($appountment->getResaons && $appountment->getResaons->name) ? $appountment->getResaons->name : '';
+            $appountment->durationId            =  $durationData;
+            $appountment->isInterpreterId       =  ($appountment->is_interpreter && $appountment->is_interpreter == 'on') ? 'Yes' : 'No';
+            $appountment->additionInformationId   =  ($appountment && $appountment->appointment_addition_info != "") ? $appountment->appointment_addition_info : '';
+            return $appountment;
+        } 
+    }
+    public function addDocuments(Request $request, Patient $patient)
+    {
+        // echo  "<pre>";
+        // print_r($request->id);exit;
+        //echo "###".$request->pid."==".$request->id;exit; 
+        
+        try {
+            $head = 'Add '; $documents = []; $id= null; $providerId = null;
+            $providerGallary = [];
+            if(isset($request->id)){
+                $head = 'Update ';
+                $id= $request->id;
+                $documents = AllDocument::where("id", $request->id)->where('is_active',1)->first();
+            }
+            $title = ($request->type) ? $head.$request->type.'  Document' : null;
+            
+            $injuryId = null; $patient = []; $pInjuries = [];  $injury  = []; $typdocTypee = "";
+             
+            $docType = ($request->type) ? $request->type : null;
+            $injuryId = $request->injuryId;
+            if (isset($request->injuryDocumentId)) {
+                $title = 'Update Injury Document';
+                $id = $request->injuryDocumentId;
+            }
+            if($request->type == 'Injury'){
+                $injury  = Patient_injury::with('getInjuryClaim','getInjuryDocuments')->where('id', $injuryId)->first();
+                if($injury ){
+                    $patient = $this->setSidebarPatient($injury->patient_id);
+                    $providerId = ($injury->patient && $injury->patient->billing_provider_id) ? $injury->patient->billing_provider_id : null;
+                }
+            }
+            if($request->type == 'Bill'){
+                $providerId = null;
+                //$providerGallary;
+                 $billInfo = InjuryBill::with('getPatientForBill')->where('id', $injuryId)->first();
+                 if($billInfo){
+                    if($billInfo->getPatientForBill && $billInfo->getPatientForBill->billing_provider_id){
+                        $providerGallary = AllDocument::where('doc_type', 'Provider')->where('injury_id', $billInfo->getPatientForBill->billing_provider_id)->get();
+                    }
+                 }
+            }
+            if($request->type == 'Provider'){
+                $providerId = $request->injuryId;
+            }
+             $uu = ($request->type == 'Provider')  ? '/billing/providers/setting/' :  (($request->type == 'Bill') ? '/view/patient/injury/bill/info/' : '/injury/view/');
+            $url = $uu.$injuryId;
+            
+            
+            $reportType = ReportType::orderBy('id', 'desc')->get();
+             $allDocuments = AllDocument::where('doc_type', $request->type)->where('injury_id', $request->injuryId)->get();
+             return view('patients.injury.documents.create', compact('providerGallary','allDocuments','url','providerId','documents','docType','id','injuryId','title','reportType' ,'patient', 'injury'));
+        } catch (\Exception $e) {
+            return $this->redirectToRoute(redirect()->back(), 'Something went wrong', 'error', ["positionClass" => "toast-top-center"]);
+        }
+    }
+    public function deleteDocument(Request $request)
+    {
+        // echo  "<pre>";
+        // print_r($request->id);exit;  
+        try {
+            $allDocuments = AllDocument::where('id', $request->id)->withTrashed()->first();
+            if($allDocuments){
+                $allDocuments->delete();
+                if($request->docType == 'Bill'){
+                    $url =  '/view/patient/injury/bill/info/' . $allDocuments->injury_id;
+                }
+                else if($request->docType == 'Injury'){
+                    $url =  '/injury/view/' . $allDocuments->injury_id; 
+                }
+                else if($request->docType == 'Provider'){
+                    $url = 'patients/injury/documents/'.$allDocuments->injury_id."/".$request->docType;
+                }
+                return $this->redirectToRoute($url, 'Document created successfully', 'success', ["positionClass" => "toast-top-center"]);
+
+            } 
+            
+         } catch (\Exception $e) {
+            return $this->redirectToRoute(redirect()->back(), 'Something went wrong', 'error', ["positionClass" => "toast-top-center"]);
+        }
+    }
+     
+    function appointmentBillStatus(Request $request){ 
+        if(isset($request->appointmentIds)){
+            $checkStatus = Status::where('slug_name', $request->changeVal)->first();
+            if($checkStatus){
+                $billStatusInfo = Status::where('slug_name', 'INCOMPLETE_BILL')->first();
+                foreach($request->appointmentIds as $id){
+                    $appointment = PatientAppointment::where('id', $id)->first(); 
+                    $checkBill = InjuryBill::where('appointment_id', $appointment->id)->first(); 
+                    if($billStatusInfo){
+                        if(!$checkBill){
+                            $bill_info = new InjuryBill();
+                            $bill_info->injury_id = $appointment->case_id;
+                            $bill_info->patient_id = $appointment->patient_id;
+                            $bill_info->bill_status = $billStatusInfo->id;
+                            $bill_info->dos = $appointment->appointment_date;
+                            $bill_info->appointment_id = $appointment->id;
+                            $bill_info->save();
+                            $this->addGlobalAllLog('INCOMPLETE','App\InjuryBill',$billStatusInfo['slug_name'], $bill_info->id);
+                            $this->checkInsertUpdateTask($request, $appointment->patient_id);  
+                        }
+                    } 
+                    // if($checkStatus['slug_name'] == 'APPOINTMENT_BILL_STATUS_BILLED'){
+                    //     $checkBillUpdate = InjuryBill::where('appointment_id', $appointment->id)->first();
+                    //     $billStatusInfo = Status::where('slug_name', 'SENT_BILL')->first();
+                    //     if($billStatusInfo){
+                    //         if($checkBillUpdate){
+                    //             $checkBillUpdate->bill_status = $billStatusInfo->id;
+                    //             $checkBillUpdate->update();
+                    //             $this->addGlobalAllLog('SENT','App\InjuryBill',$billStatusInfo['slug_name'], $checkBillUpdate->id);
+                    //             $this->checkInsertUpdateTask($request, $appointment->patient_id); 
+                    //         }
+                    //     } 
+                    // }
+                    $appointment->bill_status = $checkStatus->id; 
+                    $appointment->update();
+                } 
+            }
+        }
+        // echo "<pre>";
+        // print_r($request->appointmentIds);
+        
+        // $appointment = PatientAppointment::where('id', $request->appointMentId)->first();
+        // if($appointment){
+        //     $appointment->status = $request->statusId;
+        //     $appointment->update();
+        // } 
+        // $appointment = PatientAppointment::where('id', $request->appointMentId)->first();
+        // if($appointment){
+        //     $appointment->bill_status = $request->reasonId;
+        //     $appointment->update();
+        // } 
+    }
+    public function savePatientAppointment(Request $request)
+    {
+        // echo "<pre>";
+        // print_r($request->all());exit;
+         try {
+            if(isset($request->patientId)){
+                $newAppoint =  date('Y-m-d');
+                if(isset($request->appointment_date)){
+                $reqDob =  $request->appointment_date;
+                $exDate = explode('/', $reqDob);
+                $newBreakDate = $exDate[2]."-".$exDate[0]."-".$exDate[1];
+                //$reverDate = implode('-', array_reverse($exDate));
+                $newAppoint =  date('Y-m-d',strtotime($newBreakDate));
+                }
+                $statusId = 1;
+                $billStatusInfo = Status::where('slug_name', 'INCOMPLETE_APPOINTMENT')->first();
+                if($billStatusInfo){
+                    $statusId =  $billStatusInfo->id;
+                }
+                $checkApoint = PatientAppointment::where('patient_id', $request->patientId)->where('appointment_date', $newAppoint)->first();
+                if ($checkApoint) {
+                     $checkApoint->billing_provider_id = $request->appointment_provider;
+                    $checkApoint->rendering_provider_id= $request->apt_rendering_id;
+                    $checkApoint->appointment_date = $newAppoint;
+                    $checkApoint->appointment_time = $request->appointment_time;
+                    $checkApoint->location = $request->appointment_location;
+                    $checkApoint->resource = $request->appointment_resource;
+                    $checkApoint->recurrene = $request->appointment_recurrene;
+                    $checkApoint->appointment_reason = $request->appointment_resason;
+                    $checkApoint->meeting_type = $request->appointment_meeting_Type;
+                    $checkApoint->duration = $request->appointment_duration;
+                     $checkApoint->case_id= $request->appointment_case;
+                    $checkApoint->authorised= $request->appointment_authorization;
+                    $checkApoint->appointment_addition_info = $request->appointment_additionInfo;
+                    $checkApoint->is_interpreter= $request->is_interpreter;
     
+                    $checkApoint->update();
+                    return  $this->redirectToRoute('/patient/create/schedular', "Patient appointment updated successfully", 'success', ["positionClass" => "toast-top-center"]);
+                } else { 
+                    $pAppoint = new PatientAppointment();
+                    $pAppoint->patient_id = $request->patientId;
+                    $pAppoint->billing_provider_id = $request->appointment_provider;
+                    $pAppoint->rendering_provider_id= $request->apt_rendering_id;
+                    $pAppoint->appointment_date = $newAppoint;
+                    $pAppoint->appointment_time = $request->appointment_time;
+                    $pAppoint->location = $request->appointment_location;
+                    $pAppoint->resource = $request->appointment_resource;
+                    $pAppoint->recurrene = $request->appointment_recurrene;
+                    $pAppoint->appointment_reason = $request->appointment_resason;
+                    $pAppoint->meeting_type = $request->appointment_meeting_Type;
+                    $pAppoint->duration = $request->appointment_duration;
+                    $pAppoint->status = $statusId; 
+                    $pAppoint->case_id= $request->appointment_case;
+                    $pAppoint->authorised= $request->appointment_authorization;
+                    $pAppoint->appointment_addition_info = $request->appointment_additionInfo;
+                    $pAppoint->is_interpreter= $request->is_interpreter;
+    
+                    // $pAppoint->arrival_time  = $request->patientId;
+                    // $pAppoint->notes  = $request->patientId;
+                    $pAppoint->save();
+                    //return redirect('/patient/create/schedular/' . $request->patientId);
+                    return  $this->redirectToRoute('/patient/create/schedular', "Patient appointment added successfully", 'success', ["positionClass" => "toast-top-center"]);
+                }  
+            } 
+            else{
+                return $this->redirectToRoute(redirect()->back(), 'something went wrong', 'error', ["positionClass" => "toast-top-center"]);
+            }
+            
+        } catch (\Exception $e) {
+            return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
+        }
+    }
+    public function viewPatientInjuryBill(Request $request)
+    {
+        // echo "<pre>";
+        // print_r($request->all());exit;
+        $patientId = null; $patient = null; $injury = null; $patientInjury = []; $injuryBill = []; $totalServiceUnit = 0; $providerId = Null;
+        $billServices = [];
+        $injuryId = $request->route()->parameter('injuryId');
+        $injuiryInfo =  Patient_injury ::where('id',$injuryId)->first();
+        
+        if($injuiryInfo){
+            $patientId =   $injuiryInfo->patient_id;
+            $patient = $this->setSidebarPatient($patientId);
+            $injury = $this->setSidebarInjury($injuryId);
+        }
+
+        $bills = $this->getBillListByInjuryId($injuryId, $patientId);
+        $billServices =  $bills['services'];
+        $injuryBill = $bills['bills'];
+        return view('patients.injury.bills.show', compact('injuryBill','patientId', 'injuryId','patient','injury','billServices'));
+    }
+    public function viewPatientInjuryBillInfomation(Request $request)
+    {
+        $billId = $request->route()->parameter('id');
+        $injuryBillInfo = InjuryBill::with('getBillServices', 'getRenderinPlaceServices', 'getRenderinProvider','getBillDocuments','getBillDiagnosis')->where('id', $billId)->first();
+        $patientId = $injuryBillInfo->patient_id;
+        $injuryId =  $injuryBillInfo->injury_id;
+        $patient = $this->setSidebarPatient($injuryBillInfo->patient_id);
+        $injury = $this->setSidebarInjury($injuryBillInfo->injury_id);
+        $showSentButton = $this->checkForSenButtonInBillPage($request, $injuryBillInfo);
+        $diagnos = null; $prefix ='';
+        if($injuryBillInfo->getBillDiagnosis && count($injuryBillInfo->getBillDiagnosis) > 0){ 
+            foreach($injuryBillInfo->getBillDiagnosis as $dg){
+                $diagnos .= $prefix . $dg->getBillDiagnosisName->diagnosis_code;
+                $prefix = ', ';
+            }
+        }
+        $billLogs = MasterDataLog::where('data_id', $billId)->get();
+        $billStatuss = Status::where('status_type', 3)->get();
+        $totalDays = $this->getTodatlDaysForBill(date('Y-m-d', strtotime($injuryBillInfo->created_at)));  
+        $isShowSentButton = $this->showSendButton($injuryBillInfo);
+         return view('patients.injury.bills.show-info', compact('isShowSentButton', 'totalDays','billStatuss', 'showSentButton', 'billLogs','diagnos','patientId', 'injuryId', 'patient', 'injury','billId','injuryBillInfo'));
+    }
     public function schedularList(Request $request)
     { 
-        // echo "<pre>";
-        // print_r($request->all());exit; 
         $newAppoint =  date('Y-m-d'); $patientAppointment = []; $searchKey =null; $durationDate =null; $meetingType =null; $srcProvider = null; 
         $appointMents =  AppointmentReason::where('is_active', 1)->get(); 
         $meetingTypes = $this->patientModel->getMeetingType();
-        $billStatus = Status::where("is_active", 1)->where("status_type", 6)->orderBy('display_order', 'ASC')->get(); 
+        $billStatus = Status::where("is_active", 1)->where("slug_name", 'APPOINTMENT_BILL_STATUS_READY_TO_BILL')->where("status_type", 6)->orderBy('display_order', 'ASC')->get(); 
         $statuss = Status::where("is_active", 1)->where("status_type", 7)->orderBy('display_order', 'ASC')->get(); 
         $providerIds = []; $renderProviders = []; $locations = []; $srcRendering = ''; $srcLocation= '';
         foreach (Auth::user()->getUserBillingProviders as $usBilling){
@@ -1106,77 +1251,9 @@ class PatientController extends Controller
     }
     function appointmentStatus(Request $request){
         $appointment = PatientAppointment::where('id', $request->appointMentId)->first();
-        if($appointment){
+       if($appointment){
             $appointment->status = $request->statusId;
             $appointment->update();
-        } 
-    }
-    function appointmentBillStatus(Request $request){
-         $appointment = PatientAppointment::where('id', $request->appointMentId)->first();
-        if($appointment){
-            $appointment->bill_status = $request->reasonId;
-            $appointment->update();
-        }  
-    }
-    function appointmentDelete(Request $request){
-         $appointment = PatientAppointment::where('id', $request->id)->first();
-        if($appointment){
-            $this->addGlobalAllLog('APPOINTMENT_DELETE','App\PatientAppointment','Patient appointment deleted', $appointment->id); 
-            $appointment->delete();
-        }  
-    }
-    function getApointmentInfoById(Request $request){
-         $appountment = PatientAppointment::where('id', $request->eventId)->first();
-        if($appountment){
-            $fRenderingProvider = null;  $fpatientName = null; $durationData = null;
-            $fRenderingProvider = ($appountment->getRenderingProvider && $appountment->getRenderingProvider->referring_provider_first_name) ? $appountment->getRenderingProvider->referring_provider_first_name : '';
-            
-            if($appountment->getRenderingProvider && $appountment->getRenderingProvider->referring_provider_middle_name){
-                if ($fRenderingProvider !== '') {
-                    $fRenderingProvider .= ' ';
-                }
-                $fRenderingProvider .=  $appountment->getRenderingProvider->referring_provider_middle_name;
-            }
-            if($appountment->getRenderingProvider && $appountment->getRenderingProvider->referring_provider_last_name){
-                if ($fRenderingProvider !== '') {
-                    $fRenderingProvider .= ' ';
-                }
-                $fRenderingProvider .=  $appountment->getRenderingProvider->referring_provider_last_name;
-            }
-            $fpatientName = ($appountment->getPatient && $appountment->getPatient->first_name) ? $appountment->getPatient->first_name : '';
-            
-            if($appountment->getPatient && $appountment->getPatient->mi){
-                if ($fpatientName !== '') {
-                    $fpatientName .= ' ';
-                }
-                $fRenderingProvider .=  $appountment->getPatient->mi;
-            }
-            if($appountment->getPatient && $appountment->getPatient->last_name){
-                if ($fpatientName !== '') {
-                    $fpatientName .= ' ';
-                }
-                $fpatientName .=  $appountment->getPatient->last_name;
-            }
-            $durationData = $this->catculateTotalHours($appountment->duration);
-            $appountment->appointmentNo         = $appountment->appointment_no;
-            $appountment->appointmentDate       = ($appountment->appointment_date) ? date('m-d-Y', strtotime($appountment->appointment_date)) : '';
-            $appountment->meetingType           = $this->getMeetingType($appountment->meeting_type);
-            $appountment->renderingProvider     = $fRenderingProvider;
-            $appountment->resource              = ($appountment  && $appountment->resource ) ? $appountment->resource : '';
-            $appountment->authorised            = ($appountment  && $appountment->authorised ) ? $appountment->authorised : '';
-            $appountment->statusDivId           = ($appountment->getStatus && $appountment->getStatus->status_name) ? $appountment->getStatus->status_name : '';
-            $appountment->recurreneId             = ($appountment->recurrene && $appountment->recurrene == 'on') ? 'Yes' : 'No';
-            $appountment->patientNameId           =  $fpatientName;
-            $appountment->appointmentTime       = ($appountment->appointment_time) ? $appountment->appointment_time : '';
-            $appountment->billingProvider       = ($appountment->getBillingProvider && $appountment->getBillingProvider->professional_provider_name) ? $appountment->getBillingProvider->professional_provider_name : '';
-            $appountment->locationID            = ($appountment->getLocation && $appountment->getLocation->nick_name) ? $appountment->getLocation->nick_name : '';
-            $appountment->claimNo               = ($appountment->getInjury && $appountment->getInjury->getInjuryClaim && $appountment->getInjury->getInjuryClaim->claim_no) ? $appountment->getInjury->getInjuryClaim->claim_no : '';
-            $appountment->resaonsId             =  ($appountment->getResaons && $appountment->getResaons->name) ? $appountment->getResaons->name : '';
-            $appountment->durationId            =  $durationData;
-            $appountment->isInterpreterId       =  ($appountment->is_interpreter && $appountment->is_interpreter == 'on') ? 'Yes' : 'No';
-            $appountment->additionInformationId   =  ($appountment && $appountment->appointment_addition_info != "") ? $appountment->appointment_addition_info : '';
-            return $appountment;
-        }
-        
-    }
+       }  
+   }
 }

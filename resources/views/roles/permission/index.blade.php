@@ -166,7 +166,7 @@ function deletePermission(id) {
         customClass: {
             confirmButton: "btn btn-primary",
             cancelButton: "btn btn-danger",
-            popup: 'swal-wide',
+            //popup: 'swal-wide',
         }
     }).then((result) => { // Use .then() to handle the user's response
         if (result.isConfirmed) { // Only proceed if the user clicked the confirm button

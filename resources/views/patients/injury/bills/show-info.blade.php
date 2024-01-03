@@ -172,27 +172,27 @@
                                                                 <tbody>
                                                                 <tr>
                                                                     <th scope="row">DOS</th>
-                                                                    <td>{{date('Y-m-d',strtotime($injuryBillInfo->dos))}}</td>
+                                                                    <td>{{date('m-d-Y',strtotime($injuryBillInfo->dos))}}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th scope="row">Place of Service</th>
-                                                                    <td>{{($injuryBillInfo->getBillPlaceOfService) ? $injuryBillInfo->getBillPlaceOfService->nick_name : 'NA' }}</td>
+                                                                    <td>{{($injuryBillInfo && $injuryBillInfo->getBillPlaceOfService) ? $injuryBillInfo->getBillPlaceOfService->nick_name : 'NA' }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th scope="row">Place of Service Code</th>
-                                                                    <td>{{($injuryBillInfo->getBillPlaceOfService->placeOfServiceCode) ? $injuryBillInfo->getBillPlaceOfService->placeOfServiceCode->service_code. " - ".$injuryBillInfo->getBillPlaceOfService->placeOfServiceCode->name : 'NA' }}</td>
+                                                                    <td>{{($injuryBillInfo && $injuryBillInfo->getBillPlaceOfService && $injuryBillInfo->getBillPlaceOfService->placeOfServiceCode && $injuryBillInfo->getBillPlaceOfService->placeOfServiceCode->service_code) ? $injuryBillInfo->getBillPlaceOfService->placeOfServiceCode->service_code. " - ".$injuryBillInfo->getBillPlaceOfService->placeOfServiceCode->name : 'NA' }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th scope="row">Rendering Provider</th>
-                                                                    <td>{{($injuryBillInfo->getRenderinProvider) ? $injuryBillInfo->getRenderinProvider->name : 'NA' }}</td>
+                                                                    <td>{{($injuryBillInfo && $injuryBillInfo->getRenderinProvider) ? $injuryBillInfo->getRenderinProvider->name : 'NA' }}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th scope="row">Authorization Number</th>
-                                                                    <td>{{$injuryBillInfo->bill_authorization_number}}</td>
+                                                                    <td>{{($injuryBillInfo->bill_authorization_number) ? $injuryBillInfo->bill_authorization_number : '-'}}</td>
                                                                 </tr>
                                                                 <tr>
                                                                     <th scope="row">Additional Information</th>
-                                                                    <td>{{$injuryBillInfo->bill_additiona_information_box}}</td>
+                                                                    <td>{{($injuryBillInfo->bill_additiona_information_box) ? $injuryBillInfo->bill_additiona_information_box : '-'}}</td>
                                                                 </tr>
                                                                 </tbody>
                                                             </table>
@@ -233,7 +233,7 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <div class="table-responsive">
-                                                            @if($injuryBillInfo->getInjury->patient)
+                                                            @if($injuryBillInfo->getInjury && $injuryBillInfo->getInjury->patient)
                                                                 <table id="patientDemographics" class="table layout-secondary dataTable table-striped">
                                                                     <tbody>
                                                                     <tr>
@@ -265,7 +265,7 @@
                                                     </div>
                                                     <div class="card-body">
                                                         <div class="table-responsive">
-                                                        @if($injuryBillInfo->getInjury)
+                                                        @if($injuryBillInfo && $injuryBillInfo->getInjury)
                                                             <table id="injuryInformation" class="table layout-secondary dataTable table-striped">
                                                                 <tbody>
                                                                 <tr>
@@ -331,7 +331,7 @@
                                                             $blcDueAmt = 0;
                                                             $expectedFeeSAmt = 0;
                                                             @endphp
-                                                            @if(count($injuryBillInfo->getBillServices))
+                                                            @if($injuryBillInfo && count($injuryBillInfo->getBillServices))
                                                             @foreach ($injuryBillInfo->getBillServices as $bill)
                                                                 @php
                                                                 $totCharAmt += $bill->master_unit_amount;
@@ -439,9 +439,11 @@
                                                                         </td>
                                                                         <td>{{ $document->getReportType ? $document->getReportType->report_name : '-' }}
                                                                         </td>
-                                                                        <td>
-                                                                            <i class="icon-pencil  showPointer" /></i>
-                                                                            <i class="icon-trash showPointer" /></i>
+                                                                        <td><a  href="{{ url('/patients/injury/documents') }}/{{ $document->injury_id }}/{{$document->doc_type}}/{{$document->id}}">
+                                                                            <i  class="icon-pencil  showPointer"/></i>
+                                                                            </a>
+                                                                            <a href="javascript:void(0)" onclick="deleteInjuryContact({{ $document->id }}, {{ $injuryId }}, 'DOCUMENT')"><i
+                                                                                class="icon-trash showPointer" /></i></a>
                                                                         </td>
                                                                     </tr>
                                                                 @endforeach
@@ -495,3 +497,8 @@
         </div>
     </div>
 @endsection
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> 
+<!-- BEGIN VENDOR JS-->
+    <script>
+
+    </script>

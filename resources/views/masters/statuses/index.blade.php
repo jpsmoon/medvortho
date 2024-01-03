@@ -56,14 +56,11 @@
                                     <td>{{ $status->description }}</td>
                                     <td>{{ $statusClass->returnStatusName($status->status_type)}}</td>
                                     <td class="d-none">{{ $status->status_type}}</td>
-                                    <td>{{ $status->is_active ? 'Active' : 'Block' }}</td>
-                                    <td>
-                                        <a data-id="{{$status->id}}"   data-toggle="modal" data-target="#editModal_{{$status->id}}">
-                                            <i  class="icon-pencil  showPointer"/></i>
-                                        </a>
-                                        <a data-id="{{$status->id}}"  onclick="deleteStatus({{$status->id}})">
-                                            <i  class="icon-trash showPointer"/></i>
-                                        </a>
+                                    <td>{{ $status->is_active ? 'Active' : 'Block' }}</td> 
+                                    <td> 
+                                        <i  class="icon-pencil showPointer" data-id="{{$status->id}}"  " data-toggle="modal" data-target="#editModal_{{$status->id}}"/></i>
+                                         
+                                         <!--<i  class="icon-trash showPointer" onclick="deleteStatus({{$status->id}})"/></i>-->
                                     </td>
                                     </tr>
                                     <!-- Modal content -->
@@ -74,7 +71,7 @@
                                             <input type="hidden" value="{{$status->id}}" name="editstatus_id" id="editstatus_id" maxlength="100" class="form-control" placeholder="Name">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="editModalLabel">Edit Task Status</h5>
+                                                        <h5 class="modal-title" id="editModalLabel">Edit Status</h5>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
@@ -83,31 +80,26 @@
                                                             <input type="hidden" name="task_id" id="task_id" class="form-control">
                                                             <div class="col-xs-12 col-sm-12 col-md-12">
                                                                 <div class="form-group">
-                                                                    <strong>Task Status Name:</strong>
-                                                                    <input type="text" value="{{$status->status_name}}" name="status_name" id="status_name" maxlength="100" class="form-control" placeholder="Name">
+                                                                    <strong>Status Name:</strong>
+                                                                    <input type="text" data-validation-event="change" data-validation="required" data-validation-error-msg="" value="{{$status->status_name}}" name="status_name" id="status_name" maxlength="100" class="form-control" placeholder="Name">
+                                                                    @if ($errors->has('status_name'))
+                                                                        <span class="invalid-feedback" style="display:block" role="alert">
+                                                                            <strong class="invalid-feedback">{{ $errors->first('status_name') }}</strong>
+                                                                        </span>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                             <div class="col-xs-12 col-sm-12 col-md-12">
                                                                 <div class="form-group">
                                                                     <strong>Display Order:</strong>
-                                                                    <input type="text" value="{{$status->display_order}}" name="display_order" id="display_order" maxlength="2" class="form-control"  placeholder="Display Order">
+                                                                    <input type="text" data-validation-event="change" data-validation="required" data-validation-error-msg="" value="{{$status->display_order}}" name="display_order" id="display_order" maxlength="2" class="form-control"  placeholder="Display Order">
+                                                                    @if ($errors->has('display_order'))
+                                                                        <span class="invalid-feedback" style="display:block" role="alert">
+                                                                            <strong class="invalid-feedback">{{ $errors->first('display_order') }}</strong>
+                                                                        </span>
+                                                                    @endif
                                                                 </div>
-                                                            </div>
-                                                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                                            <div class="form-group">
-                                                                <strong>Type:</strong>
-                                                                <select name="status_type" id="status_type" class="form-control">
-                                                                        <option>-Select-</option> 
-                                                                        <option value="1" {{ ($status->status_type == 1) ? 'selected' : ''}}>Patient</option>
-                                                                        <option value="2" {{ ($status->status_type == 2) ? 'selected' : ''}}>Injury</option>
-                                                                        <option value="3" {{ ($status->status_type == 3) ? 'selected' : ''}}>Bill</option>
-                                                                        <option value="4" {{ ($status->status_type == 4) ? 'selected' : ''}}>Appointment</option>
-                                                                        <option value="5" {{ ($status->status_type == 5) ? 'selected' : ''}}>Other</option>
-                                                                        <option value="6" {{ ($status->status_type == 6) ? 'selected' : ''}}>Appointment Bill Status</option>
-                                                                        <option value="7" {{ ($status->status_type == 7) ? 'selected' : ''}}>Appointment Visit Status</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
+                                                            </div> 
                                                             <div class="col-xs-12 col-sm-12 col-md-12">
                                                                 <div class="form-group">
                                                                     <strong>Description:</strong>
@@ -127,8 +119,8 @@
                                     <!-- Modal content -->
                                     @endforeach
                                     @else
-                                    <tr class="jsgrid-row">
-                                            <td>No Records Found.</td>
+                                    <tr>
+                                            <td colspan="12">No Records Found.</td>
                                     </tr>
                                     @endif
                             </tbody>
@@ -145,7 +137,7 @@
             @csrf
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLabel">Add Task Status</h5>
+                    <h5 class="modal-title" id="addModalLabel">Add Status</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -154,20 +146,30 @@
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>Status:</strong>
-                            <input type="text" name="status_name" id="status_name" maxlength="100" class="form-control" placeholder="Name">
+                            <input type="text" data-validation-event="change" data-validation="required" data-validation-error-msg="" name="status_name" id="status_name" maxlength="100" class="form-control" placeholder="Name">
+                             @if ($errors->has('status_name'))
+                                <span class="invalid-feedback" style="display:block" role="alert">
+                                    <strong class="invalid-feedback">{{ $errors->first('status_name') }}</strong>
+                                </span>
+                            @endif
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>Display Order:</strong>
-                            <input type="text" name="display_order" id="display_order" maxlength="2" class="form-control" placeholder="Display Order">
+                            <input type="text" data-validation-event="change" data-validation="required" data-validation-error-msg="" name="display_order" id="display_order" maxlength="2" class="form-control" placeholder="Display Order">
+                            @if ($errors->has('display_order'))
+                                <span class="invalid-feedback" style="display:block" role="alert">
+                                    <strong class="invalid-feedback">{{ $errors->first('display_order') }}</strong>
+                                </span>
+                            @endif
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>Type:</strong>
-                            <select name="status_type" id="status_type" class="form-control">
-                                    <option>-Select-</option> 
+                            <select data-validation-event="change" data-validation="required" data-validation-error-msg="" name="status_type" id="status_type" class="form-control" onChange="getStatusAliase(this.value)";>
+                                    <option value="">-Select-</option> 
                                     <option value="1">Patient</option>
                                     <option value="2">Injury</option>
                                     <option value="3">Bill</option>
@@ -175,13 +177,36 @@
                                     <option value="5">Other</option>
                                     <option value="6">Appointment Bill Status</option>
                                     <option value="7">Appointment Visit Status</option>
+                                    <option value="8">Task</option>
                             </select> 
+                             @if ($errors->has('status_type'))
+                                <span class="invalid-feedback" style="display:block" role="alert">
+                                    <strong class="invalid-feedback">{{ $errors->first('status_type') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <strong>Aliase:</strong>
+                            <select name="status_aliase" id="status_aliase" class="form-control" data-validation-event="change" data-validation="required" data-validation-error-msg=""> 
+                            </select> 
+                            @if ($errors->has('status_aliase'))
+                                <span class="invalid-feedback" style="display:block" role="alert">
+                                    <strong class="invalid-feedback">{{ $errors->first('status_aliase') }}</strong>
+                                </span>
+                            @endif
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>Description:</strong>
                             <textarea class="form-control" style="resize:none" name="description" id="description"></textarea>
+                            @if ($errors->has('description'))
+                                <span class="invalid-feedback" style="display:block" role="alert">
+                                    <strong class="invalid-feedback">{{ $errors->first('description') }}</strong>
+                                </span>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -230,6 +255,29 @@
                         swal.fire(response.responseJSON.message, '', 'error');
                     }
                 });
+            }
+        });
+    }
+    function getStatusAliase(val){
+        let _url     = `/get/status/aliase`;
+        $.ajax({
+            url: _url,
+            type: 'POST',
+            data: {
+            _token: token,
+            statusType: val
+            },
+            success: function(response) { 
+                console.log('#response',response);
+                var items = "";
+                items += "<li value=''>-Select-</li>";
+                $.each(response, function(i, item) {
+                  items +=`<option   id="${item.id}" value="${item.name}">` + item.name + `</option>`;
+                });
+                $("#status_aliase").html(items);
+            },
+            error: function(response) {
+                swal.fire(response.responseJSON.message, '', 'error');
             }
         });
     }

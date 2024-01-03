@@ -169,4 +169,9 @@ class BillInfoController extends Controller
         }
       return view('bill-submissions.letters.authorization.show', compact(['patientId','providerId','pInjuries']));  
     }
+    public function billListStatusWise(Request $request) {
+      $injuryBills = InjuryBill::where('bill_status' , $request->statusId)->get();
+      $billServices = []; $billName = $request->statusType;
+      return view('patients.injury.bills.index', compact(['injuryBills', 'billServices', 'billName']));
+    }
 }

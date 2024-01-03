@@ -6,10 +6,17 @@ $billingId = $bRenderings->provider_type;
 }
  ?>
     <!-- START: Breadcrumbs-->
-
     <!-- END: Breadcrumbs-->
+    
+  <style>
+      .dataTables_length
+        {
+          padding-top: 2%;  
+        }  
+  </style>  
+    
     @if ($errors->any())
-        <div class="row ">
+        <div class="row mt-2 customBox">
             <div align="center" class="col-12  align-self-center">
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -20,31 +27,36 @@ $billingId = $bRenderings->provider_type;
                     </ul>
                 </div>
             </div>
-            <div class="col-1 mt-4"></div>
         </div>
     @endif
-    <div class="row">
-        <div class="col-1 mt-4"></div>
-        <div class="col-10 mt-4">
-            <div class="card row-background">
+    <div class="row mt-2 ">
+        <div class="col-md-12 mt-4">
+            <div class="card row-background customBoxHeight">
                 <!-- START: Breadcrumbs-->
-                <div class="row">
+                <div class="row ">
                     <div class="col-12  align-self-center">
-                        <div class="sub-header mt-3 py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
+                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
                             <div style="padding-top:10px" class="w-sm-100 mr-auto">
-                                <h2 class="heading"> 
-                                @if (isset($id)) Edit   @else Add   @endif Rendering Provider </h2>
+                                <h2 class="heading">Rendering Provider List</h2>
                             </div>
-                            <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                                <li style="padding-bottom:10px" class="breadcrumb-item">
-                                    <a class="btn btn-primary" href="{{ url('/billing/rendering', $providerId) }}"> Back</a>
-                                </li>
-                            </ol>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                                 
+                             <li class="breadcrumb-item">
+                                <a class="btn btn-primary" href="{{url('add/billing/rendering',$id)}}"> Add Rendering Provider</a>
+                            </li>    
+                                 
+                            <li class="breadcrumb-item">
+                                <a class="btn btn-primary" href="{{ url('/billing/rendering', $providerId) }}"> Back</a>
+                            </li>
+                        </ol> 
                         </div>
                     </div>
                 </div>
                 <!-- END: Breadcrumbs-->
-                <div class="col-12 mt-4">
+                <div class="card-content">
+                    <div class="col-md-12 col-12">
+                        <div class="row">
+            <div class="col-12 mt-4">
                     <form action="{{ route('saveBillRender') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="pType" id="pType" value="{{ $pType }}">
@@ -287,14 +299,17 @@ $billingId = $bRenderings->provider_type;
                 </div>
             </div>
         </div>
-        <div class="col-1 mt-4"></div>
-    </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 mt-4"></div>
+        </div>
     </div>
 @endsection
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
-<script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
-<script src="{{ asset('js/controller/master_for_all.js') }}"></script>
+<script src="{{ asset('public/js/bootstrap-inputmask.js') }}"></script>
+<script src="{{ asset('public/js/controller/master_for_all.js') }}"></script>
 
 <script>
 $( document ).ready(function() {

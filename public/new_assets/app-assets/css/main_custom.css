@@ -367,10 +367,19 @@ background: linear-gradient(to right,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
     padding-bottom: 0px;
     padding-top: 0px;
 }
+body::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 3px;
+}
 
-
+body::-webkit-scrollbar-track {
+  background-color: #cccccc3c;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: #005dba;
+}
 .scroll-h{
-    height:250px;
+    height:283px;
     overflow-y:scroll;
    scrollbar-width: thin;
    scrollbar-color: #cccccc3c #005dba;
@@ -386,6 +395,8 @@ background: linear-gradient(to right,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
 .scroll-h::-webkit-scrollbar-thumb {
   background-color: #005dba;
 }
+
+
 
 .table td, .table th {
   border: 1px solid rgba(33,40,50,.125);
@@ -570,22 +581,16 @@ border-bottom-right-radius: 0px;
 .custom-form .card-body h4{
  border-block-end: 1px solid #e9edf6;    
 }
-.sub-header h4:before {
-    width: 3px;
-    height: 15px;
-    content: '';
-    background: linear-gradient(to bottom, #c1acef 0%,#c1acef 50%,#476d8e 50%,#476d8e 100%);
-    position: absolute;
-    left: -10px;
-    top: 2px;
+.margin05{
+    margin-top:5px;
 }
 form .form-control {
-    border: 1px solid #e9edf6;
+    border:1px solid #999999;
     color:#333335;
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.6;
-    border-radius: 0.35rem!important;
+    border-radius: 0rem!important;
     padding: 0.5rem 0.85rem;
 }
 form .form-control input{
@@ -593,15 +598,54 @@ form .form-control input{
 }
 .form-control:focus {
     box-shadow: none;
-    border-color: #e9edf6;
+    border-color: #579de3;
     box-shadow: 0 0.0625rem 0.125rem 0 rgba(0,0,0,.05);
     color:#333;
 }
 form label {
-    color:#8c9097;
+    color: black;
+    font-weight: 600;
+    font-size: 16px;
+    font-family: 'Figtree', sans-serif!important;
 }
-form select.form-control{
-    background:#e9ecef;
+.select2-container--default .select2-selection--single {
+    border: 1px solid #999999;
+    border-radius: 0px;
+}
+
+
+
+.rightside #billingInfobydefault{
+    box-shadow: 0 0.15rem 1.75rem #21283226;
+    border: 1px solid rgba(33,40,50,.125);
+    border-radius: 0.35rem;
+    background:#fff;
+}
+.rightside #billingInfobydefault .redial-dark{
+     background: #2a3f54;
+background: -moz-linear-gradient(left,  #2a3f54 5%, #2a3f54 56%, #476d8e 100%);
+background: -webkit-linear-gradient(left,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
+background: linear-gradient(to right,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
+     font-family: 'Figtree', sans-serif!important;
+    border:0px solid rgba(33,40,50,.125)!important;
+    border-radius: 0.35rem 0.35rem 0 0;
+    color:#fff;
+    padding: 1.5rem;
+}
+#billingInfobydefault span.pr-1 {
+    width: 18%;
+    float: left;
+    color: #000000;
+}
+
+#billingInfoDiv span.pr-1 {
+    width: 18%;
+    float: left;
+    color: #000000;
+}
+
+.custom-select-sm{
+    font-size:85%;
 }
 .rightside #billingInfoDiv{
     box-shadow: 0 0.15rem 1.75rem #21283226;
@@ -627,10 +671,114 @@ background: linear-gradient(to right,  #2a3f54 5%,#2a3f54 56%,#476d8e 100%);
      letter-spacing: .05rem;
     font-size: 1.12rem!important;
 }
+.custom-nav nav ul ul li.customSec{
+    width:320px;
+}
+.customSecMenu:hover span, .customSecMenu:hover span a{
+    background: #2a3f54!important;
+    color:#fff!important;
+}
+
+.customSecMenu span {
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+    align-items: center;
+}
+.menuList{
+  display: flex;
+  justify-content:flex-start;
+   align-items: center;
+}
+
+.menuList .media-left{
+    margin-right:10px;
+}
+.rightside{
+    position: relative;
+    width: 100%;
+    min-height: 1px;
+    padding-right: 15px !important;
+    padding-left: 0px !important;
+}
+table.table-bordered.dataTable th, table.table-bordered.dataTable td{
+    text-transform:capitalize;
+}
+.pagination .page-item.active .page-link {
+    background-color: #2a3f54;
+    border-color: #3BAFDA;
+}
+.table td, .table th {
+    padding: 0.75rem 1rem;
+}
+.b-top{
+    border-top:1px solid #ccc;
+}
+.heading-background h2{
+    color:#fff;
+}
+.heading-background, .heading-background .subtittle{
+  font-family: 'Figtree', sans-serif!important;
+}
 
 
+.card-header .card-title {
+    margin-bottom: 0;
+}
 
+.sticky {
+    position: -webkit-sticky!important;
+    position: sticky!important;
+    top: 80px;
+    height: 100px
+}
+.card-header2 {
+    box-shadow: 0 0.15rem 1.75rem #21283226;
+    border: 1px solid rgba(33,40,50,.125);
+    border-radius: 0.35rem;
+    padding:10px;
+}
+.card-header2 .card .card-title {
+    font-weight: 400!important;
+    letter-spacing: .05rem;
+    font-size: 1rem;
+}
+.card-header2  .card-title {
+    margin-bottom: 1rem;
+}
+.rightBox .card {
+    margin-bottom: 0.5rem;
+}
+.rightBox .card a:hover .card-header2{
+    border: 1px solid #8ab8f3;
+    background:#efefef;
 
+}
+.injuryBox .card{
+    min-height:295px
+}
+.injuryBox .card .card-title{
+    background:#f4f4f6;
+    padding:10px;
+    border:1px solid #c9c9c9;
+    color:#000000;
+    font-weight:600;
+    
+}
+.injuryBox .card .card-body {
+    padding: 0rem;
+    padding-bottom: 0.5rem;
+}
+.injuryBox .card .card-body .table{
+    margin:0.95rem;
+    width:96%;
+}
+.padR-0{
+    padding-right:2px;
+}
+.padL-0{
+    padding-left:2px;
+}
 /*Add Patient css end here*/
 
 @media screen and (min-width: 768px) {
@@ -1024,14 +1172,7 @@ padding-bottom: 10px;
 {
 line-height: 2.2;
 }
-.rightside
-{
-position: relative;
-    width: 100%;
-    min-height: 1px;
-    padding-right: 0px !important;
-    padding-left: 0px !important;
-}
+
 .col-md-2
 {
     position: relative;

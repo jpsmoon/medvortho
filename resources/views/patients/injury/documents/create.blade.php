@@ -184,7 +184,8 @@
                                                <td><a  href="{{ url('/patients/injury/documents') }}/{{ $injuryId }}/{{$document->doc_type}}/{{$document->id}}">
                                                <i  class="icon-pencil  showPointer"/></i>
                                                </a>
-                                               <i  class="icon-trash showPointer"/></i>
+                                               <a href="javascript:void(0)" onclick="deleteInjuryContact({{ $document->id }}, {{ $injuryId }}, 'DOCUMENT')"><i
+                                                                                class="icon-trash showPointer" /></i></a>
                                                </td>
                                             </tr>
                                             @php $i++; @endphp
@@ -210,6 +211,10 @@
     <script>
     
 jQuery(document).ready(function() {
+    if($("#tempInjuryDocumentId").val() == ''){
+        $("#sendBtn").addClass('disabled');
+        $("#sendBtn").css('pointer-events' , 'none');
+    }
     var img_zone = document.getElementById('img-zone'),
         collect = {
             filereader: typeof FileReader != 'undefined',
@@ -277,7 +282,9 @@ jQuery(document).ready(function() {
                 console.log('#json',json);
                 if(json){
                     $("#tempInjuryDocumentId").val(json);
-                    setTimeout(function(){  $("#sendBtn").removeClass('disabled');
+                    setTimeout(function(){   
+                        $("#sendBtn").removeClass('disabled');
+                        $("#sendBtn").css('pointer-events' , 'auto');
                     ajax_msg(true, 'File upload successfully');
                     }, 2000); 
                 }
@@ -345,6 +352,7 @@ jQuery(document).ready(function() {
         };
     })(jQuery, window);
 });
+ 
     </script>
 <!-- BEGIN VENDOR JS-->
 
