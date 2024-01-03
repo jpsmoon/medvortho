@@ -24,11 +24,17 @@ class DatabaseSeeder extends Seeder
         $this->call( MasterBillChargesSheetTableSeeder::class);  //Added by priyanka on 03/14/2023
         $this->call( TaskCategoryTableSeeder::class);  //Added by priyanka on 03/17/2023
         $this->call( TaskTableSeeder::class);  //Added by priyanka on 03/17/2023
-        $this->call( RoleSeeder::class);  //Added by priyanka on 05/06/2023
-        $this->call( UserRolesSeeder::class);  //Added by priyanka on 05/06/2023
         $this->call( PermissionTableSeeder::class);  //Added by priyanka on 06/13/2023
+        $this->call( RoleSeeder::class);  //Added by priyanka on 05/06/2023
+        $this->call( UserRolesSeeder::class);  //Added by priyanka on 05/06/2023 
         $this->call( StatusTableSeeder::class);  //Added by priyanka on 08/02/2023
-        $this->call( UserSeeder::class);  //Added by priyanka on 05/06/2023
+        $this->call( UserSeeder::class);  //Added by priyanka on 05/06/2023 
+        $this->call( ClaimAdministrators::class);  //Added by priyanka on 02/01/2024
+        $this->call( ClaimMailAddresses::class);  //Added by priyanka on 02/01/2024
+        $this->call( ClaimBillReviews::class);  //Added by priyanka on 02/01/2024
+        $this->call( ClaimAuthContacts::class);  //Added by priyanka on 02/01/2024
+        
+        $this->call( ZipCodesWithStateCity::class);  //Added by priyanka on 02/01/2024
 
     }
 }

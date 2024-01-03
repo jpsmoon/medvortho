@@ -35,7 +35,7 @@ class HomeController extends Controller
         //$statuses = Status::where('slug_name', 'INACTICE_OTHER')->where('is_active', 1)->get();
         $mytasks = $this->getMyTaskCountList();
         $totalPatients = null; $totalBProviders = null;
-        if(Auth::user()->roles[0]['name'] =='SubAdmin'){
+         if(Auth::user()->roles && count (Auth::user()->roles) > 0 &&  Auth::user()->roles[0]['name'] =='SubAdmin'){
            $totalPatients = Patient::count(); 
             $totalBProviders = BillingProvider::where('is_active', 1)->count();
         } 

@@ -28,6 +28,12 @@ class CreateClaimAdministratorsTable extends Migration
             $table->mediumText('bill_process_flow_note')->nullable();
             $table->string('admin_fax_no', 255)->nullable();
             $table->enum('is_active', array('1', '0'))->default('1');
+            $table->string('admin_address', 255)->nullable();
+            $table->string('clearing_house', 255)->nullable();
+            $table->string('time_zone_type', 255)->nullable();
+            $table->string('bill_portal', 255)->nullable();
+            $table->string('affiliated_entries', 255)->nullable();
+            $table->string('phone_number', 255)->nullable();
             $table->timestamps();
             $table->softDeletes();
            // $table->foreign('company_type_id')->references('id')->on('company_types');

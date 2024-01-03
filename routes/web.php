@@ -365,7 +365,7 @@ Auth::routes();
         //Permission routes end here//
 
         //role routes start here
-            Route::group(['middleware' => ['role:super-admin|Admin']], function () {
+            Route::group(['middleware' => ['role:SubAdmin|Admin']], function () {
                 //Route::group(['middleware' => ['permission:publish role-list|role-create|role-edit|role-delete']], function () {
                     Route::get('permissions', [RoleController::class, 'permissionList'])->name('permissions');
                     Route::post('store/permission', [RoleController::class, 'savePermission'])->name('savePermission');
