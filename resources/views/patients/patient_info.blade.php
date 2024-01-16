@@ -109,7 +109,7 @@
 
     <div class="form-group col-md-4">
         <label for="zipcode">Zip code</label>
-        <input value="{{($patient && $patient->zipcode) ? $patient->zipcode : NULL }}" onFocus="this.selectionStart = this.selectionEnd = this.value.length;"  type="text" id="zipcode" name="zipcode" class="form-control" onKeyUp="getStatesByZipCode(this.value);"
+        <input value="{{($patient && $patient->zipcode) ? $patient->zipcode : NULL }}" onFocus="this.selectionStart = this.selectionEnd = this.value.length;"  type="text" id="zipcode" name="zipcode" class="form-control" onKeyUp="getStatesByZipCode(this.value ,'cityDD', 'stateDD');"
             data-validation-event="change" autocomplete="off" data-validation="number length" data-mask="99999" data-validation-error-msg="Please Enter the 5 Digit Zip code Number" data-validation-length="1-10" data-validation-optional="true"
             data-validation-error-msg="" maxlength="5">
         @if ($errors->has('zipcode'))

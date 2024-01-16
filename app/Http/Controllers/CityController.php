@@ -266,4 +266,10 @@ class CityController extends Controller
         $zipInfo = Zipcode::where('zip_code',$zipCode)->where('is_active', 1)->first();
         return response()->json($zipInfo); 
     }
+    public function getCityListByState(Request $request)
+    {
+        $stateName = $request->country_id;
+        $data['states'] =  Zipcode::where('country_name',$countryName)->distinct()->get();
+        return response()->json($data);
+    }
 }

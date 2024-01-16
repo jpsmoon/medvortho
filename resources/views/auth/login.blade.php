@@ -22,8 +22,13 @@
                             </div>
                         @endforeach
                     @endif
+                    @if(session('user_has_not_any_role'))
+                    <div class="alert alert-danger" role="alert">
+                        You don't have any role assigned. Please contact the global administrator.
+                    </div>
+                @endif
                 </div>
-            <form method="POST" action="{{ route('login') }}" class="row row-eq-height mt-0 custom-login">
+            <form method="POST" action="{{ route('login') }}"  class="row row-eq-height mt-0 custom-login">
             @csrf
             <div class="col-12  col-md-12">
                 <div class="form-group mb-3 btn-title">

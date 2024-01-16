@@ -20,6 +20,7 @@ class CreateInjuryBillTable extends Migration
             $table->integer('patient_id')->unsigned()->nullable();
             $table->foreign('patient_id')->references('id')->on('patients');
             $table->string('diagnosis_code_type');
+            $table->string('bill_number')->nullable();
             $table->date('dos')->nullable();
             $table->integer('bill_place_of_service')->nullable();
             $table->integer('bill_rendering_provider')->nullable();

@@ -48,4 +48,9 @@ class User extends Authenticatable
      {
          return $this->hasMany(UserBillingProvider::class,  'user_id', 'id')->where('is_active', 1);
      }
+    public function getSuperAdminUsers()
+     {
+         return $this->hasMany(User::class,  'created_by', 'id');
+     }
+      
 }

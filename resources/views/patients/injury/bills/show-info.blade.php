@@ -1897,6 +1897,7 @@
                 $("#showPdfUrLoad").removeClass('d-none');
             },
             success: function(pdfUrl) {
+                console.log('#pdfUrl#', pdfUrl);
                 $("#showPdfUrLoad").addClass('d-none')
                 $("#showPdfUrl").removeClass('d-none').attr("href", pdfUrl).append(pdfUrl).addClass(
                     'showPointer');

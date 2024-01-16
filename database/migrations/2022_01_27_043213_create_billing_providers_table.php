@@ -16,6 +16,7 @@ class CreateBillingProvidersTable extends Migration
         Schema::create('billing_providers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('injury_state_id')->nullable();
+            $table->enum('tax_id_type', array('SSN', 'EIN'));
             $table->enum('bill_type', array('Professional', 'Pharmacy', 'Institutional'));
             $table->enum('provider_type', array('Organization', 'Individual'));
             $table->string('tax_id', 25);
@@ -35,6 +36,8 @@ class CreateBillingProvidersTable extends Migration
             $table->string('payto_city_id')->nullable();
             $table->string('payto_state_id')->nullable();
             $table->string('payto_zipcode', 15)->nullable();
+            $table->integer('created_by')->nullable();
+            $table->integer('supar_admin_id')->nullable();
             $table->enum('is_active', array('1', '0'))->default('1');
             $table->timestamps();
             $table->softDeletes();

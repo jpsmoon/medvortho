@@ -424,6 +424,7 @@
      <div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow " data-scroll-to-active="true" id="mySidebar4">
       <div class="main-menu-content ">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+           
           <li class=" nav-item"><a href="javascript:void(0)"><i class="fa-regular fa-calendar-days"></i><span class="menu-title" data-i18n="nav.dash.main">Appointments</span></a>
             <ul class="menu-content">
               <li class="active"><a class="menu-item" href="{{ url('/patient/create/schedular') }}" data-i18n="nav.add.appointments">Add Appointments</a>
@@ -496,7 +497,7 @@
                <ul class="menu-content">
                      <li class="customSec vertSec">
                           <div class="scroll-h" style="overflow-x:hidden; height:230px;">
-                             @if(Auth::user()->getUserBillingProviders && count(Auth::user()->getUserBillingProviders) > 0 )
+                             @if(Auth::user()->getUserBillingProviders)
                               @foreach (Auth::user()->getUserBillingProviders as $usBilling)
                               <div class="row">
                                      <div class="col-12 customSecMenu">
@@ -516,7 +517,7 @@
                                       </div>
                                      
                              
-                                </div>
+                            </div>
                            @endforeach
                            @endif
                               </div>
@@ -534,8 +535,8 @@
                         </div>
                    </li>
                  </ul>
-        </li>
-        
+            </li> 
+            
         </ul>
       </div>
     </div>

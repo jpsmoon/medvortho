@@ -58,7 +58,7 @@
                                           @inject('roleClass', 'App\Http\Controllers\RoleController')
                                            @foreach ($roles as $key => $role)
                                                 <tr>
-                                                     <td>{{ $i++ }}</td>
+                                                     <td>{{ ++$i }}</td>
                                                      <td> {{ $role->name }} </td>
                                                     <td> 
                                                     @can('role-edit')
@@ -86,7 +86,8 @@
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
+        {!! $roles->render() !!}
 @endsection 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>

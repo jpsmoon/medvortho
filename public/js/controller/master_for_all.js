@@ -57,32 +57,7 @@ function applyDataMask(field) {
     field.addEventListener('click', changed)
     field.addEventListener('keyup', changed)
 }
-function getStatesByZipCode(val){
- //alert(val);
- $.ajax({
-    url: '/get-cities-state-by-zipCode',
-        type: 'POST',
-        data: {
-        _token: token, zipCode:val
-        },
-        success: function(response) {
-           console.log('response',response);
-           $("#cityDD").val(response.city_name);
-                var dd = document.getElementById('stateDD');
-                for (var i = 0; i < dd.options.length; i++) {
-                    if (dd.options[i].text === response.state_name) {
-                        dd.selectedIndex = i;
-                        break;
-                    }else{
-                        dd.selectedIndex =  null
-                    }
-                }
-        },
-        error: function(response) {
-            alert(response.responseJSON.message);
-        }
-    });
-}
+
 function getStateByCountry(val){
     //alert(val);
     $.ajax({
@@ -232,4 +207,33 @@ function changeUrl(billId, type, paymentId){
             swal.fire(response.responseJSON.message, '', 'error');
         }
     }); 
+}
+
+function getStatesByZipCode(val, cityId, stateId){
+    console.log('val', val);
+    //let fromUrl = '/getCityStateByZipCode'; 
+    let _url     = `/get-cities-state-by-zipCode`;
+    $.ajax({
+            url: _url,
+           type: 'POST',
+           data: {
+           _token: token, zipCode:val
+           },
+           success: function(response) {
+              //console.log('response',response);
+              $("#" +cityId).val(response.city_name);
+                   var dd = document.getElementById(stateId);
+                   for (var i = 0; i < dd.options.length; i++) {
+                       if (dd.options[i].text === response.state_name) {
+                           dd.selectedIndex = i;
+                           break;
+                       }else{
+                           dd.selectedIndex =  null
+                       }
+                   }
+           },
+           error: function(response) {
+            console.log(response.responseJSON.message);
+           }
+       });
 }

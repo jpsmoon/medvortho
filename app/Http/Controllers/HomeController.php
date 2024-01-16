@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\{Status, TaskStep, Patient, User, Role, BillingProvider, Patient_injury, InjuryBill, AppointmentReason, PatientAppointment};
 use Illuminate\Support\Facades\Auth;
-use DB;
-
+use DB; 
+use Redirect;
 
 class HomeController extends Controller
 {
@@ -21,7 +21,7 @@ class HomeController extends Controller
     public function __construct(Patient $patientMod)
     {
         $this->middleware('auth');
-        $this->patientModel = $patientMod;
+        $this->patientModel = $patientMod; 
     }
     /**
      * Show the application dashboard.
@@ -35,21 +35,29 @@ class HomeController extends Controller
         //$statuses = Status::where('slug_name', 'INACTICE_OTHER')->where('is_active', 1)->get();
         $mytasks = $this->getMyTaskCountList();
         $totalPatients = null; $totalBProviders = null;
-         if(Auth::user()->roles && count (Auth::user()->roles) > 0 &&  Auth::user()->roles[0]['name'] =='SubAdmin'){
-           $totalPatients = Patient::count(); 
-            $totalBProviders = BillingProvider::where('is_active', 1)->count();
-        } 
-        else
-        {
-            $providersId =[];
-            foreach(Auth::user()->getUserBillingProviders as $userProviderInfo){
-                $providersId[] = $userProviderInfo['provider_id'];
-            }
-            
-            if(count($providersId) > 0){
-                $totalPatients = Patient::whereIn('billing_provider_id', $providersId)->count();
-                 $totalBProviders = count(Auth::user()->getUserBillingProviders); 
-            }
+
+         if (Auth::user()->roles && Auth::user()->roles->isEmpty()) { 
+        //         Auth::logout();
+        //         return Redirect::to('login')->with('user_has_not_any_role');
+        //         //return $this->redirectToRoute('/login', "You don't have any role assigned. Please contact the global administrator.", 'error', ["positionClass" => "toast-top-center"]);
+         }
+        else{
+                if(Auth::user()->roles[0]['name'] =='SubAdmin'){
+                $totalPatients = Patient::count(); 
+                    $totalBProviders = BillingProvider::where('is_active', 1)->count();
+                } 
+                else
+                {
+                    $providersId =[];
+                    foreach(Auth::user()->getUserBillingProviders as $userProviderInfo){
+                        $providersId[] = $userProviderInfo['provider_id'];
+                    }
+                    
+                    if(count($providersId) > 0){
+                        $totalPatients = Patient::whereIn('billing_provider_id', $providersId)->count();
+                        $totalBProviders = count(Auth::user()->getUserBillingProviders); 
+                    }
+                }  
         }  
        
         $totalInjury =  Patient_injury::count();
@@ -80,7 +88,7 @@ class HomeController extends Controller
         
         $user = User::where('id', $id)->first();
         $roles = Role::select('id','name')->get();
-        $userRole = DB::table('model_has_roles')->where('model_id',$user->id);
+        $userRole = DB::table('model_has_roles')->where('model_id',$user->id)->first();
         $billingProvidersArray = BillingProvider::where('is_active', 1)->get(); 
         return view('users.edit', compact('user', 'id','roles','userRole', 'tasks', 'billingProvidersArray', 'isLoginUser'));
     }

@@ -9,7 +9,8 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DB;
 use Toastr;
-    
+use Illuminate\Support\Facades\Auth;
+
 class RoleController extends Controller
 {
     /**
@@ -32,12 +33,16 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        // $roles = Role::orderBy('id','DESC')->paginate(5);
-        // return view('roles.index',compact('roles'))
-        //     ->with('i', ($request->input('page', 1) - 1) * 5);
-        $roles = Role::orderBy('id','DESC')->get();
-        $i = 1;
-        return view('roles.index',compact(['roles', 'i']));
+        $roles = Role::orderBy('id','DESC');
+         if(Auth::user()->roles[0]['name'] !='GlobalAdmin'){
+            $isGlobalRole = Role::where('name', 'GlobalAdmin')->first();
+            if($isGlobalRole){
+                 $roles = $roles->where('id', '!=', $isGlobalRole->id);
+            } 
+        } 
+        $roles = $roles->paginate(50);
+        return view('roles.index',compact('roles'))
+            ->with('i', ($request->input('page', 1) - 1) * 5);
     }
     
     /**

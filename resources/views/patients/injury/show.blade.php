@@ -157,7 +157,7 @@
                                                 </tr>
                                                 @if (isset($pInjuries->getInjuryClaim->emp_address_line1))
                                                     <tr>
-                                                        <td width="50%"><b>Employer Address #{{ $fullAddress }}#</b>
+                                                        <td width="50%"><b>Employer Address </b>
                                                         </td>
                                                         <td width="50%">
                                                             {{ $pInjuries->getInjuryClaim->emp_address_line1 ? $pInjuries->getInjuryClaim->emp_address_line1 : '' }}
@@ -166,10 +166,10 @@
                                                     </tr>
                                                 @endif
                                                 <tr>
-                                                    <td width="50%"><b>DOI</b></td>
+                                                    <td width="50%"><b>DOI </b></td>
                                                     <td width="50%">
-                                                        {{ $pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->start_date && $pInjuries->getInjuryClaim->start_date != ' ' ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->start_date)) : '' }}
-                                                        {{ $pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->end_date && $pInjuries->getInjuryClaim->end_date != ' ' ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->end_date)) : '' }}
+                                                        {{ ($pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->start_date && $pInjuries->getInjuryClaim->start_date != ' ' && $pInjuries->getInjuryClaim->start_date != '1970-01-01' ) ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->start_date)) : '' }}
+                                                        {{ ($pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->end_date && $pInjuries->getInjuryClaim->end_date != ' ' && $pInjuries->getInjuryClaim->end_date != '1970-01-01') ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->end_date)) : '' }}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -193,12 +193,7 @@
                                                 </tr>
                                                 
 
-                                                <!--<tr>-->
-                                                <!--    <td width="50%"><b>Claim Status Date</b></td>-->
-                                                <!--    <td width="50%">-->
-                                                <!--        {{ $pInjuries->getInjuryClaim->claim_status_date ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->claim_status_date)) : 'NA' }}-->
-                                                <!--    </td>-->
-                                                <!--</tr>-->
+                                               
                                                 <tr>
                                                     <td width="50%"><b>Injury State</b></td>
                                                     <td width="50%">  {{ ($pInjuries->injury_state_id) ? strtoupper( substr( $pInjuries->injury_state_id, 0, 2 ) ) : 'NA' }}
@@ -230,31 +225,31 @@
                                                 <tr>
                                                     <td width="50%"><b>Claim Status</b></td>
                                                     <td width="50%">
-                                                        {{ ($pInjuries && $pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->getClaimStatus && $pInjuries->getInjuryClaim->getClaimStatus->claim_status) ?   $pInjuries->getInjuryClaim->getClaimStatus->claim_status: 'NA' }}
+                                                        {{ ($pInjuries && $pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->getClaimStatus && $pInjuries->getInjuryClaim->getClaimStatus->claim_status) ?   $pInjuries->getInjuryClaim->getClaimStatus->claim_status: ' ' }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td width="50%"><b>Claim Status Date</b></td>
                                                     <td width="50%">
-                                                        {{ $pInjuries->getInjuryClaim->claim_status_date ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->claim_status_date)) : 'NA' }}
+                                                        {{ ($pInjuries->getInjuryClaim->claim_status_date && $pInjuries->getInjuryClaim->claim_status_date != '1970-01-01' ) ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->claim_status_date)) : ' ' }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td width="50%"><b>ADJ Number</b></td>
                                                     <td width="50%">
-                                                        {{ $pInjuries->getInjuryClaim->adj_no ? $pInjuries->getInjuryClaim->adj_no : 'NA' }}
+                                                        {{ $pInjuries->getInjuryClaim->adj_no ? $pInjuries->getInjuryClaim->adj_no : ' ' }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td width="50%"><b>Medical Provider Network</b></td>
                                                     <td width="50%">
-                                                        {{ $pInjuries->getInjuryClaim->getMedicalProvider ? $pInjuries->getInjuryClaim->getMedicalProvider->applicant_name : 'NA' }}
+                                                        {{ $pInjuries->getInjuryClaim->getMedicalProvider ? $pInjuries->getInjuryClaim->getMedicalProvider->applicant_name : ' ' }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td width="50%"><b>Injury Practice Internal ID</b></td>
                                                     <td width="50%">
-                                                        {{ $pInjuries->getInjuryClaim->newInjuryClaim ? $pInjuries->getInjuryClaim->newInjuryClaim : 'NA' }}
+                                                        {{ $pInjuries->getInjuryClaim->newInjuryClaim ? $pInjuries->getInjuryClaim->newInjuryClaim : ' ' }}
                                                     </td>
                                                 </tr>
 
@@ -402,7 +397,7 @@
                                                                 @if (count($pInjuries->getInjuryNotes))
                                                                     @foreach ($pInjuries->getInjuryNotes as $note)
                                                                         <tr>
-                                                                            <td>{{ $note->created_at ? date('m-d-Y', strtotime($note->created_at)) : 'NA' }}
+                                                                            <td>{{ ($note->created_at && $note->created_at != '1970-01-01' ) ? date('m/d/Y', strtotime($note->created_at)) : 'NA' }}
                                                                             </td>
                                                                             <td>{{ $note->getUser ? $note->getUser->name : 'NA' }}
                                                                             </td>

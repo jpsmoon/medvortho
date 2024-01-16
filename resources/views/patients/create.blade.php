@@ -90,7 +90,7 @@
                     <div class="card-body">
                         <h4 class="px-2 py-2"><i class="fa-solid fa-user"></i> {{ trans('billLabel.patient_information') }}</h4>
                         <form action="{{ route('patients.store') }}" enctype="multipart/form-data"
-                            class="form-horizontal ladda-form'" method="POST">
+                            class="form-horizontal ladda-form" method="POST">
                             @csrf
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12">

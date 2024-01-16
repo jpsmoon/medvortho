@@ -113,6 +113,9 @@
     .border-2bottom {
       border-bottom: 2px solid #EA1D22 !important
     }
+    .border-2xbottom {
+      border-bottom:1px solid #EA1D22 !important
+    }
 
     .border-1top {
       border-top: 1px solid #EA1D22 !important
@@ -173,9 +176,24 @@
       font-style: normal;
       font-weight: 500 !important;
       text-align: right !important;
-      font-size:10px;
-      padding-bottom:12px!important;
+      font-size:0.75rem;
+      padding-bottom:1.05rem!important;
     }
+table tr:nth-child(1) .font-4 {
+    padding-bottom:1.05rem!important;
+}
+table tr:nth-child(2) .font-4 {
+    padding-bottom:1.05rem!important;
+}
+table tr:nth-child(3) .font-4 {
+    padding-bottom:1.05rem!important;
+}
+table tr:nth-child(4) .font-4 {
+    padding-bottom:1.05rem!important;
+}
+table tr:nth-child(5) .font-4 {
+    padding-bottom:1.05rem!important;
+}
 
     table.borderRgt {
       width: 100%;
@@ -324,7 +342,7 @@
       bottom: -5px;
     }
     .pt-66{
-        padding-top:60px!important;
+        padding-top:50px!important;
     }
     .text-dark {
       color: #000000 !important;
@@ -397,12 +415,16 @@
       padding-left:7px!important;
       width:85%;
     }
+.text-npi-bg{
+    position: relative;
+      left:-20px;
+}
 
     .text-npi-bg .bgtxt {
       position: relative;
       color: #EA1D2230;
       z-index:0;
-      left:10%;
+      left:40%;
       font-size:13px;
     }
 
@@ -416,21 +438,7 @@
       bottom: -5px;
     }
 
-    .noBtop {
-      border-top: 0px solid #EA1D22 !important;
-    }
-
-    .noBbottom {
-      border-bottom: 0px solid #EA1D22 !important;
-    }
-
-    .noBleft {
-      border-left: 0px solid #EA1D22 !important;
-    }
-
-    .noBright {
-      border-right: 0px solid #EA1D22 !important;
-    }
+    
 
     .logo {
       width: 40px;
@@ -554,11 +562,6 @@
       bottom: -2px;
     }
 
-    .bottom-table {
-      position: relative;
-      bottom: -2px;
-    }
-
     table.valTab tr td {
       height:6px;
       font-weight:500!important;
@@ -579,11 +582,15 @@
     }
 
     .w80 {
-      width: 75% !important;
+      width: 76% !important;
     }
 
     .w70 {
-      width: 70% !important;
+      width: 71% !important;
+    }
+    
+    .w80 {
+      width: 80% !important;
     }
 
     .Lpos {
@@ -704,7 +711,7 @@
     }
    
     .valTab .text-dark {
-      line-height:8px;
+      line-height:10px;
       /*font-size:9px;*/
       font-size:0.70rem;
       font-weight: 500 !important;
@@ -719,7 +726,7 @@
     }
 
     .w85 {
-      width: 80% !important;
+      width: 85% !important;
     }
 
     .pos-2 {
@@ -774,7 +781,8 @@
       color: #000;
       font-weight: 500;
       display: inline-block;
-      font-size:7px;
+      font-size:9px;
+      line-height:8px;
       text-align: center;
       margin-left: 3px;
       margin-right: 3px;
@@ -889,7 +897,8 @@
     
     
     .text-dark2{
-        font-size:0.6rem;
+        font-size:0.70rem;
+        line-height:0.55rem;
     }
     .B-bold{
         font-size:0.6rem;
@@ -942,6 +951,21 @@
      height:450px;
      display:block;
  }
+   .noBtop {
+      border-top: 0px solid #EA1D22 !important;
+    }
+
+    .noBbottom {
+      border-bottom: 0px solid #EA1D22 !important;
+    }
+
+    .noBleft {
+      border-left: 0px solid #EA1D22 !important;
+    }
+
+    .noBright {
+      border-right: 0px solid #EA1D22 !important;
+    }
   </style>
 </head>
 <body>
@@ -978,6 +1002,9 @@
     $bEDOSMM = null;
     $bEDOSDD = null;
     $bEDOSYYS = null; 
+    $bInjuryMM = null; 
+    $bInjuryDD  = null; 
+    $bInjuryYYS = null; 
   @endphp
   @php
  
@@ -1148,21 +1175,21 @@
               <td width="22%">
                 <table class="borderless " width="100%" valign="top">
                   <tr>
-                    <td class="fontxxx"><label><b>3.</b> PATIENT'S BIRTH DATE</label></td>
-                    <td class="fontxxx"><label>SEX</label></td>
+                    <td class="fontxxx"><span><b>3.</b> PATIENT'S BIRTH DATE</span></td>
+                    <td class="fontxxx"><span>SEX</span></td>
                   </tr>
                   <tr>
                     <td class="p-nil">
                       <table width="100%" class="borderright Bfont">
                         <tr>
-                          <td><label>MM</label></td>
-                          <td><label>DD</label></td>
-                          <td><label>YY</label></td>
+                          <td><span>MM</span></td>
+                          <td><span>DD</span></td>
+                          <td><span>YY</span></td>
                         </tr>
                         <tr>
-                          <td class="text-dark-xx">{{ $mm }}</td>
-                          <td class="text-dark-xx">{{ $dd }}</td>
-                          <td class="text-dark-xx">{{ $yy }}</td>
+                          <td class="text-dark">04</td>
+                          <td class="text-dark">01</td>
+                          <td class="text-dark">24</td>
                         </tr>
                       </table>
                     </td>
@@ -1171,7 +1198,7 @@
                         <tr>
                           <td><label for="male">M</label><span class="red_check">{{ ($injuryBillInfo->getInjury &&
                               $injuryBillInfo->getInjury->patient && $injuryBillInfo->getInjury->patient->gender &&
-                              $injuryBillInfo->getInjury->patient->gender == 'Male') ? 'X' : '' }}&nbsp;</span></label>
+                              $injuryBillInfo->getInjury->patient->gender == 'Male') ? 'X' : '' }}</span></label>
                           </td>
                           <td><label for="female">F</label><span class="red_check">{{ ($injuryBillInfo->getInjury &&
                               $injuryBillInfo->getInjury->patient && $injuryBillInfo->getInjury->patient->gender &&
@@ -1240,12 +1267,10 @@
                   </tr>
                   <tr>
                     <td class="text-dark-xx">
-                        @if($injuryBillInfo->getSendBillDate && $injuryBillInfo->getSendBillDate->bill_type && $injuryBillInfo->getSendBillDate->bill_type == 1)
-                            {{($injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim  && $injuryBillInfo->getInjury->getInjuryClaim->emp_address_line1) ? $injuryBillInfo->getInjury->getInjuryClaim->emp_address_line1 : '' }}
+                        {{($injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim  && $injuryBillInfo->getInjury->getInjuryClaim->emp_address_line1) ? $injuryBillInfo->getInjury->getInjuryClaim->emp_address_line1 : '' }}
                             {{($injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim && $injuryBillInfo->getInjury->getInjuryClaim->emp_address_line2) ? ','.$injuryBillInfo->getInjury->getInjuryClaim->emp_address_line2 : '' }}
                             
-                      @endif
-                    </td>
+                     </td>
                   </tr>
                 </table>
               </td>
@@ -1394,7 +1419,7 @@
                     <td colspan="2" class="pt-3 fontxxx"><label><b>11.</b> INSURED'S POLICY GROUP OR FECA NUMBER</label></td>
                   </tr>
                   <tr>
-                    <td colspan="2" class="text-dark">
+                    <td colspan="2" class="text-dark text-left">&nbsp;
                         @if($injuryBillInfo->getSendBillDate && $injuryBillInfo->getSendBillDate->bill_type && $injuryBillInfo->getSendBillDate->bill_type == 1)
                             {{($injuryBillInfo->getInjury && $injuryBillInfo->getInjury->claim_no) ? $injuryBillInfo->getInjury->claim_no : 'Unknown'}}
                         @endif
@@ -1446,7 +1471,7 @@
                               <tr>
                                 <td width="30%" class="text-dark-xx">
                                   {{$injuryBillInfo->getInjury->getInjuryClaim->claim_no }}</td>
-                                <td class="text-dark">Value</td>
+                                <td class="text-dark-xx">Value</td>
 
                               </tr>
                             </table>
@@ -1460,7 +1485,7 @@
                     <td colspan="2" class="pt-3"><label><b>c.</b> INSURANCE PLAN NAME OR PROGRAM NAME</label></td>
                   </tr>
                   <tr>
-                    <td colspan="2" class="text-dark pt-3">Value</td>
+                    <td colspan="2" class="text-dark-xx pt-3">Value</td>
                   </tr>
 
                   <tr class="border-top">
@@ -1502,10 +1527,10 @@
                           to the party who accepts assignment below.</small></label></td>
                   </tr>
                   <tr>
-                    <td class="p-0 pb-0 text-dark-xx"><label class="w10 red ps-10">SIGNED</label> 
-                    <span class="custom_value w70 ps-10">SIGNATURE ON FILE</span></td>
-                    <td class="p-0 pb-0 text-dark-xx text-right"><label class="w20 red">DATE</label> 
-                    <span class="custom_value w70 text-left ps-10">10/10/2023</span></td>
+                    <td class="p-0 pb-0"><label class="w10 red ps-10" style="width:16%">SIGNED</label> 
+                    <span class="custom_value w70 ps-10  text-dark-xx" >SIGNATURE ON FILE</span></td>
+                    <td class="p-0 pb-0 text-right"><label class="w20 red">DATE1</label> 
+                    <span class="custom_value w70 text-left ps-10  text-dark-xx">{{($injuryBillInfo->getSendBillDate && $injuryBillInfo->getSendBillDate->sent_date && $injuryBillInfo->getSendBillDate->sent_date != '1970-01-01') ? date('m/d/Y', strtotime($injuryBillInfo->getSendBillDate->sent_date)) : '' }} </span></td>
                   </tr>
                 </table>
               </td>
@@ -1517,9 +1542,9 @@
                           below.</small></label></td>
                   </tr>
                   <tr>
-                    <td class="p-0 pb-0 pos-12 text-dark-xx text-right">
-                    <span class="signPOS"><label class="w10 red text-left">SIGNED</label>
-                      <span class="custom_value w80">&nbsp;</span></span></td>
+                    <td class="p-0 pb-0 pos-12 text-right">
+                    <span class="signPOS"><label class="w10 red text-right" style="width:16%">SIGNED</label>
+                      <span class="custom_value w85  text-dark-xx">&nbsp;</span></span></td>
                   </tr>
                 </table>
               </td>
@@ -1533,7 +1558,7 @@
                   </tr>
                   <tr>
                     <td class="text-dark text-left solid p-nil">
-                      <table class="borderless " width="100%" valign="top">
+                      <table class="borderless Bfont" width="100%" valign="top">
                         <tbody>
                           <tr>
                             <td class="p-nil">
@@ -1550,10 +1575,17 @@
                                       <span>YY</span>
                                     </td>
                                   </tr>
+                                  @php
+                                  if($injuryBillInfo->getInjury->getInjuryClaim->start_date){
+                                        $bInjuryMM = date('m', strtotime($injuryBillInfo->getInjury->getInjuryClaim->start_date));
+                                        $bInjuryDD = date('d', strtotime($injuryBillInfo->getInjury->getInjuryClaim->start_date));
+                                        $bInjuryYYS =  date('y', strtotime($injuryBillInfo->getInjury->getInjuryClaim->start_date));
+                                }
+                                  @endphp
                                   <tr class="p-nil">
-                                    <td class="text-dark">Value</td>
-                                    <td class="text-dark">Value</td>
-                                    <td class="text-dark">Value</td>
+                                    <td class="text-dark-xx">{{$bInjuryMM}}</td>
+                                    <td class="text-dark-xx">{{$bInjuryDD}}</td>
+                                    <td class="text-dark-xx">{{$bInjuryYYS}}</td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -1578,8 +1610,8 @@
                    </td>
                 <td width="28%" class="p-nil">
                     <table class="borderless tpBm" width="100%">
-                         <tr class="border-top">
-                             <td width="100%" class="text-left solid"><span><b>15. </b>OTHER DATE</span></td>
+                         <tr>
+                             <td width="100%" class="text-left solid noborder"><span><b>15. </b>OTHER DATE</span></td>
                          </tr>
                          <tr>
                               <td class="text-dark text-left noborder p-nil">
@@ -1591,13 +1623,13 @@
                                 <tbody>
                                   <tr>
                                     <td width="25%" class="dashed">QUAL.</td>
-                                    <td class="text-dark dashed">&nbsp;</td>
+                                    <td class="text-dark-xx dashed">&nbsp;</td>
                                   </tr>
                                 </tbody>
                               </table>
                             </td>
                             <td class="p-nil">
-                              <table width="100%" class="borderright p-nil">
+                              <table width="100%" class="borderright p-nil Bfont">
                                 <tbody>
                                   <tr>
                                     <td>
@@ -1611,9 +1643,9 @@
                                     </td>
                                   </tr>
                                   <tr class="p-nil">
-                                    <td class="text-dark">Value</td>
-                                    <td class="text-dark">Value</td>
-                                    <td class="text-dark">Value</td>
+                                    <td class="text-dark-xx"> </td>
+                                    <td class="text-dark-xx"> </td>
+                                    <td class="text-dark-xx"> </td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -1626,7 +1658,7 @@
                          </table>
                     </td>
                 <td width="42%" class="p-nil ">
-                 <table class="borderless tpBm" width="100%">
+                   <table class="borderless tpBm" width="100%">
                     <tr class="border-top">
                       <td class="pt-3"><span><b>16.</b> DATES PATIENT UNABLE TO WORK IN CURRENT OCCUPATION</span></td>
                     </tr>
@@ -1658,30 +1690,27 @@
                     </tr>
                  </table>
                 </td>
-                <td rowspan="3" class="noBtop noBbottom fom3">
+                <td rowspan="5" class="noBtop noBbottom fom3">
                   <span class="img3"></span>
               </td>
             </tr>
             <tr>
-              <td class="noBleft noBtop noBbottom">&nbsp;</td>
-              <td  colspan="2" class="p-nil solid">
-                <table class="rightdashedborder Bfont" width="100%">
-                  <tr>
-                    <td width="53.5%" class="text-left solid">
-                      <label>
+                <td class="noBleft noBtop noBbottom">&nbsp;</td>
+                <td width="24%" class="p-nil">
+                   <label>
                         <b>17.</b> NAME OF REFERRING PROVIDER OR OTHER SOURCE
-                      </label>
-                    </td>
-                    <td width="46.5%" class="text-left noborder p-nil">
-                      <table class="rightdashedborder p-nil" width="100%" valign="top">
+                      </label>    
+                </td>
+                <td width="28%" class="p-nil border-top">
+                  <table class="rightdashedborder p-nil border-top" width="100%" valign="top">
                         <tr class="bgpink ">
-                          <td class="solid">
+                          <td class="solid" width="15%">
                             <label>17.a</label>
                           </td>
-                          <td class="text-dark solid"></td>
-                          <td class="text-dark noborder text-left">&nbsp;</td>
+                          <td class="text-dark solid"  width="15%"></td>
+                          <td class="text-dark noborder text-left"  width="70%">&nbsp;</td>
                         </tr>
-                        <tr class="border-bottom">
+                        <tr>
                           <td class="solid">
                             <label>17.b</label>
                           </td>
@@ -1690,94 +1719,11 @@
                           </td>
                           <td class="text-dark noborder border-top-dashed text-left">&nbsp;</td>
                         </tr>
-                      </table>
-                    </td>
-                  </tr>
-                  
-               <tr class="border-top">
-                <td class="pt-3 text-left solid"><label><b>19.</b> DATES PATIENT UNABLE TO WORK IN CURRENT OCCUPATION</label></td>
-                </tr>
-                  <tr>
-                    <td colspan="2" class="text-dark text-left">&nbsp;</td>
-                  </tr>
-                  <tr class="border-top">
-                    <td colspan="2" class="text-left noborder p-nil">
-                      <table class="rightdashedborder" width="100%" valign="top">
-                        <td class="text-left noborder">
-                          <label><b>21.</b> DIAGNOSIS OR NATURE OF ILLNESS OR INJURY Relate A-L to service line below(24E) </label>
-                        </td>
-                        <td class="text-left noborder p-nil">
-                            @php $digType = ''; $newArray = array();  $dcArray = array();  $finalArray  = array();
-                            foreach ($injuryBillInfo->getBillDiagnosis as $code) {
-                            //dd($code);
-                            $digType = ($code->getBillDiagnosisName && $code->getBillDiagnosisName->code_type != null) ? $code->getBillDiagnosisName->code_type : 10;
-                                $dcArray[]  = [ 'id' => $code->diagnose_code_id, 'dc' => $code->getBillDiagnosisName->diagnosis_code];
-                            }
-                            $finalArray  = $dcArray;
-                            //print_r($finalArray);exit;
-                            @endphp
-                          <table class="rightdashedborder p-nil" width="100%" valign="top">
-                            <tr>
-                              <td width="50%" class="dashed">
-                                <label>ICD Ind.</label>
-                              </td>
-                              <td class="text-dark dashed">{{$digType}}</td>
-                              <td width="40%" class="text-dark noborder">&nbsp;</td>
-                            </tr>
-                          </table>
-                        </td>
-                      </table>
-                    </td>
-                  </tr>
-                  
-                  <tr class="border-top">
-                  @inject('patientClass', 'App\Http\Controllers\PatientController')
-
-                    <td colspan="2" class="text-dark text-left noborder p-0">
-                      <table class="rightdashedborder p-0" width="100%" valign="top">
-                        <td class="text-left noborder">
-                          <table class="rightdashedborder p-nil p-0" width="100%" valign="top">  
-                               <tr>
-                                    @php $character = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']; @endphp
-                                    @for ($i = 0; $i < 4; $i++)
-                                        <td class="noborder p-0 text-left">
-                                            @foreach ($character as $key => $char)
-                                                @if ($key % 4 == $i)
-                                                    <table class="rightdashedborder p-nil text-left v1" width="100%" valign="top">
-                                                        <tr>
-                                                            <td width="100%" class="noborder p-0 text-left">
-                                                                <label>{{ strtoupper($char) }}.</label>
-                                                                <span class="custom_value2 w70 text-left text-dark">
-                                                                    @if (isset($finalArray[$key]) && is_array($finalArray[$key]))
-                                                                        @if (array_key_exists('dc', $finalArray[$key]))
-                                                                            {{ $finalArray[$key]['dc'] }}
-                                                                        @else
-                                                                            Value1
-                                                                        @endif
-                                                                    @else
-                                                                        Value
-                                                                    @endif
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                        <!-- You can repeat the structure for additional rows if needed -->
-                                                    </table>
-                                                @endif
-                                            @endforeach
-                                        </td>
-                                    @endfor
-                                </tr>
-                          </table>
-                        </td>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-              <td class="p-nil" width="42%">
+                      </table>    
+                </td>
+                <td width="42%" class="p-nil">
                 <table class="borderless tpBm" width="100%">
                   <tbody>
-                    
                     <tr>
                       <td class="pt-3"><label><b>18.</b> HOSPITALIZATION DATES RELATED TO CURRENT SERVICES</label></td>
                     </tr>
@@ -1806,23 +1752,38 @@
                           </tr>
                         </table>
                       </td>
-                    </tr>
-                    <tr class="border-top">
-                      <td colspan="2" class="p-nil pt-3">
-                        <table class="rightdashedborder " width="100%" valign="top">
-                          <tbody>
-                            <tr>
-                              <td class="text-left"><label><b>20.</b> OUTSIDE LAB?</label></td>
-                              <td class="text-left" colspan="2"><label>$CHARGES</label></td>
+                    </tr>    
+                    </tbody>
+                    </table>
+                </td>
+            </tr>
+            
+            <tr>
+                <td class="noBleft noBtop noBbottom">&nbsp;</td>
+                 <td colspan="2"  class="p-nil borderless">
+                    <table class="borderless Bfont" width="100%">
+                    <tr>
+                      <td class="pt-3 text-left"><span><b>19.</b> DATES PATIENT UNABLE TO WORK IN CURRENT OCCUPATION</span></td>
+                  </tr>
+                   <tr>
+                    <td class="text-dark text-left">&nbsp;</td>
+                  </tr>
+                  </table> 
+                </td>
+                 <td width="42%" class="p-nil">
+                        <table class="rightdashedborder borderless tpBm" width="100%" valign="top">
+                            <tr  class="p-nil">
+                              <td class="text-left"><span><b>20.</b> OUTSIDE LAB?</span></td>
+                              <td class="text-center noborder" colspan="2"><span>$CHARGES</span></td>
                             </tr>
-                            <tr>
-                              <td width="33%" class="solid pb-1s">
-                                <table width="100%">
-                                  <tr>
-                                    <td><span class="red_check">&nbsp;</span><label>Yes</label></td>
-                                    <td><span class="red_check">&nbsp;</span><label>No</label></td>
-                                  </tr>
-                                </table>
+                            <tr  class="p-nil">
+                              <td width="33%" class="solid">
+                                  <table width="100%">
+                              <tr>
+                                <td><span class="red_check">&nbsp;</span><span>Yes</span></td>
+                                <td><span class="red_check">&nbsp;</span><span>No</span></td>
+                              </tr>
+                            </table>
                               </td>
                               <td class="p-nil text-dark solid" width="33%">
                                 &nbsp;
@@ -1831,11 +1792,91 @@
                                 &nbsp;
                               </td>
                             </tr>
-                          </tbody>
                         </table>
-                      </td>
-                    </tr>
-                    <tr class="border-top">
+                </td>
+            </tr>
+            
+            <tr>
+              <td class="noBleft noBtop noBbottom">&nbsp;</td>
+              <td  colspan="2" class="p-nil solid">
+                <table class="rightdashedborder Bfont" width="100%">
+               
+                  <tr>
+                    <td colspan="2" class="text-left noborder p-nil">
+                      <table class="rightdashedborder" width="100%" valign="top">
+                        <td class="text-left noborder">
+                          <label><b>21.</b> DIAGNOSIS OR NATURE OF ILLNESS OR INJURY Relate A-L to service line below(24E) </label>
+                        </td>
+                        <td class="text-left noborder p-nil">
+                            @php $digType = ''; $newArray = array();  $dcArray = array();  $finalArray  = array();
+                            foreach ($injuryBillInfo->getBillDiagnosis as $code) {
+                            //dd($code);
+                            $digType = ($code->getBillDiagnosisName && $code->getBillDiagnosisName->code_type != null) ? $code->getBillDiagnosisName->code_type : 10;
+                                $dcArray[]  = [ 'id' => $code->diagnose_code_id, 'dc' => $code->getBillDiagnosisName->diagnosis_code];
+                            }
+                            $finalArray  = $dcArray;
+                            //print_r($finalArray);exit;
+                            @endphp
+                          <table class="rightdashedborder p-nil" width="100%" valign="top">
+                            <tr>
+                              <td width="50%" class="dashed">
+                                <label>ICD Ind.</label>
+                              </td>
+                              <td class="text-dark-xx dashed">{{$digType}}</td>
+                              <td width="40%" class="text-dark noborder">&nbsp;</td>
+                            </tr>
+                          </table>
+                        </td>
+                      </table>
+                    </td>
+                  </tr>
+                  
+                  <tr class="border-top">
+                  @inject('patientClass', 'App\Http\Controllers\PatientController')
+
+                    <td colspan="2" class="text-dark text-left noborder p-0">
+                      <table class="rightdashedborder p-0" width="100%" valign="top">
+                        <td class="text-left noborder">
+                          <table class="rightdashedborder p-nil p-0" width="100%" valign="top">  
+                               <tr>
+                                    @php $character = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']; @endphp
+                                    @for ($i = 0; $i < 4; $i++)
+                                        <td class="noborder p-0 text-left">
+                                            @foreach ($character as $key => $char)
+                                                @if ($key % 4 == $i)
+                                                    <table class="rightdashedborder p-nil text-left v1" width="100%" valign="top">
+                                                        <tr>
+                                                            <td width="100%" class="noborder p-0 text-left">
+                                                                <label>{{ strtoupper($char) }}.</label>
+                                                                <span class="custom_value2 w70 text-left text-dark-xx">
+                                                                    @if (isset($finalArray[$key]) && is_array($finalArray[$key]))
+                                                                        @if (array_key_exists('dc', $finalArray[$key]))
+                                                                            {{ $finalArray[$key]['dc'] }}
+                                                                        @else
+                                                                             
+                                                                        @endif
+                                                                    @else 
+                                                                    @endif
+                                                                </span>
+                                                            </td>
+                                                        </tr>  
+                                                    </table>
+                                                @endif
+                                            @endforeach
+                                        </td>
+                                    @endfor
+                                </tr>
+                          </table>
+                        </td>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+              <td class="p-nil" width="42%">
+                <table class="borderless tpBm" width="100%">
+                  <tbody>
+                    <tr>
                       <td colspan="2" class="p-nil pt-3">
                         <table class="rightdashedborder " width="100%" valign="top">
                           <tbody>
@@ -1847,8 +1888,8 @@
                                 <table width="100%" class="borderright">
                                   <tbody>
                                     <tr>
-                                      <td class="solid noborder text-left"><label>CODE</label></td>
-                                      <td class="noborder text-left"><label>ORIGINAL REF. NO.</label></td>
+                                      <td class="solid noborder text-left" width="90px"><label>CODE</label></td>
+                                      <td class="noborder text-left"><label>&nbsp;&nbsp;ORIGINAL REF. NO.</label></td>
                                     </tr>
                                     <tr>
                                       <td class="text-dark solid">&nbsp;</td>
@@ -1867,15 +1908,13 @@
                       <td colspan="2" class="pt-3"><label><b>23.</b> PRIOR AUTHORIZATION NUMBER</label></td>
                     </tr>
                     <tr>
-                      <td colspan="2" class="text-dark">&nbsp;</td>
+                      <td colspan="2" class="text-dark">{{ ($injuryBillInfo->bill_authorization_number) ? $injuryBillInfo->bill_authorization_number : ''}}</td>
                     </tr>
 
                   </tbody>
                 </table>
               </td>
             </tr>
-            
-            
             
             <tr>
               <td class="noBleft noBtop noBbottom pt-66 p-nil">
@@ -1907,13 +1946,13 @@
             <tr class="p-nil tabBox">
               <td colspan="6" class="text-left solid"><span style="margin-left:5px"><b>&nbsp; 24.</b> <b>A.</b> DATE(S) OF SERVICE</span></td>
               <td rowspan="3" class="text-center solid solid-right" width="40px"><span><b class="block">B.</b> PLACE OF SERVICE</span></td>
-              <td rowspan="3" class="text-center solid"  width="40px"><span><b class="block">C.</b> AMG</span></td>
+              <td rowspan="3" class="text-center solid" width="40px"><span><b class="block">C.</b> AMG</span></td>
               <td colspan="6" class="text-left solid"><span><b>&nbsp; D.</b> PROCEDURES, SERVICES, OR SUPPLIES</span></td>
-              <td colspan="2" rowspan="3" class="text-center solid solid-right" width="55px"><span><b class="block">E.</b> DIAGNOSIS POINTER</span></td>
-              <td colspan="3" rowspan="3" class="text-center solid p-1 h-66"><span><b class="block">F.</b> $ CHARGES</span></td>
+              <td colspan="2" rowspan="3" class="text-center solid solid-right" width="47px"><span><b class="block">E.</b> DIAGNOSIS POINTER</span></td>
+              <td colspan="3" rowspan="3" class="text-center solid p-1 h-66" width="62px"><span><b class="block">F.</b> $ CHARGES</span></td>
               <td rowspan="3" class="text-center solid p-1 h-66" width="43px"><span><b class="block">G.</b> <small>DAYS OR UNITS</small></span></td>
               <td rowspan="3" class="text-center solid p-1 h-66" width="43px"><span><b class="block">H.</b><small> EPSDT Family Plan</small></span></td>
-              <td rowspan="3" class="text-center solid p-1 h-66" ><span><b class="block">I.</b><small> ID QUAL.</small></span></td>
+              <td rowspan="3" class="text-center solid p-1 h-66"  width="28px"><span><b class="block">I.</b><small> ID<br> QUAL.</small></span></td>
               <td rowspan="3" colspan="3" class="text-center solid noborder p-1 h-66" width="50px"><span><b class="block">J.</b>RENDERING PROVIDER ID.#</span></td>
             </tr>
             <tr class="p-nil tabBox">
@@ -1922,12 +1961,12 @@
               <td class="text-center solid p-0 " colspan="6"><span><small>(Explain Unusual Circumstances)</small></span></td>
             </tr>
             <tr class="p-nil tabBox">
-              <td class="text-dark noborder">MM</td>
-              <td class="text-dark noborder">DD</td>
-              <td class="text-dark noborder">YY</td>
-              <td class="text-dark noborder">MM</td>
-              <td class="text-dark noborder">DD</td>
-              <td class="text-dark noborder">YY</td>
+              <td class="text-dark-xx noborder">MM</td>
+              <td class="text-dark-xx noborder">DD</td>
+              <td class="text-dark-xx noborder">YY</td>
+              <td class="text-dark-xx noborder">MM</td>
+              <td class="text-dark-xx noborder">DD</td>
+              <td class="text-dark-xx noborder">YY</td>
               <td class="text-center solid p-0" colspan="2"><span>CPT/HCPCS</span></td>
               <td class="text-center solid p-0" colspan="4"><span>MODIFIER</span></td>
             </tr>
@@ -1947,7 +1986,7 @@
              @endphp 
                     <!--Value feed row start here-->
                         <tr class="p-nil bgpink border-top">
-                          <td class="text-dark noborder">{{ $inj_mm }}</td>
+                          <td class="text-dark-xx noborder">{{ $inj_mm }}</td>
                           <td class="text-dark noborder"></td>
                           <td class="text-dark solid"></td>
                           <td class="text-dark noborder"></td>
@@ -1966,12 +2005,12 @@
                           <td colspan="3" class="text-dark solid"></td>
                           <td class="text-dark solid"></td>
                           <td class="text-dark solid"></td>
-                          <td class="text-dark solid">ZZ</td>
-                          <td colspan="3" class="text-dark noborder border-top-dashed text-left">
+                          <td class="text-dark-xx solid">ZZ</td>
+                          <td colspan="3" class="text-dark-xx noborder border-top-dashed text-left">
                                 {{($injuryBillInfo->getRenderinProvider && $injuryBillInfo->getRenderinProvider->taxonomyCode && $injuryBillInfo->getRenderinProvider->taxonomyCode->taxonomy_code) ? $injuryBillInfo->getRenderinProvider->taxonomyCode->taxonomy_code : '1215628623'}}
                             </td> 
                         </tr>
-                        <tr class="p-nil">
+                        <tr class="text-dark-xx p-nil">
                             @php 
                             $bAmt1=0; $bAmt2=0;
                             if($new_array[$j]['total_bill_amount']){
@@ -1988,56 +2027,62 @@
                                 $bEDOSYYS =  date('y', strtotime($injuryBillInfo->dos_end));
                             }
                             @endphp
-                          <td class="text-dark ">{{ $bDOSMM }}</td>
-                          <td class="text-dark ">{{ $bDOSDD }}</td>
-                          <td class="text-dark solid">{{ $bDOSYYS }}</td>
-                          <td class="text-dark">{{ $bEDOSMM }}</td>
-                          <td class="text-dark">{{ $bEDOSDD }}</td>
-                          <td class="text-dark solid">{{ $bEDOSYYS }}</td>
-                          <td class="text-dark solid">{{ ($injuryBillInfo->getBillPlaceOfService &&
+                          <td class="text-dark-xx">{{ $bDOSMM }}</td>
+                          <td class="text-dark-xx">{{ $bDOSDD }}</td>
+                          <td class="text-dark-xx solid">{{ $bDOSYYS }}</td>
+                          <td class="text-dark-xx">{{ $bEDOSMM }}</td>
+                          <td class="text-dark-xx">{{ $bEDOSDD }}</td>
+                          <td class="text-dark-xx solid">{{ $bEDOSYYS }}</td>
+                          <td class="text-dark-xx solid">{{ ($injuryBillInfo->getBillPlaceOfService &&
                             $injuryBillInfo->getBillPlaceOfService->placeOfServiceCode) ?
                             $injuryBillInfo->getBillPlaceOfService->placeOfServiceCode->service_code : 'code' }}</td>
-                          <td class="text-dark solid">&nbsp;</td>
-                          <td class="text-dark solid" colspan="2">
+                          <td class="text-dark-xx solid">&nbsp;</td>
+                          <td class="text-dark-xx solid" colspan="2">
                               {{ ($new_array[$j] && $new_array[$j]['bill_procedure_code'] != null ) ? $new_array[$j]['bill_procedure_code'] : 'NA' }}
                           </td>
-                          <td class="text-dark">&nbsp;</td>
-                          <td class="text-dark">&nbsp;</td>
-                          <td class="text-dark">&nbsp;</td>
-                          <td class="text-dark solid">
+                          <td class="text-dark-xx">&nbsp;</td>
+                          <td class="text-dark-xx">&nbsp;</td>
+                          <td class="text-dark-xx">&nbsp;</td>
+                          <td class="text-dark-xx solid">
                                 {{($new_array[$j]->getModifierInfo) ? $new_array[$j]->getModifierInfo['name'] : ''}}
                           </td>
-                          <td colspan="2" class="text-dark solid"> 
+                          <td colspan="2" class="text-dark-xx solid"> 
                          <?php 
-                          if($new_array[$j]['bill_diag_codes1'] ){
-                              if($patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_codes1'], $finalArray, $character) != null){
-                                echo $patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_codes1'], $finalArray, $character);
-                              }
-                          }
-                          if($new_array[$j]['bill_diag_codes2'] ){
-                              if($patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_codes2'], $finalArray, $character) != null){
-                              echo  $patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_codes2'], $finalArray, $character). ', ';
-                              }
-                          }
-                          if($new_array[$j]['bill_diag_codes3'] ){
-                              if($patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_codes3'], $finalArray, $character) != null){
-                              echo  $patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_codes3'], $finalArray, $character). ', ';
-                              }
-                          }
-                          if($new_array[$j]['bill_diag_code4'] ){
-                              if($patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_code4'], $finalArray, $character) != null){
-                              echo  $patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_code4'], $finalArray, $character);
-                              }
-                          }
+                         $valArray = array($new_array[$j]['bill_diag_codes1'],$new_array[$j]['bill_diag_codes2'],$new_array[$j]['bill_diag_codes3'], $new_array[$j]['bill_diag_code4']);
+                         $dcCodes =  $patientClass->getDignosisCOdeCharacterInBillViewPage($valArray, $finalArray, $character);
+                          echo $dcCodes; 
+                          
+                        //   if($new_array[$j]['bill_diag_codes1'] ){
+                        //       if($patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_codes1'], $finalArray, $character) != null){
+                        //        
+                         echo $patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_codes1'], $finalArray, $character);
+                         
+                        //       }
+                        //   }
+                        //   if($new_array[$j]['bill_diag_codes2'] ){
+                        //       if($patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_codes2'], $finalArray, $character) != null){
+                        //       echo  $patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_codes2'], $finalArray, $character). ', ';
+                        //       }
+                        //   }
+                        //   if($new_array[$j]['bill_diag_codes3'] ){
+                        //       if($patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_codes3'], $finalArray, $character) != null){
+                        //       echo  $patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_codes3'], $finalArray, $character). ', ';
+                        //       }
+                        //   }
+                        //   if($new_array[$j]['bill_diag_code4'] ){
+                        //       if($patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_code4'], $finalArray, $character) != null){
+                        //       echo  $patientClass->getDignosisCOdeCharacterInBillViewPage($new_array[$j]['bill_diag_code4'], $finalArray, $character);
+                        //       }
+                        //   }
                          ?>
                           
                           </td>
-                          <td colspan="2" class="text-dark ">{{$bAmt1}}</td>
-                          <td class="text-dark text-center solid">{{$bAmt2}}</td>
-                          <td class="text-dark solid">{{($new_array[$j]['bill_units']) ? $new_array[$j]['bill_units'] : ''}}</td>
-                          <td class="text-dark solid">004</td>
+                          <td colspan="2" class="text-dark-xx text-right" style="text-align:right; padding-right:2px;">{{$bAmt1}}</td>
+                          <td class="text-dark-xx text-left solid" style="padding-left:0px!important;"><span style="position:relative; right:2px; font-size:0.75rem; font-weight:600;"><b>.</b></span>{{$bAmt2}}</td>
+                          <td class="text-dark-xx solid">{{($new_array[$j]['bill_units']) ? $new_array[$j]['bill_units'] : ''}}</td>
+                          <td class="text-dark-xx solid">004</td>
                           <td class=" solid border-top-dashed"><span>NPI</span></td>
-                          <td colspan="3" class="text-dark noborder border-top-dashed text-left">
+                          <td colspan="3" class="text-dark-xx noborder border-top-dashed text-left">
                           {{($injuryBillInfo->getRenderinProvider && $injuryBillInfo->getRenderinProvider->referring_provider_npi) ? $injuryBillInfo->getRenderinProvider->referring_provider_npi : '1215628623'}}
                           </td> 
                         </tr>
@@ -2117,8 +2162,8 @@
                           <td class="p-0 ps-10 pt-20 text-dark-xx text-left">{{
                             $injuryBillInfo->getInjury->patient->getBillingProvider->tax_id ?
                             $injuryBillInfo->getInjury->patient->getBillingProvider->tax_id : '' }}</td>
-                          <td class="p-0"><span class="red_check">&nbsp;</span></td>
-                          <td class="p-0"><span class="red_check">&nbsp;</span></td>
+                          <td class="p-0"><span class="red_check">{{ ($injuryBillInfo->getInjury->patient->getBillingProvider->tax_id_type &&  $injuryBillInfo->getInjury->patient->getBillingProvider->tax_id_type == 'SSN') ? "X" : ' ' }}</span></td>
+                          <td class="p-0"><span class="red_check">{{ ($injuryBillInfo->getInjury->patient->getBillingProvider->tax_id_type &&  $injuryBillInfo->getInjury->patient->getBillingProvider->tax_id_type == 'EIN') ? "X" : ' ' }}</span></td>
                         </tr>
                       </table>
                     </td>
@@ -2129,7 +2174,16 @@
                           <td colspan="2" class="p-nil text-left"><span><b>&nbsp;27.</b> ACCEPT ASSIGNMENT?<br><small style="padding-left:12px; line-height:4px">(For govt. claims, see back)</small></span></td>
                         </tr>
                         <tr class="p-nil">
-                          <td class="p-nil ps-10 solid text-dark-xx text-left">477db9122800-1</td>
+                          <td class="p-nil ps-10 solid text-dark-xx text-left">
+                              @php $accountNumber = ''; $fnAccountNumber = '';
+                              if($injuryBillInfo->bill_number != ''){
+                              $accountNumber =  $injuryBillInfo->bill_number;
+                              $lastDigitId = ($injuryBillInfo->getSendBillDate && $injuryBillInfo->getSendBillDate->bill_type && $injuryBillInfo->getSendBillDate->bill_type == 1) ? 1 : 2;
+                               $fnAccountNumber = $accountNumber."-".$lastDigitId;
+                               }
+                               echo ($fnAccountNumber != '') ? $fnAccountNumber : '477db9122800-1';
+                              @endphp 
+                            </td>
                           <td class="p-nil"><span class="red_check">&nbsp;</span><span>YES</span></td>
                           <td class="p-nil noborder"><span class="red_check">&nbsp;</span><span>NO</span></td>
                         </tr>
@@ -2139,29 +2193,28 @@
                 </table>
               </td>
               <td class="p-nil" width="36%">
-                <table class="rightdashedborder" width="100%" valign="top">
+                <table class="rightdashedborder valTab Bfont" width="100%" valign="top">
                   <tr class="p-nil">
                     <td class="solid text-left p-0" colspan="3"><label><b>&nbsp;28.</b> TOTAL CHARGE</label></td>
                     <td class="solid text-left p-0" colspan="3"><label><b>&nbsp;29.</b> AMOUNT PAID</label></td>
                     <td class="noborder text-left p-0" colspan="3"><label><b>&nbsp;30.</b> Rsvd for NUCC Use</label></td>
                   </tr>
                   <tr class="p-nil">
-                    <td class="text-dark noborder p-nil pt-8"><label>$</label></td>
-                    <td class="text-dark-xx text-right  p-nil pt-8">
+                    <td class="text-dark text-left noborder p-nil pt-8"><label>$</label></td>
+                    <td class="text-dark-xx text-right p-nil pt-8">
                     @php $tot1 =0; $tot2=0; @endphp
                        @php list($tot1, $tot2) = explode('.',  $totalCharge); 
                        @endphp
                     {{$tot1}}
                     </td>
-                    <td class="text-dark-xx solid p-nil pt-8 text-left">.{{$tot2}}</td>
+                    <td class="text-dark-xx solid p-nil text-left pt-8" style="padding-left:0px!important;"><span style="position:relative; right:2px; top:-5px; font-size:0.75rem; font-weight:600;"><b>.</b></span>{{$tot2}}</td>
+                    <td class="text-dark-xx text-left p-nil noborder pt-8"><label>&nbsp;$</label></td>
+                    <td class="text-dark text-right p-nil pt-8"></td>
+                    <td class="text-dark solid  p-nil pt-8 text-left" style="padding-left:0px!important;"><!--<span style="position:relative; right:2px; font-size:0.75rem; font-weight:600;"><b>.</b></span>00--></td>
 
-                    <td class="text-dark p-nil noborder pt-8"><label>$</label></td>
-                    <td class="text-dark-xx text-right p-nil pt-8">0</td>
-                    <td class="text-dark-xx solid  p-nil pt-8 text-left">.00</td>
-
-                    <td class="text-dark noborder p-nil pt-8"><label>-</label></td>
-                    <td class="text-dark-xx text-right p-nil pt-8">0</td>
-                    <td class="text-dark-xx noborder  p-nil pt-8 text-left">.00</td>
+                    <td class="text-dark text-left noborder p-nil pt-8"><label></label></td>
+                    <td class="text-dark text-right p-nil pt-8"></td>
+                    <td class="text-dark noborder  p-nil pt-8 text-left" style="padding-left:0px!important;"><!--<span style="position:relative; right:2px; font-size:0.75rem; font-weight:600;"><b>.</b></span>00--></td>
                   </tr>
                 </table>
               </td>
@@ -2170,14 +2223,14 @@
             
             <tr>
                 <td class="noBleft noBright noBtop noBbottom">&nbsp;</td>
-                <td colspan="2" class="p-nil pt-0 border-2bottom">
+                <td colspan="2" class="p-nil pt-0 border-2bottom ">
                 <table class="rightdashedborder B-bold" width="100%">
                   <tr>
-                    <td class="solid p-nil" width="55%">
+                    <td class="solid p-nil border-2xbottom" width="55%">
                       <table class="borderless text-left minheight pos-2-old Bfont" width="100%">
                         <tr>
-                          <td colspan="2" class="text-left"><label><b>31.</b> SIGNATURE OF PHYSICIAN OR SUPPLIER
-                              INCLUDING DEGRESS OR CREDENTIALS <small>(I certify that the statements on the reverse apply to this bill and are made a part thereof.)</small></label></td>
+                          <td colspan="2" class="text-left" style="padding-right:25px;"><label style="font-size:0.55rem; line-height:6px; padding-top:3px;"><b>31.</b> SIGNATURE OF PHYSICIAN OR SUPPLIER
+                              INCLUDING &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DEGRESS OR CREDENTIALS <small>(I certify that the &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;statements on the reverse apply to this bill and are &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;made a part thereof.)</small></label></td>
                         </tr>
                         <tr>
                           <td colspan="2" class="text-dark2 p-0 text-left">{{
@@ -2193,8 +2246,8 @@
                           </td>
                         </tr>
                         <tr>
-                          <td class="p-nill text-left"> <label class="custom_value33 text-dark-xx">SIGNATURE ON FILE</label></td>
-                          <td class="p-nill text-center text-dark-xx"><label class="custom_value33">10/10/2023</label></td>
+                          <td class="p-nill text-left"> <label class="custom_value33 text-dark-xx" style="text-transform:capitalize;">Signature On File</label></td>
+                          <td class="p-nill text-center text-dark-xx"><label class="custom_value33">{{($injuryBillInfo->getSendBillDate && $injuryBillInfo->getSendBillDate->sent_date && $injuryBillInfo->getSendBillDate->sent_date != '1970-01-01') ? date('m/d/Y', strtotime($injuryBillInfo->getSendBillDate->sent_date)) : '-' }}</label></td>
                         </tr>
                         <tr>
                           <td class="p-nill text-left"><label> SIGNED </label></td>
@@ -2206,20 +2259,24 @@
                     <td class="noborder p-nil" width="45%">
                       <table class="borderless text-left minheight Bfont" width="100%">
                         <tr>
-                          <td class="p-0 text-left"><label><b>32.</b> SERVICE FACILITY LOCATION INFORMATION </label>
+                          <td class="p-0 text-left"><label style="font-size:0.55rem;"><b>&nbsp;32.</b> SERVICE FACILITY LOCATION INFORMATION </label>
                           </td>
                         </tr>
                         <tr>
                           <td class="text-dark2 text-left">{{ $injuryBillInfo->getBillPlaceOfService->nick_name }}</td>
                         </tr>
-                        <tr>
-                          <td class="text-dark2 text-left">{{ $injuryBillInfo->getBillPlaceOfService->address_line1 }}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td class="text-dark2 text-left">{{ $injuryBillInfo->getBillPlaceOfService->address_line1 }}
-                          </td>
-                        </tr>
+                        
+                         @if($injuryBillInfo->getBillPlaceOfService->address_line1)
+                          <tr>
+                            <td class="text-dark2 text-left">{{ $injuryBillInfo->getBillPlaceOfService->address_line1 }}</td>
+                          </tr>
+                          @endif
+                          @if($injuryBillInfo->getBillPlaceOfService->address_line2)
+                          <tr>
+                            <td class="text-dark2 text-left">{{  $injuryBillInfo->getBillPlaceOfService->address_line2 }}</td>
+                          </tr>
+                           @endif
+                   
                         <tr>
                           <td class="text-dark2 text-left">{{ $injuryBillInfo->getBillPlaceOfService->city_id }}
                             <span style="position:relative; right:-50px;">
@@ -2227,16 +2284,21 @@
                             </span>
                           </td>
                         </tr>
+                         @if($injuryBillInfo->getBillPlaceOfService->address_line2 == null)
+                          <tr>
+                                <td class="text-dark2 text-left">   &nbsp;  </td>
+                        </tr>
+                          @endif
                         <tr>
                           <td class="p-nil bottom-table">
                             <table width="100%" class="simpleborder p-0">
                               <tr>
-                                <td width="55%" class="text-left p-nil ">a.<span class="text-npi-bg text-dark-xx">
+                                <td width="55%" class="text-left p-nil noBbottom">a.<span class="text-npi-bg text-dark-xx" style="text-align:left;">
                                     <span class="bgtxt">NPI</span>
-                                     {{
-                                    $injuryBillInfo->getInjury->patient->getBillingProvider->professional_npi }}</span>
+                                     {{$injuryBillInfo->getInjury->patient->getBillingProvider->professional_npi }}
+                                     </span>
                                 </td>
-                                <td class="bgpink noborder text-left">b.</td>
+                                <td class="bgpink noborder text-left noBbottom">b.</td>
                               </tr>
                             </table>
                           </td>
@@ -2249,21 +2311,25 @@
                 <td class="p-nil border-2bottom" width="42%">
                 <table class="borderless minheight Bfont" width="100%">
                   <tr>
-                    <td class="p-0"><label><b>33.</b> BILLING PROVIDER INFO & PH #(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</label></td>
+                    <td class="p-0"><label style="font-size:0.55rem;"><b>&nbsp;33.</b> BILLING PROVIDER INFO & PH # &nbsp;(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)</label></td>
                   </tr>
                   <tr>
                     <td class="text-dark2">{{
                       $injuryBillInfo->getInjury->patient->getBillingProvider->professional_provider_name ?
                       $injuryBillInfo->getInjury->patient->getBillingProvider->professional_provider_name : '' }}</td>
                   </tr>
+                  @if($injuryBillInfo->getInjury->patient->getBillingProvider->professional_addres1)
                   <tr>
                     <td class="text-dark2">{{
                       $injuryBillInfo->getInjury->patient->getBillingProvider->professional_addres1 }}</td>
                   </tr>
+                  @endif
+                  @if($injuryBillInfo->getInjury->patient->getBillingProvider->professional_addres2)
                   <tr>
                     <td class="text-dark2">{{
                       $injuryBillInfo->getInjury->patient->getBillingProvider->professional_addres2 }}</td>
                   </tr>
+                   @endif
                   <tr>
                     <td class="text-dark2">{{ $injuryBillInfo->getInjury->patient->getBillingProvider->professional_city
                       }}
@@ -2274,20 +2340,28 @@
                       </span>
                     </td>
                   </tr>
+                  @if($injuryBillInfo->getInjury->patient->getBillingProvider->professional_addres2 == null)
                   <tr>
-                    <td class="p-nil bottom-table2">
-                      <table width="100%" class="simpleborder Bfont">
+                    <td class="text-dark2">   &nbsp;  </td>
+                  </tr>
+                  @endif
+                  <tr>
+                    <td class="p-nil bottom-table2 noBbottom">
+                      <table width="100%" class="simpleborder Bfont noBbottom">
                         <tr>
-                          <td width="45%">a.<span class="text-npi-bg text-dark-xx"><span class="bgtxt">NPI</span> {{
-                              $injuryBillInfo->getInjury->patient->getBillingProvider->professional_npi }}</span></td>
-                          <td class="bgpink text-left">b.</td>
+                          <td width="45%" class="text-left p-nil noBbottom">a.<span class="text-npi-bg text-dark-xx">
+                              <span class="bgtxt">NPI</span>
+                              {{$injuryBillInfo->getInjury->patient->getBillingProvider->professional_npi}}
+                              </span>
+                             </td>
+                          <td class="bgpink text-left noBbottom">b.</td>
                         </tr>
                       </table>
                     </td>
                   </tr>
                 </table>
               </td>
-                <td class="noBleft noBright noBtop noBbottom">&nbsp;</td>
+                <td class="noBleft noBright noBtop">&nbsp;</td>
             </tr>
             <tr>
               <td class="noBleft noBright noBbottom">&nbsp;</td>

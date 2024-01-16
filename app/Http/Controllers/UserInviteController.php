@@ -28,17 +28,19 @@ class UserInviteController extends Controller
     }
     public function index(Request $request)
     {
-        if(Auth::user()->roles[0]['name'] =='SubAdmin'){
-              $accountUser = User::orderBy('created_at', 'desc')->get();
-              $inviteUser = UserInvite::orderBy('created_at', 'desc')->get();
-        } 
-        else
-        {
-            $accountUser = User::where('created_by', Auth::user()->id)->orderBy('created_at', 'desc')->get();
-            $inviteUser = UserInvite::where('created_by', Auth::user()->id)->orderBy('created_at', 'desc')->get();
-        }
+        // if(Auth::user()->roles[0]['name'] =='SubAdmin'){
+        //       $accountUser = User::orderBy('created_at', 'desc')->get();
+        //       $inviteUser = UserInvite::orderBy('created_at', 'desc')->get();
+        // } 
+        // else
+        // {
+        //     $accountUser = User::where('created_by', Auth::user()->id)->orderBy('created_at', 'desc')->get();
+        //     $inviteUser = UserInvite::where('created_by', Auth::user()->id)->orderBy('created_at', 'desc')->get();
+        // }
          
-            
+        $accountUser = User::where('created_by', Auth::user()->id)->orderBy('created_at', 'desc')->get();
+        $inviteUser = UserInvite::where('created_by', Auth::user()->id)->orderBy('created_at', 'desc')->get();
+        
         return view('usersInvite.index', compact('inviteUser','accountUser'));
     }
     public function checkBillingProviderAccess($userId){

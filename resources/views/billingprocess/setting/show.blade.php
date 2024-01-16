@@ -85,16 +85,19 @@
                                     <label class="bold" for=""> Tax ID </label><br>
                                     <span>{{($billingProviders->tax_id) ? $billingProviders->tax_id : ''}}</span>
                                 </div>
-                                
                                 <div class="col-md-4">
-                                    <label class="bold" for=""> DOL Provider Number </label><br>
-                                    <span>{{($billingProviders->dol_provider_name) ? $billingProviders->dol_provider_name : '-'}}</span>
-                                </div>
+                                    <label class="bold" for=""> Tax ID Type</label><br>
+                                    <span>{{($billingProviders->tax_id_type ) ? $billingProviders->tax_id_type : ''}}</span>
+                                </div> 
                                 
                             </div>
                             
                              <hr>   
                             <div class="row">
+                                <div class="col-md-4">
+                                    <label class="bold" for=""> DOL Provider Number </label><br>
+                                    <span>{{($billingProviders->dol_provider_name) ? $billingProviders->dol_provider_name : '-'}}</span>
+                                </div>
                                 <div class="col-md-4">
                                     <label class="bold" for=""> Telephone </label><br>
                                     <span>{{($billingProviders->professional_telephone) ? $billingProviders->professional_telephone : ''}}</span>
@@ -102,16 +105,14 @@
                                 <div class="col-md-4">
                                     <label class="bold" for=""> Fax Number </label><br>
                                     <span>{{($billingProviders->professional_telephone) ? $billingProviders->professional_telephone : ''}}</span>
-                                </div>
-                                
+                                </div> 
+                            </div>
+                             <hr>
+                            <div class="row">
                                 <div class="col-md-4">
                                     <label class="bold" for="">Bill Type </label><br>
                                     <span>{{$billingProviders->bill_type}}</span>
                                 </div>
-                                
-                            </div>
-                             <hr>
-                            <div class="row">
                                 <div class="col-md-4">
                                     <label class="bold" for=""> Physical Address </label><br>
                                      <span>
@@ -133,13 +134,13 @@
 
                                    {{$billingProviders->professional_zip}}
                                    </span>
-                                </div>
-                                
+                                </div> 
+                            </div>
+                            <div class="row">
                                 <div class="col-md-4">
                                 <label class="bold" for="">Active? </label><br>
                                 <span>{{($billingProviders->is_active == 1) ? 'Yes' : 'No'}}</span>
                                 </div>
-                                
                             </div>
                             <hr>
                             <div class="row">

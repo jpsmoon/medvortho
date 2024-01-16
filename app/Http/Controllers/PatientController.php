@@ -29,6 +29,7 @@ class PatientController extends Controller
     }
     public function index(Request $request)
     {
+        $patients = [];
         if(Auth::user()->roles[0]['name'] =='SubAdmin'){
                $patients = Patient::with('getBillingProvider')->orderBy('created_at', 'desc')->get();  
         } 
@@ -1186,27 +1187,6 @@ class PatientController extends Controller
             return $allDiagnosis;
         } 
     }
-    public function savePatienInjurytBill(Request $request)
-    {
-        try {
-            DB::beginTransaction();
-            $bill_Id = $this->storeInjuryBillInfo($request); 
-            $bDescription = ($request->billId) ? 'Update Bill' : 'Add Bill'; 
-            $this->addBillLogs($request, $billId, $bDescription, 'BILL_INFO', null); 
-            DB::commit();
-            $message =  trans('bill.bill_added');
-            //$url =  'injury/view/' . $request->injuryId;
-            if(isset($request->billId)){
-                $message = trans('bill.bill_updated');
-                
-            }
-            $url =  'view/patient/injury/bill/info/' .$bill_Id; 
-            return $this->redirectToRoute($url, $message, 'success', ["positionClass" => "toast-top-center"]);
-        } catch (\Exception $e) {
-            DB::rollback();   
-            return $this->redirectToRoute(redirect()->back(), trans('bill.bill_created_successfully'), 'error', ["positionClass" => "toast-top-center"]);
-        }
-    }
     
     
     public function storeBillDianosisCode(Request $request){
@@ -2204,6 +2184,117 @@ class PatientController extends Controller
         }
         return 1;
     }
+
+    public function getDignosisCOdeCharacterInBillViewPage($dcValues, $finalArray, $character)
+    {
+        //   echo "<pre>";
+        //   print_r($dcValues);
+        //   print_r($finalArray);
+        //   print_r($character);exit;
+        // $charDC = '';
+        // if (is_array($dcValues) || is_object($dcValues)) {
+        //     foreach($dcValues as $val){
+        //          foreach ($character as $key => $char){ 
+        //             if (isset($finalArray[$key]) && is_array($finalArray[$key])){
+        //                 if (array_key_exists('dc', $finalArray[$key])){ 
+        //                     if($finalArray[$key]['dc'] == $val){
+        //                           $charDC .= strtoupper($char).","; 
+        //                     } 
+        //                 }
+        //             }
+        //         }  
+        //     }
+        // }exit;
+        // return $charDC;  
+        // echo "<pre>";
+        // print_r($dcValues);
+        // echo "<br>";
+        // echo "matching values";
+        // echo "<pre>";
+        // print_r($finalArray);
+        // echo "<br>";
+        // echo "final array values";
+        // echo "<pre>";
+        // print_r($character);
+        // echo "<br>";
+        // echo "character array values";exit; 
+         
+
+         $charDC = ''; // Initialize the variable to store the result
+
+        // Create a mapping of 'dc' values to characters
+        $dcCharacterMapping = [];
+        foreach ($finalArray as $charArray) {
+            if (isset($charArray['dc'])) {
+                $dcCharacterMapping[trim(strtoupper($charArray['dc']))] = true;
+            }
+        }
+        
+        if (is_array($dcValues) || is_object($dcValues)) {
+            foreach ($dcValues as $val) {
+                // Check if the 'dc' value exists in the mapping
+                $val = trim(strtoupper($val)); // Trim and convert to uppercase for consistency
+                if (isset($dcCharacterMapping[$val])) {
+                    // Find the corresponding character in $character
+                    $index = array_search($val, array_map('trim', array_map('strtoupper', $dcValues)));
+                    if ($index !== false && isset($character[$index])) {
+                        $charDC .= strtoupper($character[$index]) . ",";
+                    }  
+                }  
+            } 
+            // Remove the trailing comma if any
+            $charDC = rtrim($charDC, ',');
+        }
+        
+        // Output the final result
+        echo $charDC;
+    }
+    public function viewPatient(Request $request)
+    {
+        $patientInjury = [];
+        if(isset($request->id)){
+            $patient =  $this->getPatientById($request->id);
+            if($patient){
+                $patientId = $request->id;
+                $injury = $this->getInjuryClaimDate($patientId, null);
+                $meetingTypes = $this->patientModel->getMeetingType();
+                $patientAppointment = PatientAppointment::where('patient_id', $patientId )->take(5)->orderBy('appointment_date', 'desc')->get();
+
+                if($patient && $patient->getInjuries){
+                    $pInjuries = $patient->getInjuries;
+                }
+                $this->setSidebarPatient($patientId);
+                //dd($patientAppointment);
+                return view('patients.show', compact('patientAppointment','patient', 'pInjuries', 'patientId', 'injury', 'meetingTypes', 'patientAppointment'));
+            }
+            else{
+                return $this->redirectToRoute('/patients', trans('bill.record_not_found'), 'error', ["positionClass" => "toast-top-center"]);
+            }
+        }else{
+            return  $this->redirectToRoute('/patients', 'This record does not exist', 'error', ["positionClass" => "toast-top-center"]);
+        }
+    }
+    public function savePatienInjurytBill(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $bill_Id = $this->storeInjuryBillInfo($request); 
+            $bDescription = ($request->billId) ? 'Update Bill' : 'Add Bill'; 
+            $this->addBillLogs($request, $request->billId, $bDescription, 'BILL_INFO', null); 
+            DB::commit();
+            $message =  trans('bill.bill_added');
+            //$url =  'injury/view/' . $request->injuryId;
+            if(isset($request->billId)){
+                $message = trans('bill.bill_updated');
+                
+            }
+            $url =  'view/patient/injury/bill/info/' .$bill_Id; 
+            return $this->redirectToRoute($url, $message, 'success', ["positionClass" => "toast-top-center"]);
+        } catch (\Exception $e) {
+            DB::rollback();   
+            return $this->redirectToRoute(redirect()->back(), trans('bill.bill_created_successfully'), 'error', ["positionClass" => "toast-top-center"]);
+        }
+    }
     public function viewPatientInjuryBillInfomation(Request $request)
     {
         $billId = $request->route()->parameter('id');
@@ -2258,43 +2349,4 @@ class PatientController extends Controller
             return $this->redirectToRoute('/home','This bill does not exist', 'error', ["positionClass" => "toast-top-center"]);
         }
     }
-    public function getDignosisCOdeCharacterInBillViewPage($val, $finalArray, $character)
-    {
-        $charDC = null;
-        foreach ($character as $key => $char){
-            if (isset($finalArray[$key]) && is_array($finalArray[$key])){
-                if (array_key_exists('dc', $finalArray[$key])){
-                    if($finalArray[$key]['dc'] === $val){
-                        $charDC = strtoupper($char); 
-                    } 
-                }
-            }
-        }
-        return $charDC;
-    }
-    public function viewPatient(Request $request)
-    {
-        $patientInjury = [];
-        if(isset($request->id)){
-            $patient =  $this->getPatientById($request->id);
-            if($patient){
-                $patientId = $request->id;
-                $injury = $this->getInjuryClaimDate($patientId, null);
-                $meetingTypes = $this->patientModel->getMeetingType();
-                $patientAppointment = PatientAppointment::where('patient_id', $patientId )->take(5)->orderBy('appointment_date', 'desc')->get();
-
-                if($patient && $patient->getInjuries){
-                    $pInjuries = $patient->getInjuries;
-                }
-                $this->setSidebarPatient($patientId);
-                //dd($patientAppointment);
-                return view('patients.show', compact('patientAppointment','patient', 'pInjuries', 'patientId', 'injury', 'meetingTypes', 'patientAppointment'));
-            }
-            else{
-                return $this->redirectToRoute('/patients', trans('bill.record_not_found'), 'error', ["positionClass" => "toast-top-center"]);
-            }
-        }else{
-            return  $this->redirectToRoute('/patients', 'This record does not exist', 'error', ["positionClass" => "toast-top-center"]);
-        }
-    }  
 }

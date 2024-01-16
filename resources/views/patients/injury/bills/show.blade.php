@@ -79,7 +79,7 @@
                                                     $totPaymentAmt += $bill->totalCharge;
                                                     @endphp
                                                         <tr>
-                                                            <td><a href="{{url('/view/patient/injury/bill/info')}}/{{$bill->id}}">{{'Bill00'.$bill->id}}</a></td>
+                                                            <td><a href="{{url('/view/patient/injury/bill/info')}}/{{$bill->id}}">{{($bill->bill_number) ? $bill->bill_number : 'Bill00'.$bill->id}} </a></td>
                                                             <td>{{date('m-d-Y',strtotime($bill->dos))}}</td>
                                                             <td>  
                                                             {{ ($bill->getRenderinProvider && $bill->getRenderinProvider->referring_provider_first_name) ? $bill->getRenderinProvider->referring_provider_first_name : ''}} 

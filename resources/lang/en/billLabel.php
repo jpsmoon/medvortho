@@ -38,5 +38,20 @@ return [
     'patient_information' => 'Patient Information',
 
      //patient add/Edit label
- 
+
+     //Soft Users label
+     'userId' =>'User Id',
+     'userName' =>'Name',
+     'userEmail' =>'Email',
+     'userPass' =>'Password',
+     'userOriginalPass' =>'Password',
+     'userPhone' =>'Phone Number',
+     'userList' => 'Software User List',
+    'userAdd' =>'Add Software User',
+    'userLName' =>'Last Name',
+    'userRole' =>'Role',
+    'providerList' => 'Provider List',
+    'billingProviderAdd' =>'Add Billing Provider',
+    'Name' => '',
+    //Soft Users label
 ];

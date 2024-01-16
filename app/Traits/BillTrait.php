@@ -1387,6 +1387,7 @@ trait BillTrait
                     //$billrefeningProvider->professional_user_with_access = $users;
                     $billrefeningProvider->professional_fax_number = $request->institution_fax_number;
                 }
+                $billrefeningProvider->tax_id_type  = $request->tax_id_type;
                 $billrefeningProvider->save();
                 if($billrefeningProvider){
                     DB::table('user_billing_providers')->where('user_id', Auth::user()->id)->where('provider_id', $billrefeningProvider->id)->delete(); 
@@ -1507,7 +1508,7 @@ trait BillTrait
                         $billrefeningProviderUpdate->professional_fax_number = $request->institution_fax_number;
                     }
                 $billrefeningProviderUpdate->is_active = $request->provider_status;
-
+                $billrefeningProviderUpdate->tax_id_type  = $request->tax_id_type;
                 $billrefeningProviderUpdate->update();
                 if($billrefeningProviderUpdate){
                     DB::table('user_billing_providers')->where('user_id', Auth::user()->id)->where('provider_id', $billrefeningProviderUpdate->id)->delete(); 

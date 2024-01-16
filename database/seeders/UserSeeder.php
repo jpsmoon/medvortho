@@ -25,28 +25,18 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ],
+             
             [
-                'name' => 'Super Sub Admin',
-                'email' => 'admin@gmail.com',
-                'emp_id'=>'1001',
+                'name' => 'Super Admin',
+                'email' => 'sup.admin@rcm.com',
+                'emp_id'=>'1002',
                 'phone_no'=>'9100000000',
                 'original_pass' => '12345678',
                 'password' => bcrypt('12345678'),
-                'created_by' => null, 
+                'created_by' => 1,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
-            // [
-            //     'name' => 'Super Admin',
-            //     'email' => 'sup.admin@rcm.com',
-            //     'emp_id'=>'1002',
-            //     'phone_no'=>'9100000000',
-            //     'original_pass' => '12345678',
-            //     'password' => bcrypt('12345678'),
-            //     'created_by' => 1,
-            //     'created_at' => now(),
-            //     'updated_at' => now()
-            // ],
             [
                 'name' => 'Admin',
                 'email' => 'admin@rcm.com',

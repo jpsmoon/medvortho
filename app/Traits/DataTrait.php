@@ -731,7 +731,15 @@ trait DataTrait
     public function getTotalDayAndDate($billDate, $numberOfDay){
         $date = Carbon::createFromFormat('Y-m-d', $billDate);
         $daysToAdd = $numberOfDay;
-        $date = $date->addDays($daysToAdd);
+        if($numberOfDay == 15){
+            if ($date->isWeekend()) {
+                $date->nextWeekday(); // Move to the next weekday
+            }
+            $date = $date->addWeekdays($daysToAdd); 
+        }
+        else{
+            $date = $date->addDays($daysToAdd);
+        } 
         return array('days'=>$numberOfDay, 'bDate' =>  $date->format('m/d/Y'));
 
     }

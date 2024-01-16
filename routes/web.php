@@ -1,10 +1,11 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\{HomeController, RoleController, ProductController, BillingProcessController, BillInfoController, PatientController,PatientInjuryController,
+use App\Http\Controllers\{ HomeController, RoleController, ProductController, BillingProcessController, BillInfoController, PatientController,PatientInjuryController,
 ClaimAdministratorController,BillingProviderController,HealthProviderController, MedicalProviderController, BillingLetterController,
 TaxonomyCodeController,  DiagnosisCodeController,  ServiceCodeController, CompanyTypeController, ClaimStatusController,
 PayerTypeController, CountryController, StateController, CityController, TaskController, StatusController, UserTaskController,
-BillingCustomSettingController, UserInviteController, MasterHolidayController, MasterCrudController, TallyFormController, PdfMergerController
+BillingCustomSettingController, UserInviteController, MasterHolidayController, MasterCrudController, TallyFormController, PdfMergerController, SoftUsersController, 
+CustomLoginController, GlobalAdminController
 };
 /*
 |--------------------------------------------------------------------------
@@ -18,8 +19,9 @@ BillingCustomSettingController, UserInviteController, MasterHolidayController, M
 */
 
 Route::get('/', function () {
-return redirect(route('login'));
+    return redirect(route('login'));
 }); 
+
 Route::get('bill-submissions/letters/demand-letter/{providerId?}/{billId?}', [BillingLetterController::class, 'viewDemandLetter']);
 
 Route::get('bill-submissions/letters/sbr-letter/{providerId?}/{billId?}', [BillingLetterController::class, 'viewSbrLetter']);
@@ -261,14 +263,14 @@ Auth::routes();
             Route::group(['middleware' => ['permission:publish city-list|city-create|city-edit|city-delete']], function () {
                 Route::post('get-cities-by-state', [CityController::class, 'getCitiesByState']); 
                 Route::post('city/restore', [CityController::class, 'restore'])->name('cities.restore');
-                Route::resource('cities', CityController::class);
-                Route::post('get-cities-state-by-zipCode', [CityController::class, 'getCitiesStateByZipCode']);
+                Route::resource('cities', CityController::class); 
                 Route::post('get-state-by-country', [CityController::class, 'getStateByCountry']);
                 Route::post('get-cities-by-state-code', [CityController::class, 'getCityByStateCode']);
                 Route::get('get-city-list', [CityController::class, 'getCities']);
                 Route::post('delete/city', [CityController::class, 'deleteCity']);
                 Route::post('get/city/byId', [CityController::class, 'getCityById']);
                 Route::post('update/city', [CityController::class, 'updateCity']);
+                Route::post('get-cities-by-state-name', [CityController::class, 'getCitiesByState']); 
             });
             Route::group(['middleware' => ['permission:publish task-list|task-create|task-edit|task-delete']], function () {
                 Route::resource('tasks', TaskController::class);
@@ -364,17 +366,43 @@ Auth::routes();
 
         //Permission routes end here//
 
-        //role routes start here
-            Route::group(['middleware' => ['role:SubAdmin|Admin']], function () {
-                //Route::group(['middleware' => ['permission:publish role-list|role-create|role-edit|role-delete']], function () {
-                    Route::get('permissions', [RoleController::class, 'permissionList'])->name('permissions');
-                    Route::post('store/permission', [RoleController::class, 'savePermission'])->name('savePermission');
-                    Route::post('delete/permission/{id}',[RoleController::class, 'deletePermission']);
-                    Route::post('delete/role/{id}',[RoleController::class, 'deleteRole']);
-                    Route::resource('roles', RoleController::class);
-                    Route::get('master/holidays',[MasterHolidayController::class, 'index']);
-                    Route::post('save/holiday', [MasterHolidayController::class, 'storeHoliday']); 
-                    Route::post('delete/holiday', [MasterHolidayController::class, 'deleteHoliday']);
-            }); 
-        //role routes end here
+            //role routes start here
+                Route::group(['middleware' => ['role:GlobalAdmin|SubAdmin|Admin']], function () {
+                    //Route::group(['middleware' => ['permission:publish role-list|role-create|role-edit|role-delete']], function () {
+                        Route::get('permissions', [RoleController::class, 'permissionList'])->name('permissions');
+                        Route::post('store/permission', [RoleController::class, 'savePermission'])->name('savePermission');
+                        Route::post('delete/permission/{id}',[RoleController::class, 'deletePermission']);
+                        Route::post('delete/role/{id}',[RoleController::class, 'deleteRole']);
+                        Route::resource('roles', RoleController::class);
+                        Route::get('master/holidays',[MasterHolidayController::class, 'index']);
+                        Route::post('save/holiday', [MasterHolidayController::class, 'storeHoliday']); 
+                        Route::post('delete/holiday', [MasterHolidayController::class, 'deleteHoliday']);
+                       
+                }); 
+            //role routes end here
+
+                    Route::post('get-cities-state-by-zipCode', [CityController::class, 'getCitiesStateByZipCode'])->name('getCityStateByZipCode');
+                    // Route::get('soft/user/login', [LoginCustomLoginControllerController::class, 'showLoginForm'])->name('loginSoftUser');
+                    // Route::post('doLoginFrm', [CustomLoginController::class, 'doLoginForm'])->name('loginAction');
+
+
+
+            // Routes for 'Global Admin' login
+                Route::prefix('global')->group(function () {
+                    Route::group(['middleware' => ['role:GlobalAdmin']], function () {
+                        Route::get('home', [GlobalAdminController::class, 'index']);
+                        Route::get('soft/users', [SoftUsersController::class, 'index']);
+                        Route::get('add/soft/user', [SoftUsersController::class, 'create']);
+                        Route::get('edit/soft/user/{id}', [SoftUsersController::class, 'create']);
+                        Route::post('save/soft/user', [SoftUsersController::class, 'saveUserInDb']);
+                        Route::get('soft/user/setting/{id}', [SoftUsersController::class, 'viewSoftUser']);
+                    });
+                    // Add more global admin specific routes here
+                }); 
+                Route::prefix('subglobal')->group(function () {
+                    Route::get('home', [HomeController::class, 'index']);
+                    // Add more global admin specific routes here
+                }); 
+
+            
     });

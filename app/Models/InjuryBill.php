@@ -10,6 +10,26 @@ use App\Models\RenderinProvider;
 class InjuryBill extends Model
 {
     use HasFactory;
+  
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::created(function ($model) {
+            $billNumber = 'Bill' . $model->id . date('y') . date('m') . date('d');
+            $model->bill_number = $billNumber;
+            $model->save();
+        });
+
+        self::updating(function ($model) {
+            // Check if user number is empty before updating
+            if (empty($model->bill_number)) {
+                $billNumber = 'Bill' . $model->id . date('y') . date('m') . date('d');
+                $model->bill_number = $billNumber;
+            }
+        });
+    }
 
     public function getBillServices()
      {
@@ -66,4 +86,5 @@ class InjuryBill extends Model
     {
         return $this->hasOne(AllDocument::class, 'injury_id', 'id')->where('doc_type', 'BILLEOR');
     }
+    
 }

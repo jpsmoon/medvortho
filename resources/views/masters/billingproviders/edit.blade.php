@@ -168,6 +168,21 @@
                                                     </span>
                                                 @endif
                                             </div>
+                                            <div class="form-group col-md-8">
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input  {{ $billingprovider && $billingprovider->tax_id_type == 'SSN' ? 'checked' : '' }} data-validation-event="change" data-validation="required"  data-validation-error-msg=""  class="custom-control-input" type="radio" name="tax_id_type" id="tax_id_type1" value="SSN" />
+                                                    <label class="custom-control-label"  for="tax_id_type1"> SSN </label>
+                                                </div>
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input  {{ $billingprovider && $billingprovider->tax_id_type == 'EIN' ? 'checked' : '' }} data-validation-event="change" data-validation="required"  data-validation-error-msg=""  class="custom-control-input" type="radio" name="tax_id_type" id="tax_id_type2" value="EIN" />
+                                                    <label class="custom-control-label"  for="tax_id_type2"> EIN </label>
+                                                </div> 
+                                                @if($errors->has('tax_id_type'))
+                                                <span class="invalid-feedback" style="display:block" role="alert">
+                                                    <strong>{{ $errors->first('tax_id_type') }}</strong>
+                                                </span>
+                                                @endif
+                                            </div>
                                         </div>
                                         <div class="form-row col-md-12">
                                             <div class="col-md-2 title">

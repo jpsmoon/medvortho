@@ -160,7 +160,7 @@
                                             <strong>Role:</strong>
                                             <select name="roles[]" id="roles"  class="form-control 4col formcls" , data-validation-event="change" data-validation="required">
                                                 @foreach ($roles as $role)
-                                                    <option value="{{$role->id}}"> {{$role->name}}</option>
+                                                    <option value="{{$role->id}}" {{($userRole && $userRole->role_id == $role->id) ? 'selected' : ''}}> {{$role->name}}</option>
                                                 @endforeach
                                                 </select>
                                                 @if ($errors->has('roles'))

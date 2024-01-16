@@ -7,7 +7,9 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Auth;
+use Redirect;
+use URL;
 class LoginController extends Controller
 {
     /*
@@ -47,4 +49,26 @@ class LoginController extends Controller
             'last_login_ip' => $request->getClientIp()
         ]);
     }
+    public function redirectTo()
+      {
+          if (Auth::check() && Auth::user()->roles->isEmpty()) {
+              //return redirect()->route('login')->with('user_has_not_any_role', true);
+              //return Redirect::to('login')->with('user_has_not_any_role');
+             // return Redirect::to(URL::previous())->with('user_has_not_any_role');
+          } 
+          else {
+            $role = Auth::user()->roles[0]['name']; 
+            switch ($role) {
+              case 'GlobalAdmin':
+                return '/global/home';
+                break;
+              case 'SubAdmin' && 'Admin': 
+                return '/subglobal/home';
+                break;  
+              default:
+                return '/home'; 
+              break;
+            }
+          }
+      }
 }

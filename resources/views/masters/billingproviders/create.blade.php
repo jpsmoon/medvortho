@@ -112,7 +112,7 @@
                                         <strong>{{ $errors->first('bill_type') }}</strong>
                                     </span>
                                     @endif
-                                </div>
+                                </div> 
                             </div>
                             <!-- professhionalDiv start-->
                             <div class="form-row d-none" id="professhionalDiv">
@@ -143,19 +143,32 @@
                                 <div class="col-xs-12 col-sm-12 col-md-12 d-none pl-0 pr-0" id="organizationDiv">
 
                                 <div class="form-row col-md-12 border-bottom2">
-                                        <div class="col-md-2 title">
-                                        <label>CMS 1500 Box 25</label>
+                                    <div class="col-md-2 title"> <label>CMS 1500 Box 251</label> </div>
+                                    <div class="form-group col-md-2">
+                                        <label for=""> Tax ID <span class="required">* </span> </label>
+                                        <input type="text" id="professional_tax_id" name="professional_tax_id" class="form-control" data-validation-event="onkeypress" data-validation="custom" data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit Tax ID ">
+                                        @if($errors->has('professional_tax_id'))
+                                        <span class="invalid-feedback" style="display:block" role="alert">
+                                            <strong>{{ $errors->first('professional_tax_id') }}</strong>
+                                        </span>
+                                        @endif
+                                    </div>
+                                    <div class="form-group col-md-8">
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input checked data-validation-event="change" data-validation="required"  data-validation-error-msg=""  class="custom-control-input" type="radio" name="tax_id_type" id="tax_id_type1" value="SSN" />
+                                            <label class="custom-control-label"  for="tax_id_type1"> SSN </label>
                                         </div>
-                                            <div class="form-group col-md-2">
-                                                <label for=""> Tax ID <span class="required">* </span> </label>
-                                                <input type="text" id="professional_tax_id" name="professional_tax_id" class="form-control" data-validation-event="onkeypress" data-validation="custom" data-validation-regexp="^[0-9]{9}$" maxLength="9" data-validation-error-msg="Please Enter the 9 Digit Tax ID ">
-                                                @if($errors->has('professional_tax_id'))
-                                                <span class="invalid-feedback" style="display:block" role="alert">
-                                                    <strong>{{ $errors->first('professional_tax_id') }}</strong>
-                                                </span>
-                                                @endif
-                                            </div>
-                                        </div>
+                                        <div class="custom-control custom-radio custom-control-inline">
+                                            <input data-validation-event="change" data-validation="required"  data-validation-error-msg=""  class="custom-control-input" type="radio" name="tax_id_type" id="tax_id_type2" value="EIN" />
+                                            <label class="custom-control-label"  for="tax_id_type2"> EIN </label>
+                                        </div> 
+                                        @if($errors->has('tax_id_type'))
+                                        <span class="invalid-feedback" style="display:block" role="alert">
+                                            <strong>{{ $errors->first('tax_id_type') }}</strong>
+                                        </span>
+                                        @endif
+                                    </div> 
+                                </div>
 
                                 <div class="form-row col-md-12">
                                         <div class="col-md-2 title" >
