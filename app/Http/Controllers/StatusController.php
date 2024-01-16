@@ -27,7 +27,7 @@ class StatusController extends Controller
 
     public function store(Request $request)
     {
-        request()->validate(['status_name' => 'required', 'status_type' => 'required', 'display_order' => 'required']);
+        //request()->validate(['status_name' => 'required', 'status_type' => 'required', 'display_order' => 'required']);
          try {
           if(isset($request->editstatus_id)){
             $this->storeStatus($request, $request->editstatus_id);
@@ -110,6 +110,9 @@ class StatusController extends Controller
       } 
       elseif($status == 8){
         return 'Task';
+      } 
+      elseif($status == 9){
+        return 'Bill Stage';
       } 
     }
     public function getBillStatuss(){

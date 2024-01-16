@@ -9,5 +9,5 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Task extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = [ 'task_name' ];
+    protected $fillable = [ 'task_name', 'status_id', 'category_id', 'slug', 'description', 'is_active' ];
 }

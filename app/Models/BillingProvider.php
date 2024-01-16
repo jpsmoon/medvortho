@@ -76,5 +76,10 @@ class BillingProvider extends Model
      {
          return $this->providerReasons;
      }
-
+     public function getProviderSecondReviewReasons(){
+        return $this->hasMany(WriteOffReason::class, 'provider_id', 'id')->where('type', 2)->orWhere('for_all_providers', 1);
+    }
+    public function getProviderWriteOfReasons(){
+        return $this->hasMany(WriteOffReason::class, 'provider_id', 'id')->where('type', 1)->orWhere('for_all_providers', 1);
+    }
 }

@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
 
 <style>   
@@ -46,27 +46,33 @@
 .deleteToggle label:active:after {
 	width: 10px;
 }
-
+div.dataTables_wrapper div.dataTables_filter label {
+    margin-top: 0;
+}
 </style>
 
-<!-- START: Breadcrumbs-->
-    <div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mt-3">Account Users</h4></div>
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+ <!-- START: Breadcrumbs-->
+    <div class="row mt-0">
+         <div class="col-12  align-self-center">
+            <div class="sub-header mt-0 py-3 px-2 align-self-center d-sm-flex w-100 rounded heading-background">
+                <div class="w-sm-100 mr-auto margin05">
+                   <h2><i class="fa-solid fa-id-card-clip"></i> Account Users</h2>
+                </div>
+                <div align="right" class="w-sm-100 ">
+                    <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                     <li class="breadcrumb-item">
                      <a class="btn btn-primary" href="{{ route('inviteUser') }}"> Invite User</a>
                     </li>
                 </ol>
+                </div>
             </div>
         </div>
+        
     </div>
     <!-- END: Breadcrumbs-->
-    
 
     <div class="row">
-        <div class="col-12 mt-3">
+        <div class="col-12">
             <div class="card">
                 <div class="card-body">
                     <div class="table-responsive">
@@ -118,7 +124,7 @@
                                     @endforeach
                                     @else
                                     <tr class="jsgrid-row">
-                                            <td class="jsgrid-cell">No Records Found.</td>
+                                    <td class="jsgrid-cell">No Records Found.</td>
                                     </tr>
                                     @endif
                                 </tbody>
@@ -129,19 +135,24 @@
         </div>
     </div>
     @if(count($inviteUser))
-      <!-- START: Breadcrumbs-->
-      <div class="row ">
-          <div class="col-12  align-self-center">
-              <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                  <div class="w-sm-100 mr-auto"><h4 class="mt-3">Invited Users</h4></div> 
-              </div>
-          </div>
-      </div>
-      <!-- END: Breadcrumbs--> 
+    <!-- START: Breadcrumbs-->
+    <div class="row">
+         <div class="col-12  align-self-center">
+            <div class="sub-header mt-0 py-3 px-2 align-self-center d-sm-flex w-100 rounded heading-background">
+                <div class="w-sm-100 mr-auto margin05">
+                   <h2><i class="fa-solid fa-user-plus"></i> Invited Users</h2>
+                </div>
+            
+            </div>
+        </div>
+        
+    </div>
+    <!-- END: Breadcrumbs-->
+ 
       <div class="row">
-          <div class="col-12 mt-3">
+          <div class="col-12">
               <div class="card">
-                  <div class="card-body">
+                  <div class="card-body customBoxHeight3">
                       <div class="table-responsive">
                           <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
                                 <thead class="thead-dark">
@@ -164,7 +175,7 @@
                                             <tr>
                                                 <td>{{ $user->email }}</td>
                                               <td>
-                                                  <label class="badge badge-success">{{ ($user->getRoleInfo) ? $user->getRoleInfo->name : '' }}</label>
+                                              <label class="badge badge-success">{{ ($user->getRoleInfo) ? $user->getRoleInfo->name : '' }}</label>
                                               </td>
                                               <td>{{ ($user->created_at) ? date('m-d-Y', strtotime($user->created_at)) : '' }}</td>
                                               <td>{{ $user->token_url }}</td>
@@ -191,7 +202,7 @@ function resendInvite(uId) {
         title: 'Are you sure you want to re-invite this email address?',
         //text: "You won't be able to revert this!",
         showCancelButton: true,
-        confirmButtonColor: '#3085D6',
+        confirmButtonColor: '#3BAFDA',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Resend',
         customClass: {

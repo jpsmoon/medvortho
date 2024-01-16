@@ -105,7 +105,7 @@
 </div>
 <div class="form-row">
     <div class="form-group col-md-6">
-        <label for="zipcode">   Zip code </label>
+        <label for="zipcode">   Zip code</label>
         <input type="text" name="zipcode" class="form-control" onKeyUp="getStatesByZipCode(this.value);"
          data-validation-event="change" data-validation="number length"
         data-validation-length="1-10" data-validation-optional="true"

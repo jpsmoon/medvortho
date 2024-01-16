@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Support\Facades\Auth;
 
 class Handler extends ExceptionHandler
 {
@@ -43,7 +44,9 @@ class Handler extends ExceptionHandler
         // if ($exception instanceof \Illuminate\Auth\Access\AuthorizationException) {
         //      return response()->view('errors.permission', [], 403);
         // }
-
+        if (Auth::user() && Auth::user()->roles && Auth::user()->roles->isEmpty()) { 
+            return response()->view('errors.role', [], 500);
+        }
         // return parent::render($request, $exception);
         if ($exception instanceof CustomException) {
             return response()->view('errors.permission', [], 500);

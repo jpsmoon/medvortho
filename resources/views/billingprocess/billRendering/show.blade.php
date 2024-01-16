@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
 <?php $billingId = 1;
 if (isset($id)){
@@ -29,11 +29,11 @@ $billingId = $bRenderings->provider_type;
             </div>
         </div>
     @endif
-    <div class="row mt-2 ">
+    <div class="row mt-0 ">
         <div class="col-md-12 mt-4">
             <div class="card row-background customBoxHeight">
                 <!-- START: Breadcrumbs-->
-                <div class="row ">
+                <div class="row">
                     <div class="col-12  align-self-center">
                         <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
                             <div style="padding-top:10px" class="w-sm-100 mr-auto">
@@ -61,32 +61,32 @@ $billingId = $bRenderings->provider_type;
                                 </svg>
                             </label>
                             <span style="font-size:16px; font-weight:bold">
-                                @if ($bRenderings->provider_type == 1)
+                                @if ($bRenderings->referring_provider_first_name != "")
                                     {{ $bRenderings->referring_provider_first_name }}
                                     {{ $bRenderings->referring_provider_last_name ? $bRenderings->referring_provider_last_name : '' }}
                                     {{ $bRenderings->referring_provider_middle_name ? $bRenderings->referring_provider_middle_name : '' }}
+                                    {{ $bRenderings->referring_provider_suffix ? $bRenderings->referring_provider_suffix : '' }}
                                 @else
                                     {{ $bRenderings->entity_name }}
                                 @endif
                             </span>
                             <br>
-                            <span
-                                class="provider_heading_type">{{ $bRenderings->type == 1 ? 'Referring Provider' : ($bRenderings->type == 2 ? 'Supervising Provider' : 'Rendering Provider') }}</span>
+                            <span class="provider_heading_type">{{ $bRenderings->type == 1 ? 'Referring Provider' : ($bRenderings->type == 2 ? 'Supervising Provider' : 'Rendering Provider') }}</span>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
+                        @can('rendering-provider-edit')
                             <div class="col-md-12">
                                 <a href="{{ url('/edit/billing/rendering') }}/{{ $bRenderings->billing_provider_id }}/{{ $bRenderings->id }}"
                                     class="btn btn-primary"><i class="icon-note"></i> Edit</span></a>
                             </div>
+                        @endcan
                             <div class="col-md-12" style="padding-top:10px;">
                                 <label for="rendering_provider_npi"> Name :-</label>
                                 <span class="bold">
-                                    @if ($bRenderings->provider_type == 1)
-                                        {{ $bRenderings->referring_provider_first_name }}
-                                        {{ $bRenderings->referring_provider_last_name ? $bRenderings->referring_provider_last_name : '' }}
-                                        {{ $bRenderings->referring_provider_middle_name ? $bRenderings->referring_provider_middle_name : '' }}
+                                    @if ($bRenderings->referring_provider_first_name != "")
+                                        {{$bRenderings->referring_provider_first_name}} {{ ($bRenderings->referring_provider_last_name) ? $bRenderings->referring_provider_last_name : ''}} {{ ($bRenderings->referring_provider_middle_name) ? $rendering->referring_provider_middle_name : ''}} {{ $bRenderings->referring_provider_suffix ? $bRenderings->referring_provider_suffix : '' }} 
                                     @else
                                         {{ $bRenderings->entity_name }}
                                     @endif
@@ -102,9 +102,16 @@ $billingId = $bRenderings->provider_type;
                                     <label for="rendering_provider_npi"> NPI :-</label>
                                     <span class="bold">{{ $bRenderings->referring_provider_npi }}</span>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <label for="rendering_provider_npi"> Taxonomy Code :-</label>
                                     <span class="bold">{{ $bRenderings->taxonomyCode ? $bRenderings->taxonomyCode->code . ' ' . $bRenderings->taxonomyCode->name : '-' }}</span>
+                                </div>
+                            </div><br>
+                            
+                            <div class="row" style="padding-left:10px">
+                                <div class="col-md-3">
+                                    <label for="rendering_provider_npi"> State License Numbers :-</label>
+                                    <span class="bold">{{ $bRenderings->referring_provider_npi }}</span>
                                 </div>
                             </div>
                             
@@ -150,9 +157,18 @@ $billingId = $bRenderings->provider_type;
                                 </div>
                                 
                                 <div class="col-md-3">
-                                    <label for="rendering_provider_npi"> Active? :-</label>
-                                <span><b>Yes</b></span>
+                                    <label for="is_active"> Active? :-</label>
+                                <span><b>{{ ($bRenderings->is_active && $bRenderings->is_active == 1) ? 'Yes' : 'No' }}</b></span>
                                 </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="form-row mt-3" id="">
+                                <div class="form-group col-md-3">
+                                    <label for="signature_img">History:-</label>
+                                </div>
+                                
                             </div>
                             
                         </div>

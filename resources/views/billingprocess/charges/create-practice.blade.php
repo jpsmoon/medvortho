@@ -1,21 +1,19 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
 
 <style>
 #myDIV {
   width: 100%;
   padding: 10px 0;
-  
 }
 </style>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <?php $billingId = 1;
 ?>
 <!-- START: Breadcrumbs-->
 <!-- END: Breadcrumbs-->
     @if ($errors->any())
-        <div class="row ">
+        <div class="row mt-2">
             <div align="center" class="col-12  align-self-center">
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -26,26 +24,25 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-1 mt-4"></div>
         </div>
     @endif
     <div class="row">
-        <div class="col-1 mt-4"></div>
-        <div class="col-10 mt-4">
-            <div class="card row-background" style="min-height: 565px;">
+        
+        <div class="col-12 mt-0">
+            <div class="card row-background customBoxHeight">
                 <!-- START: Breadcrumbs-->
                 <div class="row">
                     <div class="col-12  align-self-center">
-                        <div class="sub-header mt-3 py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
-                            <div style="padding-top:10px; padding-left:20px;" class="w-sm-100 mr-auto">
+                        <div class="sub-header py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div style="padding-top:5px;" class="w-sm-100 mr-auto">
                                 @if($ctype != 2)
-                                <h2 class="heading">Add Practice Charges</h2>
+                                <h2 class="heading"> <i class="fa-solid fa-hand-holding-dollar"></i> Add Practice Charges</h2>
                                 @else
                                 <h2 class="heading">Enter Expected Reimbursements</h2> 
                                 @endif
                             </div>
                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                                <li style="padding-bottom:10px" class="breadcrumb-item">
+                                <li class="breadcrumb-item">
                                     <a class="btn btn-primary" href="{{ url('/setting/billing/provider/charge/add', $providerId) }}"> Back</a>
                                 </li>
                             </ol>
@@ -53,7 +50,8 @@
                     </div>
                 </div>
                 <!-- END: Breadcrumbs-->
-                <div class="col-12 mt-3">
+                 <div class="row mt-2 mx-1">
+                <div class="col-12 ">
                     <form action="{{ route('savePracticeCharge') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="ctype" id="ctypeId" value="{{ $ctype }}">
@@ -73,7 +71,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label for=""> State<span class="required">* </span> </label>
-                                <select  data-validation-event="change" data-validation="required" data-validation-error-msg="" name="states_code[]"  multiple="multiple"
+                                <select  data-validation-event="change" data-validation="required" data-validation-error-msg="" name="states_code[]"
                                 class="form-control 4 colactive"  id="statesId" data-validation="required" data-validation-error-msg="">
                                     @foreach ($states as $state)
                                     <option value="{{$state["state_code"]}}"> {{$state["state_name"]}}</option>
@@ -87,7 +85,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label for=""> Effective DOS<span class="required">* </span> </label>
-                                <input type="text" id="effective_dos"  data-validation-event="change" data-validation="required"data-validation-error-msg="" name="effective_dos" class="form-control ">
+                                <input type="text" id="effective_dos" data-mask="99/99/9999"  data-validation-event="change" data-validation="required"data-validation-error-msg="" name="effective_dos" class="form-control">
                                 @if($errors->has('effective_dos'))
                                 <span class="invalid-feedback" style="display:block" role="alert">
                                     <strong>{{ $errors->first('effective_dos') }}</strong>
@@ -96,7 +94,7 @@
                             </div>
                             <div class="form-group col-md-3">
                                 <label for=""> Expiration DOS<span class="required">* </span> </label>
-                                <input type="text" data-validation-event="change" data-validation="required" data-validation-error-msg="" id="expiration_dos" name="expiration_dos" class="form-control ">
+                                <input type="text" data-mask="99/99/9999" data-validation-event="change" data-validation="required" data-validation-error-msg="" id="expiration_dos" name="expiration_dos" class="form-control">
                                 @if($errors->has('expiration_dos'))
                                 <span class="invalid-feedback" style="display:block" role="alert">
                                     <strong>{{ $errors->first('expiration_dos') }}</strong>
@@ -111,7 +109,7 @@
                         <div class="row cloneDiv" id="inputChargeDiv_{{$i}}">
                             <div class="form-group col-md-3">
                                 <label for=""> Procedure Code </label>
-                                <input type="text" id="bill_procedure_code_{{$i}}" name="procedure_code[]" class="form-control ">
+                                <input type="text" id="bill_procedure_code_{{$i}}" name="procedure_code[]" class="form-control">
                                 @if($errors->has('procedure_code'))
                                 <span class="invalid-feedback" style="display:block" role="alert">
                                     <strong>{{ $errors->first('procedure_code') }}</strong>
@@ -157,7 +155,7 @@
                         </div>
                         <?php }?>
                         <div class="row">
-                            <div class="form-row col-md-12">
+                            <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <button type="submit" style="min-width: 120px" class="btn btn-primary ladda-button">
                                         <span class="ladda-label buttonfont">Add</span></button>
@@ -165,6 +163,7 @@
                             </div>
                         </div>
                     </form>
+                </div>
                 </div>
             </div>
         </div>
@@ -189,8 +188,8 @@ $( document ).ready(function() {
         checkLastIdForProcedureCodeClone();
     });
     $("#inputChargeDiv_1").find("#remove_item_icon_1").remove();
-    $('#effective_dos').datepicker({ dateFormat: 'mm-dd-yy', maxDate: new Date() });
-    $('#expiration_dos').datepicker({ dateFormat: 'mm-dd-yy', minDate: new Date() });
+    $('#effective_dos').datepicker({ dateFormat: 'mm/dd/yy', maxDate: new Date() });
+    $('#expiration_dos').datepicker({ dateFormat: 'mm/dd/yy', minDate: new Date() });
 });
 
 window.onload = function afterWebPageLoad() {

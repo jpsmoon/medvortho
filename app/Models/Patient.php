@@ -169,4 +169,13 @@ class Patient extends Model
      public function getPatientHistory(){
         return $this->hasMany(MasterDataLog::class, 'data_id', 'id')->WhereIn('type', ['PATIENT_UPDATE','PATIENT_ADD','PATIENT_DELETED']);
     }
+    //get billing provider for list
+    public function billingProviderForPatientList()
+    {
+        return $this->hasOne(BillingProvider::class, 'id', 'billing_provider_id');
+    }
+    public function getInjury()
+     {
+          return $this->hasOne(Patient_injury::class, 'patient_id', 'id')->oldest();
+     }
 }

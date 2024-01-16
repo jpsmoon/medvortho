@@ -175,6 +175,9 @@ return [
         App\Providers\RouteServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Brian2694\Toastr\ToastrServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        //GrofGraf\LaravelPDFMerger\Providers\PDFMergerServiceProvider::class,
+        Webklex\PDFMerger\Providers\PDFMergerServiceProvider::class
     ],
 
     /*
@@ -231,6 +234,9 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Toastr'  => Brian2694\Toastr\Facades\Toastr::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        //'PDFMerger' => GrofGraf\LaravelPDFMerger\Facades\PDFMergerFacade::class,
+        'PDFMerger' => Webklex\PDFMerger\Facades\PDFMergerFacade::class
     ],
 
 ];

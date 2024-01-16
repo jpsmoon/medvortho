@@ -1,52 +1,4 @@
-                                    <style>
-                                        .input-icons i {
-                                            position: absolute;
-                                        }
-
-                                        .input-icons input {
-                                            width: 100%;
-                                            margin-bottom: 10px;
-                                        }
-
-                                        .card {
-                                            position: relative;
-                                            display: -ms-flexbox;
-                                            display: flex;
-                                            -ms-flex-direction: column;
-                                            flex-direction: column;
-                                            min-width: 0;
-                                            word-wrap: break-word;
-                                            background-color: #fff;
-                                            background-clip: border-box;
-                                            border: 1px solid rgba(0, 0, 0, .125);
-                                            border-radius: .25rem;
-                                        }
-
-                                        .card-header:first-child {
-                                            border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
-                                        }
-
-                                        .card-header {
-                                            padding: .75rem 1.25rem;
-                                            margin-bottom: 0;
-                                            background-color: rgba(0, 0, 0, .03);
-                                            border-bottom: 1px solid rgba(0, 0, 0, .125);
-                                        }
-
-                                        .card-body {
-                                            -ms-flex: 1 1 auto;
-                                            flex: 1 1 auto;
-                                            padding: 1.25rem;
-                                        }
-
-                                        #contactTbleId .table td {
-                                            padding: 0px !important;
-                                        }
-
-                                        #contactTbleId .table th {
-                                            padding: 4px !important;
-                                        }
-                                    </style>
+                      
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="form-row">
@@ -137,6 +89,16 @@
                                                         </span>
                                                     @endif
                                                 </div>
+                                                <div class="form-group col-md-6">
+                                                    <label for="employer_name"> Employer Phone Number </label>
+                                                    <input autocomplete="off"  type="text" name="employer_phone_number" value="{{ ($pInjuries && $pInjuries->getInjuryClaim &&  $pInjuries->getInjuryClaim->employer_phone_number) ? $pInjuries->getInjuryClaim->employer_phone_number : '' }}"
+                                                        class="form-control" maxlength="12">
+                                                    @if ($errors->has('employer_phone_number'))
+                                                        <span class="invalid-feedback" style="display:block" role="alert">
+                                                            <strong class="invalid-feedback">{{ $errors->first('employer_phone_number') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
                                                 <div class="form-group col-md-4"
                                                     style="margin-top:-5px; margin-left:0px;">
                                                     <label for="employer_name_address" class="pt-4"> Employer Address
@@ -153,217 +115,9 @@
                                                 </div>
                                             </div>
                                             <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="start_date_injury"> Injury Start Date </label>
-                                                    <div class="input-icons">
-                                                        <input autocomplete="off" data-validation-event="change"
-                                                            data-validation="required date"
-                                                            data-validation-format="mm/dd/yyyy"
-                                                            data-validation-error-msg="" autocomplete="off"
-                                                            name="start_date" id="start_date_injury"
-                                                            value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->start_date)) : '') : '' }}"
-                                                            class="form-control" maxlength="100">
-                                                        <i class="icon-calendar form-control-feedback"></i>
-                                                    </div>
-                                                    @if ($errors->has('start_date'))
-                                                        <span class="invalid-feedback" style="display:block"
-                                                            role="alert">
-                                                            <strong
-                                                                class="invalid-feedback">{{ $errors->first('start_date') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                                <div class="form-group col-md-3" style="padding-top:35Px;">
-                                                    <label for="cumulative-trauma1"> Cumulative Trauma </label>
-                                                    <div class="custom-control custom-radio custom-control-inline">
-                                                        <input autocomplete="off" type="radio"
-                                                            class="custom-control-input" name="cumulative_trauma"
-                                                            onClick="showHideInjuryDate(this.value)"
-                                                            id="cumulative-trauma1"
-                                                            value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->is_cumulative : '') : 1 }}">
-                                                        <label class="custom-control-label"
-                                                            for="cumulative-trauma1">Yes</label>
-                                                    </div>
-                                                    <div class="custom-control custom-radio custom-control-inline">
-                                                        <input autocomplete="off" type="radio"
-                                                            class="custom-control-input" name="cumulative_trauma"
-                                                            id="cumulative-trauma2" checked=""
-                                                            onClick="showHideInjuryDate(this.value)"
-                                                            value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->is_cumulative : '') : 2 }}">
-                                                        <label class="custom-control-label"
-                                                            for="cumulative-trauma2">No</label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-md-3 d-none" id="injury-end-date-divId">
-                                                    <label for="injury-end-date"> Injury End Date </label>
-                                                    <input autocomplete="off" data-validation-event="change"
-                                                        data-validation="date" data-validation-optional="true"
-                                                        data-validation-format="mm/dd/yyyy"
-                                                        data-validation-error-msg="" autocomplete="off"
-                                                        type="text" name="injury_end_date" id="injury-end-date"
-                                                        value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->end_date)) : '') : '' }}"
-                                                        class="form-control" maxlength="100">
-                                                    <i class="facalendar icon-calendar"></i>
-                                                    @if ($errors->has('injury_end_date'))
-                                                        <span class="invalid-feedback" style="display:block"
-                                                            role="alert">
-                                                            <strong
-                                                                class="invalid-feedback">{{ $errors->first('injury_end_date') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-6">
-                                                    <label for="claim_admin_id"> Claims Administrator </label>
-                                                    <select name="claim_admin_id" class="form-control"
-                                                        id="claim_admin_id" data-validation-event="change"
-                                                        data-validation="required" data-validation-error-msg="">
-                                                        <option value="">Select</option>
-                                                        @foreach ($claimsAdministers as $claimAdmin)
-                                                            <option value="{{ $claimAdmin->id }}"
-                                                                {{ $pInjuries ? ($pInjuries->getInjuryClaim ? ($pInjuries->getInjuryClaim->claim_admin_id == $claimAdmin->id ? 'selected' : '') : '') : '' }}>
-                                                                {{ $claimAdmin->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @if ($errors->has('claim_admin_id'))
-                                                        <span class="invalid-feedback" style="display:block"
-                                                            role="alert">
-                                                            <strong
-                                                                class="invalid-feedback">{{ $errors->first('claim_admin_id') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                                <div class="form-group col-md-2"
-                                                    style="margin-top:-5px; margin-left:0px;">
-                                                    <label for="claim_admin_id" class="pt-4"> &nbsp;</label>
-                                                    <div
-                                                        class="custom-control custom-control custom-checkbox custom-control-inline">
-                                                        <input autocomplete="off" type="checkbox"
-                                                            class="custom-control-input" name="no_any_claim1"
-                                                            id="no_any_claim_id"
-                                                            value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->no_any_claim : 0) : 0 }}">
-                                                        <label class="custom-control-label checkbox-primary"
-                                                            for="no_any_claim_id">None</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-4">
-                                                    <label for="claim_no"> Claim Number  </label>
-                                                    <input autocomplete="off" type="text" name="claim_no"
-                                                        data-validation-optional="true" data-validation-event="change"
-                                                        data-validation="required, alphanumeric"
-                                                        data-validation-allowing="-_ " id="claim_no"
-                                                        class="form-control" maxlength="100"
-                                                        value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->claim_no : '') : '' }}">
-                                                    @if ($errors->has('claim_no'))
-                                                        <span class="invalid-feedback" style="display:block"
-                                                            role="alert">
-                                                            <strong
-                                                                class="invalid-feedback">{{ $errors->first('claim_no') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                                <div class="form-group col-md-4">
-                                                    <label for="claim_admin_id"> Claim Status </label>
-                                                    <select name="claim_status" class="form-control searcDrop"
-                                                        id="claim_status">
-                                                        <option value="">-Select-</option>
-                                                        @foreach ($claimStatus as $status)
-                                                            <option value="{{ $status['claim_status'] }}"
-                                                                {{ $pInjuries ? ($pInjuries->getInjuryClaim ? ($pInjuries->getInjuryClaim->claim_status_id === $status['claim_status'] ? 'selected' : '') : '') : '' }}>
-                                                                {{ $status['claim_status'] }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    @if ($errors->has('claim_status'))
-                                                        <span class="invalid-feedback" style="display:block"
-                                                            role="alert">
-                                                            <strong
-                                                                class="invalid-feedback">{{ $errors->first('claim_status') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
-                                                <div class="form-group col-md-4" id="showClaimStatusDate">
-                                                    <label for="injury-end-date"> Claim Status Date </label>
-                                                    <input autocomplete="off" type="text"
-                                                        data-validation-event="change" data-validation="date"
-                                                        data-validation-optional="true"
-                                                        data-validation-format="mm/dd/yyyy" id="claim_status_dateId"
-                                                        name="claim_status_date" class="form-control" maxlength="100"
-                                                        value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->claim_status_date)) : '') : '' }}">
-                                                    @if ($errors->has('claim_status_date'))
-                                                        <span class="invalid-feedback" style="display:block"
-                                                            role="alert">
-                                                            <strong
-                                                                class="invalid-feedback">{{ $errors->first('claim_status_date') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
-
-                                            </div>
-                                            <div class="form-row">
-                                                <div class="form-group col-md-4">
-                                                    <label for="injury-end-date">ADJ Number</label>
-                                                    <input data-validation-optional="true"
-                                                        data-validation-event="change"
-                                                        data-validation="required, alphanumeric"
-                                                        data-validation-allowing="-_ " autocomplete="off"
-                                                        type="text" id="adj_number" name="adj_number"
-                                                        value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->adj_no : '') : '' }}"
-                                                        class="form-control" maxlength="50">
-                                                    @if ($errors->has('adj_number'))
-                                                        <span class="invalid-feedback" style="display:block"
-                                                            role="alert">
-                                                            <strong
-                                                                class="invalid-feedback">{{ $errors->first('adj_number') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
-
-                                                <div class="form-group col-md-4">
-                                                    <label for="injury-end-date">Practice Internal ID </label>
-                                                    <input autocomplete="off" type="text" id="practiceInternalId"
-                                                        name="practiceInternalId"
-                                                        value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->adj_no : '') : '' }}"
-                                                        class="form-control" maxlength="100">
-                                                    @if ($errors->has('practiceInternalId'))
-                                                        <span class="invalid-feedback" style="display:block"
-                                                            role="alert">
-                                                            <strong
-                                                                class="invalid-feedback">{{ $errors->first('practiceInternalId') }}</strong>
-                                                        </span>
-                                                    @endif
-                                                </div>
-
-                                                <div class="form-group col-md-3">
-                                                    <label for="claim_admin_id"> Medical Provider Network </label>
-                                                    <span class="btn btn-primary" id="labelMedicalNetworkList"
-                                                        data-toggle="modal"
-                                                        data-target="#medicalNetworkProviderModal">Select Medical
-                                                        Provider Network </span>
-                                                    <span id="medical_provider_name"></span>
-                                                    <input type="hidden" name="medical_provider_network"
-                                                        class="form-control" id="medical_provider_network">
-
-                                                </div>
-                                                <div class="form-group col-md-1"
-                                                    style="margin-top:-5px; margin-left:0px;">
-                                                    <label for="claim_admin_id" class="pt-4"> &nbsp;</label>
-                                                    <div
-                                                        class="custom-control custom-control custom-checkbox custom-control-inline">
-                                                        <input autocomplete="off" type="checkbox"
-                                                            class="custom-control-input" name="no_any_network"
-                                                            id="no_any_network_id" value="0">
-                                                        <label class="custom-control-label checkbox-primary"
-                                                            for="no_any_network_id">None</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-row">
                                                 <div class="col-sm-12">
                                                     <fieldset id="showEmployerAddressDiv" class="d-none">
-                                                        <legend>Employer Address</legend>
+                                                        <legend><h2>Employer Address</h2></legend>
                                                         <div class="form-row">
                                                             <div class="form-group col-md-6">
                                                                 <label for="address_line1"> Address Line1
@@ -371,8 +125,7 @@
                                                                         id="addressAstrixSpan">*
                                                                     </span> </label>
                                                                 <input type="text" data-validation-event="change"
-                                                                    data-validation="alphanumeric"
-                                                                    data-validation-allowing="-_ "
+                                                                    data-validation="required" 
                                                                     data-validation-optional="true"
                                                                     name="address_line1" id="address_line1"
                                                                     class="form-control" style="resize: none;"
@@ -387,8 +140,7 @@
                                                             <div class="form-group col-md-6">
                                                                 <label for="address_line2"> Address Line2</label>
                                                                 <input type="text" data-validation-event="change"
-                                                                    data-validation="alphanumeric"
-                                                                    data-validation-allowing="-_ "
+                                                                    data-validation="required" 
                                                                     data-validation-optional="true"
                                                                     name="address_line2" class="form-control"
                                                                     style="resize: none;"
@@ -441,11 +193,219 @@
                                                     </fieldset>
                                                 </div>
                                             </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="start_date_injury"> Injury Start Date </label>
+                                                    <div class="input-icons">
+                                                        <input autocomplete="off" data-validation-event="change"
+                                                            data-validation="required date"
+                                                            data-validation-format="mm/dd/yyyy" data-mask="99/99/9999"
+                                                            data-validation-error-msg="Please Enter the Date in Correct Format (mm/dd/yyyy)" autocomplete="off"
+                                                            name="start_date" id="start_date_injury"
+                                                            value="{{ ($pInjuries && $pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->start_date) ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->start_date)) : ''}}"
+                                                            class="form-control" maxlength="100">
+                                                        <i class="icon-calendar form-control-feedback"></i>
+                                                    </div>
+                                                    @if ($errors->has('start_date'))
+                                                        <span class="invalid-feedback" style="display:block"
+                                                            role="alert">
+                                                            <strong
+                                                                class="invalid-feedback">{{ $errors->first('start_date') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group col-md-3" style="padding-top:35Px;">
+                                                    <label for="cumulative-trauma1"> Cumulative Trauma </label>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input autocomplete="off" type="radio"
+                                                            class="custom-control-input" name="cumulative_trauma"
+                                                            onClick="showHideInjuryDate(this.value)"
+                                                            id="cumulative-trauma1"
+                                                            value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->is_cumulative : '') : 1 }}">
+                                                        <label class="custom-control-label"
+                                                            for="cumulative-trauma1">Yes</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio custom-control-inline">
+                                                        <input autocomplete="off" type="radio"
+                                                            class="custom-control-input" name="cumulative_trauma"
+                                                            id="cumulative-trauma2" checked=""
+                                                            onClick="showHideInjuryDate(this.value)"
+                                                            value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->is_cumulative : '') : 2 }}">
+                                                        <label class="custom-control-label"
+                                                            for="cumulative-trauma2">No</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-3 d-none input-icons" id="injury-end-date-divId">
+                                                    <label for="injury-end-date"> Injury End Date </label>
+                                                    <input autocomplete="off" data-validation-event="change"
+                                                        data-validation="date" data-validation-optional="true"
+                                                        data-validation-format="mm/dd/yyyy" data-mask="99/99/9999"
+                                                        data-validation-error-msg="Please Enter the Date in Correct Format (mm/dd/yyyy)" autocomplete="off"
+                                                        type="text" name="injury_end_date" id="injury-end-date"
+                                                        value="{{ ($pInjuries && $pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->end_date) ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->end_date)) : ''}}"
+                                                        class="form-control" maxlength="100">
+                                                    <i class="facalendar icon-calendar"></i>
+                                                    @if ($errors->has('injury_end_date'))
+                                                        <span class="invalid-feedback" style="display:block"
+                                                            role="alert">
+                                                            <strong
+                                                                class="invalid-feedback">{{ $errors->first('injury_end_date') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-6">
+                                                    <label for="claim_admin_id"> Claims Administrator </label>
+                                                    <select name="claim_admin_id" class="form-control"
+                                                        id="claim_admin_id" data-validation-event="change"
+                                                        data-validation="required" data-validation-error-msg="">
+                                                        <option value="">Select</option>
+                                                        @foreach ($claimsAdministers as $claimAdmin)
+                                                            <option value="{{ $claimAdmin->id }}"
+                                                                {{ $pInjuries ? ($pInjuries->getInjuryClaim ? ($pInjuries->getInjuryClaim->claim_admin_id == $claimAdmin->id ? 'selected' : '') : '') : '' }}>
+                                                                {{ $claimAdmin->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('claim_admin_id'))
+                                                        <span class="invalid-feedback" style="display:block"
+                                                            role="alert">
+                                                            <strong
+                                                                class="invalid-feedback">{{ $errors->first('claim_admin_id') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group col-md-2"
+                                                    style="margin-top:-5px; margin-left:0px;">
+                                                    <label for="claim_admin_id" class="pt-4"> &nbsp;</label>
+                                                    <div
+                                                        class="custom-control custom-control custom-checkbox custom-control-inline">
+                                                        <input autocomplete="off" type="checkbox"
+                                                            class="custom-control-input" name="no_any_claim1"
+                                                            id="no_any_claim_id"
+                                                            value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->no_any_claim : 0) : 0 }}">
+                                                        <label class="custom-control-label checkbox-primary"
+                                                            for="no_any_claim_id">None</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="claim_no"> Claim Number  </label>
+                                                    <input autocomplete="off" type="text" name="claim_no"
+                                                        data-validation-optional="true" data-validation-event="change"
+                                                        data-validation="required" id="claim_no"
+                                                        class="form-control" maxlength="100"
+                                                        value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->claim_no : '') : '' }}">
+                                                    @if ($errors->has('claim_no'))
+                                                        <span class="invalid-feedback" style="display:block"
+                                                            role="alert">
+                                                            <strong
+                                                                class="invalid-feedback">{{ $errors->first('claim_no') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="claim_admin_id"> Claim Status </label>
+                                                    <select name="claim_status" class="form-control searcDrop"
+                                                        id="claim_status">
+                                                        <option value="">-Select-</option>
+                                                        @foreach ($claimStatus as $status)
+                                                            <option value="{{$status['id']}}" {{ ($pInjuries && $pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->claim_status_id && $pInjuries->getInjuryClaim->claim_status_id == $status['id']) ? 'selected' : ''}}>
+                                                                {{ $status['claim_status'] }} </option>
+                                                        @endforeach
+                                                    </select>
+                                                    @if ($errors->has('claim_status'))
+                                                        <span class="invalid-feedback" style="display:block"
+                                                            role="alert">
+                                                            <strong
+                                                                class="invalid-feedback">{{ $errors->first('claim_status') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                                <div class="form-group col-md-4 input-icons" id="showClaimStatusDate">
+                                                    <label for="injury-end-date"> Claim Status Date </label>
+                                                    <input autocomplete="off" type="text"
+                                                        data-validation-event="change" data-validation="date"
+                                                        data-validation-optional="true" data-mask="99/99/9999" data-validation-error-msg="Please Enter the Date in Correct Format (mm/dd/yyyy)"
+                                                        data-validation-format="mm/dd/yyyy" id="claim_status_dateId"
+                                                        name="claim_status_date" class="form-control" maxlength="100"
+                                                        value="{{ ($pInjuries && $pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->claim_status_date) ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->claim_status_date)) : ''}}">
+                                                         <i class="icon-calendar form-control-feedback"></i>
+                                                    @if ($errors->has('claim_status_date'))
+                                                        <span class="invalid-feedback" style="display:block"
+                                                            role="alert">
+                                                            <strong
+                                                                class="invalid-feedback">{{ $errors->first('claim_status_date') }}</strong>
+                                                        </span>
+                                                       
+                                                    @endif
+                                                </div>
+
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="injury-end-date">ADJ Number</label>
+                                                    <input data-validation-optional="true"
+                                                        data-validation-event="change"
+                                                        data-validation="required" autocomplete="off"
+                                                        type="text" id="adj_number" name="adj_number"
+                                                        value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->adj_no : '') : '' }}"
+                                                        class="form-control" maxlength="50">
+                                                    @if ($errors->has('adj_number'))
+                                                        <span class="invalid-feedback" style="display:block"
+                                                            role="alert">
+                                                            <strong
+                                                                class="invalid-feedback">{{ $errors->first('adj_number') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+
+                                                <div class="form-group col-md-4">
+                                                    <label for="injury-end-date">Injury Practice Internal ID </label>
+                                                    <input autocomplete="off" type="text" id="practiceInternalId"
+                                                        name="practiceInternalId"
+                                                        value="{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->adj_no : '') : '' }}"
+                                                        class="form-control" maxlength="100">
+                                                    @if ($errors->has('practiceInternalId'))
+                                                        <span class="invalid-feedback" style="display:block"
+                                                            role="alert">
+                                                            <strong
+                                                                class="invalid-feedback">{{ $errors->first('practiceInternalId') }}</strong>
+                                                        </span>
+                                                    @endif
+                                                </div>
+
+                                                <div class="form-group col-md-3">
+                                                    <label for="claim_admin_id"> Medical Provider Network </label>
+                                                    <span class="btn btn-primary" id="labelMedicalNetworkList"
+                                                        data-toggle="modal"
+                                                        data-target="#medicalNetworkProviderModal">Select Medical
+                                                        Provider Network </span>
+                                                    <span id="medical_provider_name"></span>
+                                                    <input type="hidden" name="medical_provider_network"
+                                                        class="form-control" id="medical_provider_network">
+
+                                                </div>
+                                                <div class="form-group col-md-1"
+                                                    style="margin-top:-5px; margin-left:0px;">
+                                                    <label for="claim_admin_id" class="pt-4"> &nbsp;</label>
+                                                    <div
+                                                        class="custom-control custom-control custom-checkbox custom-control-inline">
+                                                        <input autocomplete="off" type="checkbox"
+                                                            class="custom-control-input" name="no_any_network"
+                                                            id="no_any_network_id" value="0">
+                                                        <label class="custom-control-label checkbox-primary"
+                                                            for="no_any_network_id">None</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
                                             
                                             <div class="form-row">
                                                 <div class="col-sm-12">
                                                     <fieldset>
-                                                        <legend>ICD-10 Diagnosis Codes</legend>
+                                                        <legend><h2>ICD-10 Diagnosis Codes</h2></legend>
                                                         <div class="form-row" id="diagnosisCodeContainer">
                                                             @php $addedDia = count($selectedDianos);
                                                             $totalCnt = 4;
@@ -453,9 +413,7 @@
                                                             @endphp
                                                             @for ($i = 1; $i <= $leftCnt; $i++)
                                                                 <div class="form-group col-md-3">
-                                                                    <label for="diagnoses_code1"> &nbsp; </label>
-                                                                    <select name="work_dg_code_id[]" class="form-control injuryDiagnosesCode" id="work_dg_code_id_{{ $i }}"> 
-                                                                    </select>
+                                                                   <input type="text" name="work_dg_code_id[]" class="work_dg_original" id="work_dg_code_id_{{$i}}"> 
                                                                     @if ($errors->has('diagnoses_code1'))
                                                                         <span class="invalid-feedback"
                                                                             style="display:block" role="alert">
@@ -533,11 +491,12 @@
                                                         @endif
                                                     </div>
                                                 @endif
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-6 mt-2">
                                                     <div class="form-row">
                                                         <div class="col-md-12 clonedWrapper" id="cloneContactWrapper">
                                                             <div class="card" id="cardDivd1">
-                                                                <div class="card-header" id="cardHeadId1">Contacts - Optional
+                                                                <div class="card-header p-1 sub-title" id="cardHeadId1">
+                                                                <h2 class="sub-title">Contacts - Optional</h2>
                                                                 </div>
                                                                 <div class="card-body">
                                                                     <input type="hidden" class="contactRoleName"
@@ -614,8 +573,7 @@
                                                                                     </label>
                                                                                     <input data-validation-optional="true"
                                                                                         data-validation-event="change"
-                                                                                        data-validation="required, alphanumeric"
-                                                                                        data-validation-allowing="-_ "
+                                                                                        data-validation="required" 
                                                                                         autocomplete="off" type="text"
                                                                                         id="contact_company_name"
                                                                                         name="contact_company_name[]"
@@ -803,7 +761,7 @@
                                                     <label for="description2"> Injury Description <span
                                                             class="required">* </span> </label>
                                                     <textarea data-validation-event="change" data-validation="required" data-validation-error-msg="" id="description2"
-                                                        class="form-control" name="description2">{{ $pInjuries ? ($pInjuries->description ? $pInjuries->description : '') : '' }} </textarea>
+                                                        class="form-control limitsize" name="description2">{{ $pInjuries ? ($pInjuries->description ? $pInjuries->description : '') : '' }} </textarea>
                                                     @if ($errors->has('description2'))
                                                         <span class="invalid-feedback" style="display:block"
                                                             role="alert">
@@ -918,7 +876,7 @@
                                             <div class="form-row">
                                                 <div class="form-holder col-md-6">
                                                     <label for="ins_authinfo"> Authorization Info.</label>
-                                                    <textarea class="form-control" name="ins_authinfo" id="ins_authinfo" style="resize:none;">{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->ins_authinfo : '') : '' }}</textarea>
+                                                    <textarea class="form-control limitsize" name="ins_authinfo" id="ins_authinfo" style="resize:none;">{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->ins_authinfo : '') : '' }}</textarea>
                                                     @if ($errors->has('ins_authinfo'))
                                                         <span class="invalid-feedback" style="display:block"
                                                             role="alert">
@@ -1110,7 +1068,7 @@
                                                                 <label for="p_address_line1"> Address Line1 <span
                                                                         class="required">* </span> </label>
                                                                 <textarea name="p_address_line1" class="form-control" style="resize: none;" data-validation-event="change"
-                                                                    data-validation="alphanumeric" data-validation-allowing="-_ " data-validation-optional="true"
+                                                                    data-validation="required"  data-validation-optional="true"
                                                                     data-validation-error-msg="">{{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->p_address_line1 : '') : '' }}</textarea>
                                                                 @if ($errors->has('p_address_line1'))
                                                                     <span class="invalid-feedback"
@@ -1121,7 +1079,7 @@
                                                             </div>
                                                             <div class="form-group col-md-6">
                                                                 <label for="p_address_line2"> Address Line2 </label>
-                                                                <textarea data-validation-event="change" data-validation="alphanumeric" data-validation-allowing="-_ "
+                                                                <textarea data-validation-event="change" data-validation="required"
                                                                     data-validation-optional="true" name="p_address_line2" class="form-control" style="resize: none;">
                                                                 {{ $pInjuries ? ($pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->p_address_line2 : '') : '' }}
                                                             </textarea>

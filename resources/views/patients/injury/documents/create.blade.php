@@ -1,104 +1,20 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
-   <style>
-
-.drop-zone {
-  height: 500px;
-  padding: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-family: "Quicksand", sans-serif;
-  font-weight: 500;
-  font-size: 20px;
-  cursor: pointer;
-  color: #cccccc;
-  border:3px dashed grey;
-  border-radius: 10px;
-}
-.drop-zone--over {
-  border-style: solid;
-}
-.drop-zone__input {
-  display: none;
-}
-.drop-zone__thumb {
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: #cccccc;
-  background-size: cover;
-  position: relative;
-}
-.drop-zone__thumb::after {
-  content: attr(data-label);
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  padding: 5px 0;
-  color: #ffffff;
-  background: rgba(0, 0, 0, 0.75);
-  font-size: 14px;
-  text-align: center;
-}
-
-/* css start with new change with progress background*/ 
-
-
-   </style>
-   
-<style type="text/css">
-    .btn-file {
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .btn-file input[type=file] {
-        position: absolute;
-        top: 0;
-        right: 0;
-        min-width: 100%;
-        min-height: 100%;
-        font-size: 100px;
-        text-align: right;
-        filter: alpha(opacity=0);
-        opacity: 0;
-        outline: none;
-        background: white;
-        cursor: inherit;
-        display: block;
-    }
-    
-    .img-zone {
-        background-color: #F2FFF9;
-        border: 5px dashed #303630;
-        border-radius: 5px;
-        padding: 20px;
-    }
-    
-    .img-zone h2 {
-        margin-top: 0;
-    }
-    
-    .progress, #img-preview {
-        margin-top: 15px;
-    }
-</style>
-
 <!-- START: Breadcrumbs-->
-    <div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mb-0">{{$title}}</h4></div>
-
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+    <div class="row mt-0">
+        <div class="col-12 align-self-center">
+            <div class="sub-header mt-0 py-3 pl-2 align-self-center d-sm-flex w-100 rounded heading-background">
+                <div class="w-sm-100 mr-auto margin05">
+                     <h2><i class="fa-solid fa-file-invoice-dollar"></i> {{$title}}</h2>
+                     </div>
+                     
+                <div class="w-sm-100 ">
+                    <ol class="list-inline breadcrumb bg-transparent align-self-center m-0 p-0">
                     <li class="breadcrumb-item">
-                        <a class="btn btn-primary" href="{{url($url)}}"> Back</a>
+                    <a class="btn btn-primary" href="{{url($url)}}"> Back</a>
                     </li>
                 </ol>
+            </div>
             </div>
         </div>
     </div>
@@ -111,7 +27,7 @@
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
                     <ul>
                         @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
+                        <li>{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>
@@ -123,44 +39,29 @@
         {{ session()->get('success') }}
     </div>
 @endif
-    <div class="row">
-        <div class="col-9 mt-4">
-            <div class="card row-background">
-                <div class="card-content">
-                    <div class="card-body">
+    <div class="row2 customBoxHeight bg-white">
+        <div class="col-lg-12">
+            <div class="row ">
+        <div class="col-9">
+            <div class="card row-background2">
+                    <div class="card-body2">
                         <form action="{{ route('storeInjuryBillDocument') }}" enctype="multipart/form-data" id="patientInjuryDocumentFrm" class="form-horizontal ladda-form'" method="POST">
                         @csrf
                         <input type="hidden" name="providerId" id="providerId" value="{{$providerId}}">
                         <input type="hidden" name="injuryId" id="injuryId" value="{{$injuryId}}">
                         <input type="hidden" name="injuryDocumentId" id="injuryDocumentId" value="{{$id}}">
                         <input type="hidden" name="docType" id="docType" value="{{$docType}}">
-                        <input type="hidden" name="tempInjuryDocumentId" id="tempInjuryDocumentId" value="">
+                        <input type="hidden" name="tempInjuryDocumentId" id="tempInjuryDocumentId" value="{{($documents) ? $documents->id : '' }}">
                         <input type="hidden" name="fileName" id="fileName" value="{{($documents && $documents->injury_document) ? $documents->injury_document : '' }}">
                             @include('patients.injury.documents.patient_injury')
                             <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                                    <button type="submit" id="sendBtn" class="btn btn-primary ladda-button disabled"><span class="ladda-label">Submit</span></button>
+                                <div class="col-xs-12 col-sm-12 col-md-12 text-center mt-2">
+                                 <button type="submit" id="sendBtn" class="btn btn-primary ladda-button {{ (!$documents ) ? 'disabled' : ' ' }} "><span class="ladda-label">Submit</span></button>
                                 </div>
                             </div>
                         </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-       @if($docType != 'Provider')
-        <div class="col-3 mt-4 rightside">
-        @include('patients.show-patient-info')
-        </div>
-        @endif
-    </div>
-    @if($allDocuments)
-    <div class="row">
-        <div class="col-9 mt-4">
-            <div class="card row-background">
-                <div class="card-content">
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
+                    <div class="table-responsive p-2 ">
+                            <table id="example" class="table layout-secondary dataTable table-striped table-bordered no-footer">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">Id</th>
@@ -180,28 +81,36 @@
                                                 <td>{{$i}}</td>
                                                <td>{{$document->description}}</td>
                                                <td><a href="{{ asset('/injury_document/'.$document->injury_document)}}" target="_blank">{{$fileName}}</a></td>
-                                               <td>{{($document->getReportType) ? $document->getReportType->report_name : '-'	}}</td>
+                                               <td>{{($document->getReportType && $document->getReportType->report_name) ? $document->getReportType->report_code."-".$document->getReportType->report_name : '-'	}}</td>
                                                <td><a  href="{{ url('/patients/injury/documents') }}/{{ $injuryId }}/{{$document->doc_type}}/{{$document->id}}">
                                                <i  class="icon-pencil  showPointer"/></i>
                                                </a>
-                                               <a href="javascript:void(0)" onclick="deleteInjuryContact({{ $document->id }}, {{ $injuryId }}, 'DOCUMENT')"><i
-                                                                                class="icon-trash showPointer" /></i></a>
+                                               <a href="javascript:void(0)" onclick="deleteInjuryContact({{ $document->id }}, {{ $injuryId }}, 'DOCUMENT')">
+                                                   <i class="icon-trash showPointer" /></i></a>
                                                </td>
                                             </tr>
                                             @php $i++; @endphp
                                                 @endforeach
                                             @else
                                             <tr>
-                                                        <td colspan="10">No Records Found.</td>
-                                                </tr>
+                                            <td colspan="10">No Records Found.</td>
+                                            </tr>
                                             @endif
                                     </tbody>
                                 </table>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
+       @if($docType != 'Provider')
+        <div class="col-3 mt-1 rightside sticky">
+        @include('patients.show-patient-info')
+        </div>
+        @endif
+    </div>
+    </div>
+    </div>
+    @if($allDocuments)
 @endif
 @endsection
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

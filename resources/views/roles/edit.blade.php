@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
 <!-- START: Breadcrumbs-->
     <div class="row ">
@@ -8,7 +8,7 @@
 
                 <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                     <li class="breadcrumb-item">
-                        <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back</a>
+                        <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back22</a>
                     </li>
                 </ol>
             </div>

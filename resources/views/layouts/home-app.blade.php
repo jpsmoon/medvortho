@@ -7,53 +7,46 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }}</title>
     <!-- Scripts -->
-  
     <!--<link-->
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!--    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i%7CMuli:300,400,500,700"-->
-    <!--    rel="stylesheet">-->
 
-    <link rel="stylesheet" href="{{ asset('public/new_assets/vendors/jquery-ui/jquery-ui.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('new_assets/vendors/jquery-ui/jquery-ui.min.css') }}">
+    
 
     <!-- BEGIN VENDOR CSS-->
-    <link rel="stylesheet" type="text/css" href="{{ url('public/new_assets/app-assets/css/vendors.min.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="{{ url('public/new_assets/app-assets/vendors/css/forms/icheck/icheck.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="{{ url('public/new_assets/app-assets/vendors/css/forms/icheck/custom.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url('public/new_assets/app-assets/vendors/css/charts/morris.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="{{ url('public/new_assets/app-assets/vendors/css/extensions/unslider.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="{{ url('public/new_assets/app-assets/vendors/css/weather-icons/climacons.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('new_assets/app-assets/css/vendors.min.css') }}">
+    <!--<link rel="stylesheet" type="text/css"-->
+    <!--    href="{{ asset('new_assets/app-assets/vendors/css/forms/icheck/icheck.css') }}">-->
+    <link rel="stylesheet" type="text/css" href="{{ asset('new_assets/app-assets/vendors/css/forms/icheck/custom.css') }}">
+    <!--<link rel="stylesheet" type="text/css" href="{{ asset('new_assets/app-assets/vendors/css/charts/morris.css') }}">-->
+    <!--<link rel="stylesheet" type="text/css"-->
+    <!--    href="{{ asset('new_assets/app-assets/vendors/css/extensions/unslider.css') }}">-->
+    <!--<link rel="stylesheet" type="text/css"-->
+    <!--    href="{{ asset('new_assets/app-assets/vendors/css/weather-icons/climacons.min.css') }}">-->
     <!-- END VENDOR CSS-->
 
     <!-- BEGIN VENDOR CSS-->
-    <link rel="stylesheet" type="text/css" href="{{ url('public/new_assets/app-assets/css/vendors.min.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="{{ url('public/new_assets/app-assets/vendors/css/tables/datatable/datatables.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('new_assets/app-assets/vendors/css/tables/datatable/datatables.min.css') }}">
     <!-- END VENDOR CSS-->
 
     <!-- BEGIN ROBUST CSS-->
-    <link rel="stylesheet" type="text/css" href="{{ url('public/new_assets/app-assets/css/app.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('new_assets/app-assets/css/app.min.css') }}">
     <!-- END ROBUST CSS-->
     <!-- BEGIN Page Level CSS-->
-    <link rel="stylesheet" type="text/css"
-        href="{{ url('public/new_assets/app-assets/css/core/menu/menu-types/horizontal-top-icon-menu.min.css') }}">
-    <link rel="stylesheet" type="text/css"
-        href="{{ url('public/new_assets/app-assets/css/core/colors/palette-climacon.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url('public/new_assets/app-assets/css/pages/users.min.css') }}">
+    <!--<link rel="stylesheet" type="text/css"-->
+    <!--    href="{{ asset('new_assets/app-assets/css/core/menu/menu-types/horizontal-top-icon-menu.min.css') }}">-->
+    <link rel="stylesheet" type="text/css"href="{{ asset('new_assets/app-assets/css/core/colors/palette-climacon.css') }}">
+    <!--<link rel="stylesheet" type="text/css" href="{{ asset('new_assets/app-assets/css/pages/users.min.css') }}">-->
     <!-- END Page Level CSS-->
     <!-- BEGIN Custom CSS-->
-    <link rel="stylesheet" type="text/css" href="{{ url('public/new_assets/assets/css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('new_assets/assets/css/style.css') }}">
     <!-- END Custom CSS-->
 
     <!-- END Main Custom CSS-->
     <!-- BEGIN VENDOR JS-->
-    <script src="{{ asset('public/new_assets/app-assets/vendors/js/vendors.min.js') }}"></script>
+    <script src="{{ asset('new_assets/app-assets/vendors/js/vendors.min.js') }}"></script>
     <!-- BEGIN VENDOR JS-->
 
-    <!--<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>-->
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
 
@@ -61,99 +54,59 @@
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
 
     <!-- ladda progress buttons -->
-    <link rel="stylesheet" href="{{ url('public/new_assets/plugins/hakimel-ladda/ladda-themeless.min.css') }}">
-    <script src="{{ asset('public/new_assets/plugins/hakimel-ladda/spin.min.js') }}"></script>
-    <script src="{{ asset('public/new_assets/plugins/hakimel-ladda/ladda.min.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('public/new_assets/css/toastr.min.css') }}">
-    <link href="{{ asset('public/css/step-content.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ asset('new_assets/plugins/hakimel-ladda/ladda-themeless.min.css') }}">
+    <script src="{{ asset('new_assets/plugins/hakimel-ladda/spin.min.js') }}"></script>
+    <script src="{{ asset('new_assets/plugins/hakimel-ladda/ladda.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('new_assets/css/toastr.min.css') }}">
+    <link href="{{ asset('css/step-content.css') }}" rel="stylesheet">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+    
+    <!-- START: Page CSS-->
+    <link rel="stylesheet" href="{{ asset('new_assets/vendors/fullcalendar/core/main.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('new_assets/vendors/fullcalendar/daygrid/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('new_assets/vendors/fullcalendar/timegrid/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('new_assets/vendors/fullcalendar/list/main.css') }}">
+    <!-- END: Page CSS-->
+     <!-- BEGIN Main Custom CSS-->
+    <link rel="stylesheet" href="{{ asset('new_assets/app-assets/css/main_custom.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.css">
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.js"></script>
     <style>
-        footer {
+     footer {
             position: fixed;
             bottom: 0;
             width: 100%;
         }
 
-        .card-content {
-            min-height: 490px;
-        }
+       #searchInputId{
+           border-radius:5px!important;
+       } 
+       .search-form .dropdown.dropdown-lg .dropdown-menu {
+        margin-top: -18px;
+         padding: 6px 12px;
+       }
+       .search-form .form-group {
+         margin-bottom: 0.3rem;
+       }
+       .nav-link.nav-link-label{
+           position:relative;
+           top:7px;
+       }
+       .dropdown.dropdown-lg .dropdown-menu {
+    min-width: 410px;
+}
+.autoCompete-css{
+    width: 410px;
+}
+.header-navbar.nav-bg .dropdown-menu-right{
+    border-radius:0 0 5px 5px;
+}
+ .search-form label {
+    font-size: 13px;
+}
 
-        .autoCompete-css {
-            list-style: none;
-            padding: 0px;
-            width: 83%;
-            position: absolute;
-            margin: 0;
-            top: 86%;
-            border: solid 1px #a9bed6;
-            z-index: 999999 !important;
-            display: none;
-        }
-
-        .autoCompete-css li {
-            background: #fff;
-            padding: 9px;
-        }
-
-        .autoCompete-css li:nth-child(even) {
-            background: #f3f3f3;
-            color: 343538;
-        }
-
-        .autoCompete-css li:hover,
-        li b:hover {
-            cursor: pointer;
-        }
-
-        #searchDrop-Down .dropdown-menu {
-            font-size: 13px;
-            min-width: 525px !important;
-            border-top: none !important;
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-            margin-top: -1.5px;
-            box-shadow: none;
-        }
-
-        .topSearch .select2-selection__arrow {
-            display: none !important;
-        }
-
-        .swal-wide {
-            width: 300px !important;
-            height: 200px !important;
-        }
-
-        .swal2-container {
-            top: -11% !important;
-        }
-
-        .swal2-button {
-            border: 1px dashed #333;
-        }
-
-        /*  style cancel buttons */
-        .swal2-button--cancel {
-            color: #333;
-        }
-
-        .swal2-button--confirm {
-            color: green
-        }
-
-        .swal2-button--danger {
-            color: red;
-        }
-    </style>
-    <!-- START: Page CSS-->
-    <link rel="stylesheet" href="{{ asset('public/new_assets/vendors/fullcalendar/core/main.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('public/new_assets/vendors/fullcalendar/daygrid/main.css') }}">
-    <link rel="stylesheet" href="{{ asset('public/new_assets/vendors/fullcalendar/timegrid/main.css') }}">
-    <link rel="stylesheet" href="{{ asset('public/new_assets/vendors/fullcalendar/list/main.css') }}">
-    <!-- END: Page CSS-->
-     <!-- BEGIN Main Custom CSS-->
-    <link rel="stylesheet" href="{{ url('public/new_assets/app-assets/css/main_custom.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        </style>
      <!-- END: Page CSS-->
     @php
         $sidebar_active = '';
@@ -167,7 +120,8 @@
             $sidebar_active = 'active';
         @endphp
     @endif
-    @if (request()->is('patients/view/*'))
+    @if (request()->is('patients/view/*') ||
+         request()->is('view/patient/injury/bill/info/*'))
         @php  $coantainCls ='full-width';  @endphp
     @endif
 
@@ -178,12 +132,12 @@
 
     <!-- START: Pre Loader
         <div class="se-pre-con">
-            <img src="{{ asset('public/new_assets/images/loader.png') }}" alt="logo" width="10%" class="img-fluid"/>
+            <img src="{{ asset('new_assets/images/loader.png') }}" alt="logo" width="10%" class="img-fluid"/>
         </div>-->
     <!-- END: Pre Loader-->
 
     <!-- fixed-top-->
-    <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-static-top nav-bg navbar-border navbar-brand-center sticky-top">
+    <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-static-top nav-bg navbar-border navbar-brand-center sticky-top navbar-horizontal navbar-without-dd-arrow">
         <div class="container-fluid mainSec">
         <div class="navbar-wrapper">
             <div class="navbar-container content">
@@ -191,26 +145,147 @@
                     <ul class="nav navbar-nav mr-auto float-left">
                         <li>
                             <div class="nav-logo">
-                                <span>Meraki R.C.M Solutions</span>
+                                <span><a href="{{ route('home') }}"><img src="{{ asset('new_assets/app-assets/images/logo.png') }}" style="height:63px; width:auto;"></a></span>
                             </div>
+                        </li>
+                        <li>
+                       <div class="navbar-container custom-nav" data-menu="menu-container">
+         <nav>
+        <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
+            <li><a href="javascript:void(0)"><i class="fa-regular fa-calendar-days"></i> Appointments</a>
+             <!--First Tier Drop Down -->
+            <ul>
+                <li><a href="{{ url('/patient/create/schedular') }}"> Add Appointments</a></li>
+                <li><a  href="{{ url('/patient/list/schedular') }}"> Appointment List</a></li>
+            </ul>        
+            </li>
+            
+            
+            <li><a href="javascript:void(0)"><i class="fa-solid fa-file-invoice-dollar"></i> Billing</a>
+            <!--First Tier Drop Down -->
+                <ul>
+                    <li><a href="javascript:void(0)">Patient</a>
+                            <ul>
+                                <li><a href="{{ url('/patients/create')}}">Add Patient</a></li>
+                                <li><a href="{{ url('/patients')}}" >Manage Patient</a></li>
+                            </ul>
+                    </li>
+                    
+                    <li><a href="javascript:void(0)">Bill Status</a>
+                            <ul>
+                                @inject('statusClass', 'App\Http\Controllers\StatusController')
+                                 @if($statusClass->getBillStatuss())
+                                @foreach ($statusClass->getBillStatuss() as $status)
+                                    <li><a href="{{ url('bill/list/status/wise')}}/{{$status->id}}/{{$status->slug_name}}">{{$status->status_name}}</a></li> 
+                                @endforeach
+                                @endif 
+                            </ul>
+                    </li>
+                    <li><a href="javascript:void(0)">EMR</a></li>
+                    
+                    
+                </ul>        
+            </li>
+            <li><a href="javascript:void(0)"><i class="fa-solid fa-sack-dollar"></i> Collection</a></li>
+            
+           <li><a href="javascript:void(0)"><i class="icon-settings"></i> Setting</a>
+          <ul> 
+                    <li><a href="javascript:void(0)">Billing Provider</a>
+                         <ul>
+                            <li class="customSec ">
+                          <div class="scroll-h" style="overflow-x:hidden; height:230px;">
+                              
+                             @if(Auth::user()->getUserBillingProviders)
+                              @foreach (Auth::user()->getUserBillingProviders as $usBilling)
+                              <div class="row ">
+                                     <div class="col-12 customSecMenu">
+                                      <span>
+                                        <a href="{{ url('/billing/providers/setting/' . $usBilling->provider_id) }}" style="padding:10px 8px;">
+                                            <div class="media menuList">
+                                             <div class="media-left"><i class="fa-solid fa-user-doctor"></i></div>
+                                              <div class="media-body"> 
+                                                 <span class="media-heading">{{ ($usBilling->getBillingProvider && $usBilling->getBillingProvider->professional_provider_name) ? mb_strimwidth($usBilling->getBillingProvider->professional_provider_name, 0, 30, "...") : ''}}</span>
+                                                 <!--<p class="notification-text font-small-3 text-muted"></p>-->
+                                              </div>
+                                            </div>
+                                         </a>
+                                        <a class="iconSetting" href="{{ url('/view/billing/provider/' . $usBilling->provider_id) }}"> <i class="icon-settings"></i></a>
+                                       </span>    
+                                      </div>
+                                      
+                          </div>
+                           @endforeach
+                           @endif
+                              </div>
+                       <div class="row">
+                                    <div class="col-md-12 customSecMenu">
+                                         <span class="b-top">
+                                         <a  href="{{ url('/billingproviders') }}">
+                                              <div class="media menuList">
+                                             <div class="media-left"><i class="fa-solid fa-user-group"></i></div>
+                                             
+                                             <span class="media-body media-heading">Manage Billing Providers</span> 
+                                             </div>
+                                         </a> 
+                                         <a class="iconSetting" href="{{ url('/view/billing/provider/' . $usBilling->provider_id) }}"> <i class="icon-settings"></i></a>
+                                          </span>
+                                    </div> 
+                                </div>
+                   </li>
+                        </ul>
+                     </li>
+                     <li><a href="javascript:void(0)">Custom Settings</a>
+                         <ul>
+                            <!--<li><li><a href="{{ route('countries.index') }}">Country</a></li>-->
+                            <li><a href="{{ route('states.index') }}" >States</a></li>
+                            <li><a href="{{ route('cities.index') }}" >Cities</a></li>
+                            <li><a href="{{ route('companytypes.index') }}" >Company Type</a></li>
+                            <li><a href="{{ route('claimadministrators.index') }}">Claim Administrator</a></li>
+                            <li><a href="{{ route('taxonomycodes.index') }}" >Taxonomy Codes</a></li>
+                            <li><a href="{{ url('/master/holidays') }}" >Holidays</a></li>
+                            <li><a href="{{ url('reprt/type') }}">Reporting Type</a></li>
+                            <li><a href="{{ route('statuses.index') }}">Status</a></li>
+                            <li><a href="{{ url('bill/error') }}">Error Crud For Bill</a></li>
+                        </ul>
+                     </li>
+                     <li><a href="javascript:void(0)">Role & Permissions</a>
+                     <ul>
+                            <li>
+                                <a href="{{ route('roles.index') }}">Roles</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('permissions') }}">Permissions</a>
+                            </li>
+                    </ul>
+                     </li>
+                     <li><a href="{{ url('/manage/users')}}">Manage Users</a></li>
+                     <li><a href="javascript:void(0)">Invoices</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    </div>
                         </li>
                         <li class="nav-item nav-search">
                             <div class="search-input">
                                 <form class="float-left search-form" action="/search/patient/list/" id="searchFrm"
                                     class="form-horizontal ladda-form'" method="GET">
                                     <div class="input-group topSearch" id="adv-search" style="border:#888686">
+                                        
                                         <input type="text" id="searchInputId" autocomplete="off" name="serachInput"
                                             class="form-control" autocomplete="off"
                                             placeholder="Search with Patient Name or Patient ID">
+                                            
                                         <ul id="searchResult" class="autoCompete-css"></ul>
-                                        <div class="input-group-btn">
+                                        
+                                        <div class="input-group-btn" style="left:-40px">
                                             <div class="btn-group" role="group">
                                                 <div class="dropdown dropdown-lg">
                                                     <button type="button" class="btn btn-default dropdown-toggle"
                                                         data-toggle="dropdown" aria-expanded="false"
                                                         style="padding: 15.5px;"></button>
                                                     <div class="dropdown-menu dropdown-menu-right"
-                                                        style="background-color:#e0dddd" role="menu">
+                                                        style="background-color:#f4f4f6" role="menu">
                                                         <div class="form-group">
                                                             <label for="filter">Billing Provider</label>
                                                             <select class="form-control" id="providerName"
@@ -249,8 +324,8 @@
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6"></div>
-                                                            <div class="col-md-6"><span
-                                                                    class="text-success text-align-right showPointer"
+                                                            <div class="col-md-6 text-right"><span
+                                                                    class="text-primary  showPointer"
                                                                     style="cursor: pointer;"
                                                                     id="showOtherDivLink">Show more</span>
                                                             </div>
@@ -385,7 +460,7 @@
                         <li class="dropdown dropdown-user nav-item">
                             <a class="dropdown-toggle nav-link dropdown-user-link" href="javascript:void(0)"
                                 data-toggle="dropdown"><span class="avatar avatar-online"><img
-                                        src="{{ Auth::user()['profile_image'] ? asset('/user_image/' . Auth::user()['profile_image']) : asset('public/new_assets/app-assets/images/portrait/small/avatar-s-1.png') }}"
+                                        src="{{ Auth::user()['profile_image'] ? asset('/user_image/' . Auth::user()['profile_image']) : asset('new_assets/app-assets/images/portrait/small/avatar-s-1.png') }}"
                                         alt="avatar"><i></i></span><span
                                     class="user-name">{{ ucwords(Auth::user()['name']) }}
                                     {{ Auth::user()['last_name'] ? ucwords(Auth::user()['last_name']) : '' }}</span></a>
@@ -414,353 +489,6 @@
         </div>
     </nav>
 
-    <!-- Horizontal navigation-->
-    <div class="header-navbar navbar-expand-sm navbar navbar-horizontal navbar-fixed navbar-light navbar-without-dd-arrow navbar-bordered navbar-shadow"
-        role="navigation" data-menu="menu-wrapper">
-        <div class="container-fluid mainSec">
-            
-        <!-- custom menu start content-->
-        <div class="navbar-container custom-nav" data-menu="menu-container">
-         <nav>
-        <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">
-            <li><a href="{{ route('home') }}"><i class="fa-solid fa-house"></i>Dashboard</a></li>
-            <!--<li><a href="{{ route('patients.index') }}"><i class="fa-solid fa-bed-pulse"></i> Patients</a></li>-->
-            <li><a href="javascript:void(0)"><i class="fa-regular fa-calendar-days"></i> Appointments</a>
-             <!--First Tier Drop Down -->
-            <ul>
-                <li><a href="{{ url('/patient/create/schedular') }}"> Add Appointments</a></li>
-                <li><a  href="{{ url('/patient/list/schedular') }}"> Appointment List</a></li>
-                  <!--Third Tier Drop Down -->
-            <!--    <li><a href="javascript:void(0)">Tutorials</a>-->
-            <!--       <ul>-->
-            <!--    <li><a href="javascript:void(0)">Themes</a></li>-->
-            <!--    <li><a href="javascript:void(0)">Plugins</a></li>-->
-            <!--    <li><a href="javascript:void(0)">Tutorials</a></li>-->
-            <!--</ul>     -->
-            <!--    </li>-->
-              <!--Third Tier Drop Down -->
-            </ul>        
-            </li>
-            <li><a href="javascript:void(0)"><i class="fa-solid fa-laptop-medical"></i> EMR</a></li>
-            
-            <li><a href="javascript:void(0)"><i class="fa-solid fa-file-invoice-dollar"></i> Billing</a>
-            <!--First Tier Drop Down -->
-                <ul>
-                    <li><a href="javascript:void(0)">Patient</a>
-                            <ul>
-                                <li><a href="{{ url('/patients/create')}}">Add Patient</a></li>
-                                <li><a href="{{ url('/patients')}}" >Manage Patient</a></li>
-                            </ul>
-                    </li>
-                    
-                    <li><a href="javascript:void(0)">Bill Status</a>
-                            <ul>
-                                @inject('statusClass', 'App\Http\Controllers\StatusController')
-                                 @if($statusClass->getBillStatuss())
-                                @foreach ($statusClass->getBillStatuss() as $status)
-                                    <li><a href="{{ url('bill/list/status/wise')}}/{{$status->id}}/{{$status->slug_name}}">{{$status->status_name}}</a></li> 
-                                @endforeach
-                                @endif 
-                            </ul>
-                    </li>
-                    
-                    
-                </ul>        
-            </li>
-            <li><a href="javascript:void(0)"><i class="fa-solid fa-sack-dollar"></i> Collection</a></li>
-            
-            <li><a href="javascript:void(0)"><i class="icon-settings"></i> Billing Provider</a>
-             <ul>
-                      <li class="customSec">
-                             @if(Auth::user()->getUserBillingProviders)
-                              @foreach (Auth::user()->getUserBillingProviders as $usBilling)
-                              <div class="row">
-                                     <div class="col-12 customSecMenu">
-                                         <span>
-                                        <a href="{{ url('/billing/providers/setting/' . $usBilling->provider_id) }}">
-                                            <div class="media menuList">
-                                             <div class="media-left"><i class="fa-solid fa-user-doctor"></i></div>
-                                              <div class="media-body"> 
-                                                 <span class="media-heading">{{ ($usBilling->getBillingProvider && $usBilling->getBillingProvider->professional_provider_name) ? mb_strimwidth($usBilling->getBillingProvider->professional_provider_name, 0, 30, "...") : ''}}</span>
-                                                 <!--<p class="notification-text font-small-3 text-muted"></p>-->
-                                              </div>
-                                            </div>
-                                         </a>
-                                        <a href="{{ url('/view/billing/provider/' . $usBilling->provider_id) }}"> <i class="icon-settings"></i></a>
-                                         </span>    
-                                       
-                                      </div>
-                                     
-                             
-                          </div>
-                           @endforeach
-                       @endif
-                       <div class="row">
-                                    <div class="col-md-12 customSecMenu ">
-                                         <span class="b-top">
-                                         <a  href="{{ url('/billingproviders') }}">
-                                              <div class="media menuList">
-                                             <div class="media-left"><i class="fa-solid fa-user-group"></i></div>
-                                             
-                                             <span class="media-body media-heading">Manage Billing Providers</span> 
-                                             </div>
-                                         </a> 
-                                         <a href="{{ url('/view/billing/provider/' . $usBilling->provider_id) }}"> <i class="icon-settings"></i></a>
-                                          </span>
-                                    </div> 
-                                </div>
-                   </li>
-             </ul>
-            
-            
-            </li>
-            
-           <li><a href="javascript:void(0)"><i class="icon-settings"></i> Setting</a>
-            
-          <ul>
-                     
-                     <li><a href="javascript:void(0)">Custom Settings</a>
-                         <ul>
-                            <li><a href="{{ route('countries.index') }}">Country</a></li>
-                            <li><a href="{{ route('states.index') }}" >States</a></li>
-                            <li><a href="{{ route('cities.index') }}" >Cities</a></li>
-                            <li><a href="{{ route('companytypes.index') }}" >Company Type</a></li>
-                            <li><a href="{{ route('claimadministrators.index') }}">Claim Administrator</a></li>
-                            <li><a href="{{ route('taxonomycodes.index') }}" >Taxonomy Codes</a></li>
-                            <li><a href="{{ url('/master/holidays') }}" >Holidays</a></li>
-                            <li><a href="{{ url('/document/report/type') }}">Reporting Type</a></li>
-                            <li><a href="{{ route('statuses.index') }}">Status</a></li>
-                        </ul>
-                     </li>
-                     <li><a href="javascript:void(0)">Role & Permissions</a>
-                     
-                     <ul>
-                            <li>
-                                <a href="{{ route('roles.index') }}">Roles</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('permissions') }}">Permissions</a>
-                            </li>
-                    </ul>
-                    
-                     </li>
-                     <li><a href="{{ url('/manage/users')}}">Manage Users</a></li>
-                     <li><a href="javascript:void(0)">Invoices</a></li>
-                </ul>
-            </li>
-            
-            <!--<li><a href="javascript:void(0)"><i class="fa-solid fa-file-invoice-dollar"></i> Billing Providers</a>-->
-             <!--First Tier Drop Down -->
-            <!--<ul>-->
-            <!--    <li><a href="javascript:void(0)"> Manage Billing Providers</a></li>-->
-            <!--</ul>-->
-            <!--</li>-->
-            <!--<li><a href="javascript:void(0)"><i class="fa-solid fa-address-book"></i> Custom Masters</a>-->
-            <!--<ul>-->
-            <!--            <li><a href="{{ route('countries.index') }}">Country</a></li>-->
-            <!--            <li><a href="{{ route('states.index') }}" >States</a></li>-->
-            <!--            <li><a href="{{ route('cities.index') }}" >Cities</a></li>-->
-            <!--            <li><a href="{{ route('companytypes.index') }}" >Company Type</a></li>-->
-            <!--            <li><a href="{{ route('claimadministrators.index') }}">Claim Administrator</a></li>-->
-            <!--            <li><a href="{{ route('taxonomycodes.index') }}" >Taxonomy Codes</a></li>-->
-            <!--            <li><a href="{{ url('/master/holidays') }}" >Holidays</a></li>-->
-            <!--            <li><a href="{{ url('/document/reprt/type') }}">Reporting Type</a></li>-->
-            <!--</ul>-->
-            <!--</li>-->
-            <!-- <li><a href="javascript:void(0)"><i class="fa-solid fa-user-lock"></i> Roles and Permissions</a>-->
-            <!--<ul>-->
-            <!--            <li>-->
-            <!--                <a  href="{{ route('roles.index') }}"-->
-            <!--                    data-toggle="dropdown">Roles</a>-->
-            <!--            </li>-->
-            <!--            <li>-->
-            <!--                <a href="{{ route('permissions') }}"-->
-            <!--                    data-toggle="dropdown">Permissions</a>-->
-            <!--            </li>-->
-            <!--        </ul>-->
-            <!--</li>-->
-        </ul>
-    </nav>
-    </div>
-          <!-- custom menu end content-->
-        
-        
-        
-        <!-- Horizontal menu content-->
-        <!--<div class="navbar-container main-menu-content" data-menu="menu-container">-->
-            <!-- include includes/mixins-->
-        <!--    <ul class="nav navbar-nav" id="main-menu-navigation" data-menu="menu-navigation">-->
-
-        <!--        <li class="nav-item"><a class="nav-link" href="{{ route('home') }}"><i class="icon-home"></i><span-->
-        <!--                    data-i18n="nav.templates.main">Home</span></a>-->
-        <!--        </li>-->
-
-        <!--        <li class="nav-item"><a class="nav-link" href="{{ route('patients.index') }}"><i-->
-        <!--            class="icon-folder"></i><span data-i18n="nav.templates.main">Patients</span></a>-->
-        <!--        </li>-->
-                
-        <!--        <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"-->
-        <!--                href="javascript:void(0)" data-toggle="dropdown"><i class="icon-note"></i><span-->
-        <!--                    data-i18n="nav.category.forms">Appointments</span></a>-->
-        <!--            <ul class="dropdown-menu">-->
-        <!--                <li><a class="dropdown-item" href="{{ url('/patient/create/schedular') }}"data-toggle="dropdown">Add Appointments</a></li>-->
-        <!--                 <li><a class="dropdown-item" href="{{ url('/patient/list/schedular') }}"data-toggle="dropdown">Appointment List</a></li>-->
-                         <!--<li><a class="dropdown-item" href="{{ url('/patient/reasons/schedular') }}"data-toggle="dropdown">Reason</a></li>-->
-        <!--             </ul>-->
-        <!--        </li>           -->
-
-        <!--            @if(count(Auth::user()->getUserBillingProviders) == 1)-->
-        <!--        <li class="dropdown dropdown-notification nav-item">-->
-        <!--            <a class="dropdown-toggle nav-link" href="javascript:void(0)" data-toggle="dropdown">-->
-        <!--                <i class="icon-folder"></i>-->
-        <!--                <span data-i18n="nav.category.forms">Setting</span>-->
-        <!--            </a>-->
-        <!--            <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">-->
-        <!--                <li class="scrollable-container media-list w-100" style="position: initial !important;">-->
-        <!--                     @if(Auth::user()->getUserBillingProviders)-->
-        <!--                        <div class="row">-->
-        <!--                             @foreach (Auth::user()->getUserBillingProviders as $usBilling)-->
-        <!--                            <div class="col-md-10">-->
-        <!--                                <span> -->
-        <!--                                    <a  href="{{ url('/billing/providers/setting/' . $usBilling->provider_id) }}">-->
-        <!--                                        <div class="media">-->
-        <!--                                            <div class="media-left align-self-center"><i class="ft-plus-square icon-bg-circle bg-cyan"></i></div>-->
-        <!--                                            <div class="media-body">-->
-        <!--                                                <h6 class="media-heading">{{ ($usBilling->getBillingProvider && $usBilling->getBillingProvider->professional_provider_name) ? $usBilling->getBillingProvider->professional_provider_name : ''}}</h6> -->
-        <!--                                                <p class="notification-text font-small-3 text-muted"></p> -->
-        <!--                                            </div>-->
-        <!--                                        </div>-->
-        <!--                                    </a>-->
-        <!--                                </span> -->
-        <!--                            </div>-->
-        <!--                            <div class="col-md-2 mt-2">-->
-        <!--                                <span>-->
-        <!--                                     <a  href="{{ url('/view/billing/provider/' . $usBilling->provider_id) }}"> <i class="icon-settings"></a></i>-->
-        <!--                                 </span>-->
-        <!--                            </div>-->
-        <!--                            @endforeach-->
-        <!--                        </div>-->
-        <!--                        @endif -->
-        <!--                        <div class="row">-->
-        <!--                            <div class="col-md-12">-->
-        <!--                                 <a  href="{{ url('/billingproviders') }}">-->
-        <!--                                     <h6 class="media-heading pl-2">Manage Billing Providers</h6> -->
-        <!--                                 </a> -->
-        <!--                            </div> -->
-        <!--                        </div>-->
-        <!--                    </li> -->
-        <!--            </ul> -->
-        <!--        </li>-->
-        <!--        @endif-->
-        <!--        @if(count(Auth::user()->getUserBillingProviders) > 1)-->
-        <!--        <li class="dropdown nav-item" data-menu="dropdown">-->
-        <!--            <a class="dropdown-toggle nav-link" href="{{ route('patients.index') }}" data-toggle="dropdown">-->
-        <!--                <i class="icon-folder"></i>-->
-        <!--                <span data-i18n="nav.category.forms">Billing Providers</span>-->
-        <!--            </a>-->
-
-        <!--                <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">-->
-        <!--                    <li class="scrollable-container media-list w-100" style="position: initial !important;">-->
-        <!--                     @if(Auth::user()->getUserBillingProviders)-->
-        <!--                        <div class="row">-->
-        <!--                             @foreach (Auth::user()->getUserBillingProviders as $usBilling)-->
-        <!--                            <div class="col-md-10">-->
-        <!--                                <span> -->
-        <!--                                    <a  href="{{ url('/billing/providers/setting/' . $usBilling->provider_id) }}">-->
-        <!--                                        <div class="media">-->
-        <!--                                            <div class="media-left align-self-center"><i class="ft-plus-square icon-bg-circle bg-cyan"></i></div>-->
-        <!--                                            <div class="media-body">-->
-        <!--                                                <h6 class="media-heading">{{ ($usBilling->getBillingProvider && $usBilling->getBillingProvider->professional_provider_name) ? $usBilling->getBillingProvider->professional_provider_name : ''}}</h6> -->
-        <!--                                                <p class="notification-text font-small-3 text-muted"></p> -->
-        <!--                                            </div>-->
-        <!--                                        </div>-->
-        <!--                                    </a>-->
-        <!--                                </span> -->
-        <!--                            </div>-->
-        <!--                            <div class="col-md-2 mt-2">-->
-        <!--                                <span>-->
-        <!--                                     <a  href="{{ url('/view/billing/provider/' . $usBilling->provider_id) }}"> <i class="icon-settings"></a></i>-->
-        <!--                                 </span>-->
-        <!--                            </div>-->
-        <!--                            @endforeach-->
-        <!--                        </div>-->
-        <!--                        @endif -->
-        <!--                        <div class="row">-->
-        <!--                            <div class="col-md-12">-->
-        <!--                                 <a  href="{{ url('/billingproviders') }}">-->
-        <!--                                     <h6 class="media-heading pl-2">Manage Billing Providers</h6> -->
-        <!--                                 </a> -->
-        <!--                            </div> -->
-        <!--                        </div>-->
-        <!--                    </li> -->
-        <!--                </ul> -->
-        <!--            </li>-->
-        <!--        @endif-->
-        <!--        <li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"-->
-        <!--                href="javascript:void(0)" data-toggle="dropdown"><i class="icon-note"></i><span-->
-        <!--                    data-i18n="nav.category.forms">Custom Masters</span></a>-->
-        <!--            <ul class="dropdown-menu">-->
-        <!--                <li><a class="dropdown-item" href="{{ route('countries.index') }}" data-toggle="dropdown">Country</a></li>-->
-        <!--                <li><a class="dropdown-item" href="{{ route('states.index') }}" data-toggle="dropdown">States</a></li>-->
-        <!--                <li><a class="dropdown-item" href="{{ route('cities.index') }}" data-toggle="dropdown">Cities</a></li>-->
-        <!--                <li><a class="dropdown-item" href="{{ route('companytypes.index') }}" data-toggle="dropdown">Company Type</a></li>-->
-        <!--                <li><a class="dropdown-item" href="{{ route('claimadministrators.index') }}" data-toggle="dropdown">Claim Administrator</a></li>-->
-        <!--                <li><a class="dropdown-item" href="{{ route('taxonomycodes.index') }}" data-toggle="dropdown">Taxonomy Codes</a></li>-->
-        <!--                <li><a class="dropdown-item" href="{{ url('/master/holidays') }}" data-toggle="dropdown">Holidays</a></li>-->
-        <!--                <li><a class="dropdown-item" href="{{ url('/document/reprt/type') }}" data-toggle="dropdown">Reporting Type</a></li>-->
-        <!--            </ul>-->
-        <!--        </li>-->
-
-                <!--<li class="dropdown nav-item" data-menu="dropdown"><a class="dropdown-toggle nav-link"-->
-                <!--        href="javascript:void(0)" data-toggle="dropdown"><i class="icon-note"></i><span-->
-                <!--            data-i18n="nav.category.forms">Wizards</span></a>-->
-                <!--    <ul class="dropdown-menu">-->
-                <!--        <li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a-->
-                <!--                class="dropdown-item dropdown-toggle" href="javascript:void(0)"-->
-                <!--                data-toggle="dropdown">Form-->
-                <!--                Elements</a>-->
-                <!--        </li>-->
-                <!--        <li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a-->
-                <!--                class="dropdown-item dropdown-toggle" href="javascript:void(0)"-->
-                <!--                data-toggle="dropdown">Form-->
-                <!--                Layouts</a>-->
-                <!--        </li>-->
-                <!--        <li class="dropdown dropdown-submenu" data-menu="dropdown-submenu"><a-->
-                <!--                class="dropdown-item dropdown-toggle" href="javascript:void(0)"-->
-                <!--                data-toggle="dropdown">Form-->
-                <!--                Wizard</a>-->
-
-                <!--        </li>-->
-                <!--        <li data-menu=""><a class="dropdown-item" href="javascript:void(0)"-->
-                <!--                data-toggle="dropdown">Form-->
-                <!--                Repeater</a>-->
-                <!--        </li>-->
-                <!--    </ul>-->
-                <!--</li>-->
-                
-        <!--        <li class="dropdown nav-item" data-menu="dropdown">-->
-        <!--            <a class="dropdown-toggle nav-link" href="{{ route('patients.index') }}" data-toggle="dropdown">-->
-        <!--                <i class="ft-lock"></i>-->
-        <!--                <span data-i18n="nav.category.forms">Roles and Permissions</span>-->
-        <!--            </a>-->
-        <!--            <ul class="dropdown-menu">-->
-        <!--                <li>-->
-        <!--                    <a class="dropdown-item" href="{{ route('roles.index') }}"-->
-        <!--                        data-toggle="dropdown">Roles</a>-->
-        <!--                </li>-->
-        <!--                <li>-->
-        <!--                    <a class="dropdown-item" href="{{ route('permissions') }}"-->
-        <!--                        data-toggle="dropdown">Permissions</a>-->
-        <!--                </li>-->
-        <!--            </ul>-->
-        <!--        </li>-->
-        <!--    </ul>-->
-        <!--</div>-->
-        <!-- /horizontal menu content-->
-        </div>
-    </div>
-    <!-- Horizontal navigation-->
-
     <div class="app-content container-fluid {{$coantainCls}}">
         <div class="content-wrapper">
             <div class="content-header row">
@@ -776,8 +504,7 @@
         <div class="container-fluid mainSec">
         <p class="clearfix lighten-2 text-sm-center mb-0 px-0">
             <span class="float-md-left d-block d-md-inline-block">Copyright &copy; {{ date('Y') }}
-                <a class="text-bold-800" href="https://1.envato.market/pixinvent_portfolio"
-                    target="_blank">Medvortho </a>,
+                <a class="text-bold-800" href="#">Medvortho </a>,
                 All rights reserved. </span>
             <span class="float-md-right d-block d-md-inline-blockd-none d-lg-block">
                 Design and Develop By JPS Web Zone 
@@ -789,14 +516,12 @@
     <!-- End of Footer -->
     <!-- START: Template JS-->
 
-    <script src="{{ asset('public/new_assets/vendors/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('new_assets/vendors/jquery-ui/jquery-ui.min.js') }}"></script>
 
-    <script src="{{ asset('public/new_assets/vendors/moment/moment.js') }}"></script>
-    <!--<script src="{{ asset('public/new_assets/vendors/bootstrap/js/bootstrap.bundle.min.js') }}"></script>-->
+    <script src="{{ asset('new_assets/vendors/moment/moment.js') }}"></script>
+    <!--<script src="{{ asset('new_assets/vendors/bootstrap/js/bootstrap.bundle.min.js') }}"></script>-->
 
     <!-- START: Back to top-->.
-    
-    
 
     <script type="text/javascript">
         // Setup form validation on all forms
@@ -940,83 +665,68 @@
 
     <!-- BEGIN PAGE VENDOR JS-->
     <!-- START: Page Vendor JS-->
-    <script src="{{ asset('public/new_assets/vendors/fullcalendar/core/main.min.js') }}"></script>
-    <script src="{{ asset('public/new_assets/vendors/fullcalendar/interaction/main.js') }}"></script>
-    <script src="{{ asset('public/new_assets/vendors/fullcalendar/daygrid/main.js') }}"></script>
-    <script src="{{ asset('public/new_assets/vendors/fullcalendar/timegrid/main.js') }}"></script>
-    <script src="{{ asset('public/new_assets/vendors/fullcalendar/list/main.js') }}"></script>
+    <script src="{{ asset('new_assets/vendors/fullcalendar/core/main.min.js') }}"></script>
+    <script src="{{ asset('new_assets/vendors/fullcalendar/interaction/main.js') }}"></script>
+    <script src="{{ asset('new_assets/vendors/fullcalendar/daygrid/main.js') }}"></script>
+    <script src="{{ asset('new_assets/vendors/fullcalendar/timegrid/main.js') }}"></script>
+    <script src="{{ asset('new_assets/vendors/fullcalendar/list/main.js') }}"></script>
     <!-- END: Page Vendor JS-->
 
     <!-- START: Page JS-->
-    <!-- <script src="{{ asset('public/new_assets/app-assets/vendors/js/ui/jquery.sticky.js') }}"></script>
-    <script src="{{ asset('public/new_assets/app-assets/vendors/js/charts/jquery.sparkline.min.js') }}"></script>
-    <script src="{{ asset('public/new_assets/app-assets/vendors/js/charts/gmaps.min.js') }}"></script>
-    <script src="{{ asset('public/new_assets/app-assets/vendors/js/forms/icheck/icheck.min.js') }}"></script>
-    <script src="{{ asset('public/new_assets/app-assets/vendors/js/extensions/jquery.knob.min.js') }}"></script>
-    <script src="{{ asset('public/new_assets/app-assets/vendors/js/charts/raphael-min.js') }}"></script>
-    <script src="{{ asset('public/new_assets/app-assets/vendors/js/charts/morris.min.js') }}"></script>
-    <script src="{{ asset('public/new_assets/app-assets/vendors/js/extensions/unslider-min.js') }}"></script>
-    <script src="{{ asset('public/new_assets/app-assets/vendors/js/charts/echarts/echarts.js') }}"></script> -->
-    <!-- END PAGE VENDOR JS-->
+    
     <!-- BEGIN ROBUST JS-->
-    <script src="{{ asset('public/new_assets/app-assets/js/core/app-menu.min.js') }}"></script>
-    <!--<script src="{{ asset('public/new_assets/app-assets/js/core/app.min.js') }}"></script>-->
-    <!--<script src="{{ asset('public/new_assets/app-assets/js/scripts/customizer.min.js') }}"></script>-->
+    <script src="{{ asset('new_assets/app-assets/js/core/app-menu.min.js') }}"></script>
 
-    <!-- END ROBUST JS-->
-    <!-- BEGIN PAGE LEVEL JS-->
-    <!--<script src="{{ asset('public/new_assets/app-assets/js/scripts/ui/breadcrumbs-with-stats.min.js') }}"></script>-->
-    <!--<script src="{{ asset('public/new_assets/app-assets/js/scripts/pages/dashboard-fitness.min.js') }}"></script>-->
-    <!-- END PAGE LEVEL JS-->
+    
 
-    <script src="{{ asset('public/new_assets/js/calendar.script.js') }}"></script>
-    <script src="{{ asset('public/new_assets/js/toastr.min.js') }}"></script>
+    <script src="{{ asset('new_assets/js/calendar.script.js') }}"></script>
+    <script src="{{ asset('new_assets/js/toastr.min.js') }}"></script>
     <!-- END: Page JS-->
     
-    <script src="{{ asset('public/new_assets/app-assets/vendors/js/tables/datatable/datatables.min.js') }}"></script>
+    <script src="{{ asset('new_assets/app-assets/vendors/js/tables/datatable/datatables.min.js') }}"></script>
     <!-- Scripts -->
     <script>
         // Concept: Render select2 fields after all javascript has finished loading
-        var initSelect2 = function() {
+        // var initSelect2 = function() {
 
-            // function that will initialize the select2 plugin, to be triggered later
-            var renderSelect = function() {
-                var params = '<?php echo $sidebar_active; ?>';
-                if (params == 'active') {
-                    setSelect2ForFIlter();
-                }
-                //
-                showSearchWithDrop();
-            };
+        //     // function that will initialize the select2 plugin, to be triggered later
+        //     var renderSelect = function() {
+        //         var params = '<?php echo $sidebar_active; ?>';
+        //         if (params == 'active') {
+        //             setSelect2ForFIlter();
+        //         }
+        //         //
+        //         showSearchWithDrop();
+        //     };
 
-            // create select2 HTML elements
-            var style = document.createElement('link');
-            var script = document.createElement('script');
-            style.rel = 'stylesheet';
-            // style.href = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css';
-            //script.type = 'text/javascript';
-            //script.src = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.full.min.js';
-            style.href = '{{ url('public/new_assets/app-assets/searchSelect/select2.min.css') }}';
-            script.type = 'text/javascript';
-            script.src = '{{ asset('public/new_assets/app-assets/searchSelect/select2.full.min.js') }}';
+        //     // create select2 HTML elements
+        //     var style = document.createElement('link');
+        //     var script = document.createElement('script');
+        //     style.rel = 'stylesheet';
+        //     // style.href = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css';
+        //     //script.type = 'text/javascript';
+        //     //script.src = 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.full.min.js';
+        //     style.href = '{{ url('public/new_assets/app-assets/searchSelect/select2.min.css') }}';
+        //     script.type = 'text/javascript';
+        //     script.src = '{{ asset('public/new_assets/app-assets/searchSelect/select2.full.min.js') }}';
 
-            // trigger the select2 initialization once the script tag has finished loading
-            script.onload = renderSelect;
+        //     // trigger the select2 initialization once the script tag has finished loading
+        //     script.onload = renderSelect;
 
-            // render the style and script tags into the DOM
-            document.getElementsByTagName('head')[0].appendChild(style);
-            document.getElementsByTagName('head')[0].appendChild(script);
-        };
+        //     // render the style and script tags into the DOM
+        //     document.getElementsByTagName('head')[0].appendChild(style);
+        //     document.getElementsByTagName('head')[0].appendChild(script);
+        // };
 
-        initSelect2();
+        // initSelect2();
 
-        function showSearchWithDrop() {
-            $('.searcDrop').each(function() {
-                $(this).select2({
-                    //minimumInputLength: 2,
-                });
-            })
-        }
+        // function showSearchWithDrop() {
+        //     $('.searcDrop').each(function() {
+        //         $(this).select2({
+        //             //minimumInputLength: 2,
+        //         });
+        //     })
+        // }
         function myFunction() {
             var x = document.getElementById("myDIV");
             if (x.style.display === "none") {
@@ -1026,7 +736,12 @@
             }
         }
         $(function() {
-            $("#example").dataTable();
+            //$("#example").dataTable();
+            $("#example").dataTable({
+                "autoWidth": false,
+                "lengthChange": false,
+                "pageLength": 20
+            });
         });
         function deleteDocument(id, type) { 
                     swal.fire({

@@ -10,6 +10,26 @@ use App\Models\RenderinProvider;
 class InjuryBill extends Model
 {
     use HasFactory;
+  
+
+    public static function boot()
+    {
+        parent::boot();
+
+        self::created(function ($model) {
+            $billNumber = 'Bill' . $model->id . date('y') . date('m') . date('d');
+            $model->bill_number = $billNumber;
+            $model->save();
+        });
+
+        self::updating(function ($model) {
+            // Check if user number is empty before updating
+            if (empty($model->bill_number)) {
+                $billNumber = 'Bill' . $model->id . date('y') . date('m') . date('d');
+                $model->bill_number = $billNumber;
+            }
+        });
+    }
 
     public function getBillServices()
      {
@@ -21,7 +41,7 @@ class InjuryBill extends Model
     }
     public function getRenderinProvider()
     {
-        return $this->hasOne(RenderinProvider::class, 'id', 'bill_rendering_provider');
+        return $this->hasOne(BillReferingOrderProvider::class, 'id', 'bill_rendering_provider');
     }
     
     public function getInjury()
@@ -54,4 +74,17 @@ class InjuryBill extends Model
     {
         return $this->hasOne(Status::class, 'id', 'bill_status');
     }
+    public function getSendBillDate()
+    {
+        return $this->hasOne(SentBill::class, 'bil_id', 'id');
+    }
+    public function getBillPaymentInfo()
+    {
+        return $this->hasOne(BillPaymentInformation::class, 'bill_id', 'id');
+    } 
+    public function getBillDocForPayment()
+    {
+        return $this->hasOne(AllDocument::class, 'injury_id', 'id')->where('doc_type', 'BILLEOR');
+    }
+    
 }

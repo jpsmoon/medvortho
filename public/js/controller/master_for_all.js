@@ -57,32 +57,7 @@ function applyDataMask(field) {
     field.addEventListener('click', changed)
     field.addEventListener('keyup', changed)
 }
-function getStatesByZipCode(val){
- //alert(val);
- $.ajax({
-    url: '/get-cities-state-by-zipCode',
-        type: 'POST',
-        data: {
-        _token: token, zipCode:val
-        },
-        success: function(response) {
-           console.log('response',response);
-           $("#cityDD").val(response.city_name);
-                var dd = document.getElementById('stateDD');
-                for (var i = 0; i < dd.options.length; i++) {
-                    if (dd.options[i].text === response.state_name) {
-                        dd.selectedIndex = i;
-                        break;
-                    }else{
-                        dd.selectedIndex =  null
-                    }
-                }
-        },
-        error: function(response) {
-            alert(response.responseJSON.message);
-        }
-    });
-}
+
 function getStateByCountry(val){
     //alert(val);
     $.ajax({
@@ -104,6 +79,10 @@ function getStateByCountry(val){
             }
         });
 }
+
+
+
+
 function getGetCityBySTateCOde(val,divId){
     //alert(val);
     $.ajax({
@@ -160,7 +139,7 @@ function getReferningProvider(type,injuryId,divId,columDiv){
     });
 }
 
-function getBillingInfoForView(val,divId){
+function getBillingInfoForView(val,divId, hideDivId){
     $.ajax({
         url: '/get-billing-info-view',
             type: 'POST',
@@ -168,15 +147,11 @@ function getBillingInfoForView(val,divId){
             _token: token, billingId:val
             },
             success: function(response) {
-               console.log('response',response.professional_provider_name);
+               console.log('response##',response.professional_provider_name);
+               $("#"+hideDivId).addClass('d-none');
                 var items = "";
                 $("#"+divId).html(" ");
-                items += `<div class="mb-0"> <h6 class="mb-0"> <a class="redial-dark d-block border redial-border-light"><i class="fa-solid fa-file-invoice-dollar"></i>
-                Billing Provider </a> </h6> <div id="" class=" setCollapseBorder" role="tabpanel"><div class="card-body">
-                <span  class="font-weight-bold pr-1">Name :</span><span class="text-muted font-weight-bold">${response.professional_provider_name}</span><br/><br/>
-                <span  class="font-weight-bold pr-1">Tax ID :</span><span class="text-muted font-weight-bold">${response['tax_id']}</span><br/><br/>
-                <span  class="font-weight-bold pr-1">NPI :</span><span class="text-muted font-weight-bold">${response['professional_npi']}</span><br/><br/>
-                </div></div> </div>`;
+                 items += `<div class="card-body2"><ul class="list-group list-group-flush rightBox"><li class="list-group-item"> <div class="card2"> <div class="card-header2"><div class="row"><div class="col-12 padB05"><h4 class="card-title"> ${response.professional_provider_name} </h4> <span>Billing Provider</span></div><div class="col-12"><ul class="list-inline"><li class="list-inline-item liItem">Tax ID <br> <span class="card-title">${response['tax_id']}</span></li> <li class="list-inline-item liItem">NPI <br>  <span class="card-title">${response['professional_npi']}</span>  </li></ul></div></div></div></li></ul></div>`;
                 $("#"+divId).html(items);
             },
             error: function(response) {
@@ -185,4 +160,80 @@ function getBillingInfoForView(val,divId){
         });
 }
 
+function californiaStateByCountry(val){
+    //alert(val);
+    $.ajax({
+        url: '/get-state-by-country',
+            type: 'POST',
+            data: {
+            _token: token, country_id:val
+            },
+            success: function(response) {
+               // console.log('response',response.cities);
+                var items = "";
+                $.each(response.states, function (i, item) {
+                    //items += `<option value="${item.state_code}"  (${item.state_code} == 'CA') ? 'selected' : ''>${item.state_name}</option>`;
+                    items += `<option value="${item.state_code}" ${item.state_code === 'CA' ? 'selected' : ''}>${item.state_name}</option>`;
+                })
+                $("#stateDD").html(items);
+            },
+            error: function(response) {
+                alert(response.responseJSON.message);
+            }
+        });
+}
 
+//bill Posting Function start here
+
+function changeUrl(billId, type, paymentId){
+    console.log('billId', billId);
+    console.log('type', type);
+    console.log('paymentId', paymentId);
+    var fullUrl = ''; 
+    fullUrl ="/bill/payment/postings/new/" + type + "/" + billId;
+    //if(paymentId !== undefined || paymentId != null){ } 
+    let _url = "/remove/all/payment/data/change/tab";
+    $.ajax({
+        url: _url,
+        type: 'POST',
+        data: {_token:token, billId: billId, paymentId: paymentId},
+        success: function(response) {
+            console.log('response', response);
+            if(response){ 
+                window.location.href=fullUrl;
+            } 
+        },
+        error: function(response) {
+            swal.fire(response.responseJSON.message, '', 'error');
+        }
+    }); 
+}
+
+function getStatesByZipCode(val, cityId, stateId){
+    console.log('val', val);
+    //let fromUrl = '/getCityStateByZipCode'; 
+    let _url     = `/get-cities-state-by-zipCode`;
+    $.ajax({
+            url: _url,
+           type: 'POST',
+           data: {
+           _token: token, zipCode:val
+           },
+           success: function(response) {
+              //console.log('response',response);
+              $("#" +cityId).val(response.city_name);
+                   var dd = document.getElementById(stateId);
+                   for (var i = 0; i < dd.options.length; i++) {
+                       if (dd.options[i].text === response.state_name) {
+                           dd.selectedIndex = i;
+                           break;
+                       }else{
+                           dd.selectedIndex =  null
+                       }
+                   }
+           },
+           error: function(response) {
+            console.log(response.responseJSON.message);
+           }
+       });
+}

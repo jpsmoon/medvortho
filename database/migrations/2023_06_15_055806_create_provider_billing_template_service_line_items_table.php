@@ -16,9 +16,9 @@ class CreateProviderBillingTemplateServiceLineItemsTable extends Migration
         Schema::create('provider_billing_template_service_line_items', function (Blueprint $table) {
             $table->id();
             $table->integer('provider_id')->unsigned();
-            $table->foreign('provider_id')->references('id')->on('billing_providers')->onDelete('cascade');
+            //$table->foreign('provider_id')->references('id')->on('billing_providers')->onDelete('cascade');
             $table->integer('template_id')->unsigned();
-            $table->foreign('template_id')->references('id')->on('provider_billing_template')->onDelete('cascade');
+            //$table->foreign('template_id')->references('id')->on('provider_billing_template')->onDelete('cascade');
             $table->string('procedure_code')->nullable();
             $table->integer('modifiers_id')->nullable();
             $table->string('units')->nullable();

@@ -22,12 +22,12 @@ class AddColumnToInjuryBillServices extends Migration
             $table->double('expected_fee_schedule')->nullable();
             $table->double('calculated_br_reduction')->nullable();
             $table->double('original_submission_payment')->nullable();
-            $table->double('master_unit_amount')->nullable();
+            //$table->double('master_unit_amount')->nullable();
             $table->integer('master_procedure_code_charge_id')->nullable();
             $table->double('total_bill_amount')->nullable();
             $table->string('additional_information')->nullable();
             $table->string('is_master_found')->nullable();
-            $table->foreign('master_procedure_code_charge_id')->references('id')->on('billing_provider_charge_procedure_code');
+            //$table->foreign('master_procedure_code_charge_id')->references('id')->on('billing_provider_charge_procedure_code');
         });
     }
 

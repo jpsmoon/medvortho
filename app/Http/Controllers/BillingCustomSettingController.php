@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use DB;
 
 use App\Models\{BillModifier, ProviderBillingTemplateServiceItem, ProviderBillingTemplate, AllDocument,ReportType, City,State, BillReferingOrderProvider,BillingProvider, Taxonomy_code, User,BillPlaceService, 
-    PlaceOfServiceCode,PlaceOfServices, MasterPlaceOfService, RequestingPhysician,MasterSpecility, PractceLocation, PracticeContact, WriteOffReason};
+    PlaceOfServiceCode,PlaceOfServices, MasterPlaceOfService, RequestingPhysician,MasterSpecility, PractceLocation, PracticeContact, WriteOffReason, Patient_injury, InjuryBill};
 
 class BillingCustomSettingController extends Controller
 {
@@ -164,7 +164,7 @@ class BillingCustomSettingController extends Controller
             $title = 'Box 19 Reasons';
             $btnHeading = 'Add Box 19 Reasons';
         }
-        $reasons = WriteOffReason::where('provider_id', $providerId)->where('type', $type)->get();
+        $reasons = WriteOffReason::where('provider_id', $providerId)->where('type', $type)->orWhere('for_all_providers', 1)->get();
         $id= null;
         return view('billingprocess/billingCustomSetting/billWriteOfReason.index',compact(['btnHeading','title','providerId','reasons','id', 'type']));
     }
@@ -196,7 +196,7 @@ class BillingCustomSettingController extends Controller
         return view('billingprocess/billingCustomSetting/billingTemplate.create',compact(['billingTemplates','providerId', 'templateInfo','id','modifiersArray']));
     }
     public function storeProviderBillingTemplate(Request $request){ 
-        try { 
+        //try { 
             DB::beginTransaction();
             $this->saveProviderBillingTemplate($request);
             DB::commit();
@@ -206,9 +206,34 @@ class BillingCustomSettingController extends Controller
             } 
             $url = 'add-custom-billing-template/'.$request->billingProviderId;
             return $this->redirectToRoute($url, $msg , 'success', ["positionClass" => "toast-top-center"]); 
-        } catch (\Exception $e) {
-            DB::rollback(); 
-            return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
-        }
+        // } catch (\Exception $e) {
+        //     DB::rollback(); 
+        //     return $this->redirectToRoute(redirect()->back(), $e->getMessage(), 'error', ["positionClass" => "toast-top-center"]);
+        // }
     }
+    public function eorBills(Request $request)
+    {
+        // $patientId = null; $patient = null; $injury = null; $patientInjury = []; $injuryBill = []; $totalServiceUnit = 0; $providerId = Null;
+        // $billServices = [];
+        // $injuryId = $request->route()->parameter('injuryId');
+        // $injuiryInfo =  Patient_injury ::where('id',$injuryId)->first();
+        
+        // if($injuiryInfo){
+        //     $patientId =   $injuiryInfo->patient_id;
+        //     $patient = $this->setSidebarPatient($patientId);
+        //     $injury = $this->setSidebarInjury($injuryId);
+        // }
+
+        // $bills = $this->getBillListByInjuryId($injuryId, $patientId);
+        $injuryBills = InjuryBill::with('getBillServices', 'getRenderinPlaceServices', 'getRenderinProvider','getBillDocuments','getBillDiagnosis')->whereIn('bill_status', [28, 29])->get();
+         return view('patients.injury.bills.eor.eor-bills', compact('injuryBills'));
+    }
+    public function brills(Request $request)
+    {
+        $providerId = $request->providerId;
+        $reasons = WriteOffReason::where('provider_id', $providerId)->where('type', 3)->get();
+        $id= null;
+        return view('billingprocess/billingCustomSetting/box19Reasons.index',compact(['providerId','reasons','id']));
+    }
+    
 }

@@ -15,11 +15,12 @@ class CreateUserBillingProvidersTable extends Migration
     {
         Schema::create('user_billing_providers', function (Blueprint $table) {
             $table->id();
-            $table->integer('provider_id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('provider_id')->references('id')->on('billing_providers')->onDelete('cascade');
+            $table->integer('provider_id')->nullable();
+            $table->integer('user_id')->nullable();
+            //$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            //$table->foreign('provider_id')->references('id')->on('billing_providers')->onDelete('cascade');
             $table->integer('created_by')->nullable();
+            $table->enum('is_active', array('1', '0'))->default('1');
             $table->timestamps();
         });
     }

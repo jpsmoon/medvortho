@@ -9,4 +9,8 @@ class PatientInjuryBillog extends Model
 {
     use HasFactory;
     protected  $table = "patient_injury_bills_log";
+
+    public function getUser(){
+        return $this->hasOne(User::class,  'id', 'created_by');
+    }
 }

@@ -3,7 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Role;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class RoleSeeder extends Seeder
 {
@@ -15,9 +16,12 @@ class RoleSeeder extends Seeder
     public function run()
     {
         //
-        $roles = [ 'Super Admin','Admin', 'Reporter', 'Biller', 'Worker',  'Editor'];
-        foreach ($roles as $role) {
-            Role::create(['name' => $role,  'guard_name' =>'web']);
+        $permissions = Permission::pluck('id','id')->all();
+        $roles = [ 'GlobalAdmin', 'SubAdmin','Admin', 'Reporter', 'Biller', 'Worker',  'Editor'];
+        foreach ($roles as $roleName) {
+            Role::create(['name' => $roleName,  'guard_name' =>'web']); 
         }
+        $role = Role::find(1);
+        $role->syncPermissions($permissions);
     }
 }

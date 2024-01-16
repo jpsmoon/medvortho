@@ -6,6 +6,9 @@ use App\Models\State;
 use App\Models\Country;
 use Illuminate\Http\Request;
 //use Symfony\Component\HttpFoundation\Response;
+use Toastr;
+use DB;
+use DateTime;
 
 class StateController extends Controller
 {
@@ -24,7 +27,8 @@ class StateController extends Controller
                     ->where('countries.is_active', '1')
                     ->select("states.*", "countries.country_name")->withTrashed()
                     ->get();
-        return view('masters.states.index',compact('states'))
+        $countries = Country::where('is_active', 1)->orderBy('country_name')->get();
+        return view('masters.states.index',compact('states', 'countries'))
             ->with('i', (request()->input('page', 1) - 1) * 5);
     }
 
@@ -40,12 +44,17 @@ class StateController extends Controller
             'country_id' => 'required',
             'state_name' => 'required'
         ]);
-
-        $state = new State();
-        $state->country_id = $request->country_id;
-        $state->state_name = $request->state_name;
-
-        $state->save();
+        $isStateExist = DB::table('states')->where('country_id', $request->country_id)->where(DB::raw('LOWER(state_name)'), strtolower($request->state_name))->first(); 
+        if($isStateExist){
+            return  $this->redirectToRoute('/states', 'This state already exist', 'error', ["positionClass" => "toast-top-center"]);
+        }
+        else{
+             $state = new State();
+            $state->country_id = $request->country_id;
+            $state->state_name = $request->state_name; 
+            $state->save();
+        }
+       
     /// State::create($request->all());
         //$success = $addresses->save() ? $request->session()->flash('success', '¡Registro exitoso!') : $request->session()->flash('success', 'Ooops! Algo salio mal :(');
         //return redirect('addresses/'.$request->session()->get('customer_code'));
@@ -107,5 +116,14 @@ class StateController extends Controller
     {
         $data['states'] = State::where("country_id",$request->country_id)->orderBy('state_name')->get(["state_name","id"]);
         return response()->json($data);
+    }
+    public function destroyState(State $state, Request $request)
+    {
+        //var_dump($state); die();
+        State::where("id", $request->id)->update(['is_active' => '0']);
+        $state->delete();
+
+        return redirect()->route('states.index')
+                        ->with('success','State deleted successfully');
     }
 }

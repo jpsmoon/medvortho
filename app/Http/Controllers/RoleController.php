@@ -9,7 +9,8 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use DB;
 use Toastr;
-    
+use Illuminate\Support\Facades\Auth;
+
 class RoleController extends Controller
 {
     /**
@@ -32,7 +33,14 @@ class RoleController extends Controller
      */
     public function index(Request $request)
     {
-        $roles = Role::orderBy('id','DESC')->paginate(5);
+        $roles = Role::orderBy('id','DESC');
+         if(Auth::user()->roles[0]['name'] !='GlobalAdmin'){
+            $isGlobalRole = Role::where('name', 'GlobalAdmin')->first();
+            if($isGlobalRole){
+                 $roles = $roles->where('id', '!=', $isGlobalRole->id);
+            } 
+        } 
+        $roles = $roles->paginate(50);
         return view('roles.index',compact('roles'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
@@ -44,7 +52,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permission = Permission::get();
+        $permission = Permission::orderBy('name', 'asc')->get();
         return view('roles.create',compact('permission'));
     }
     
@@ -90,7 +98,7 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::find($id);
-        $permission = Permission::get();
+        $permission = Permission::orderBy('name', 'asc')->get();
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
             ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
             ->all();

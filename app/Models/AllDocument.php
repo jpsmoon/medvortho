@@ -10,7 +10,7 @@ class AllDocument extends Model
 {
     use HasFactory, SoftDeletes; 
     
-    protected $fillable = [ 'injury_id','reporting_type','description','injury_document','is_active','provider_id','added_by','doc_type' ];
+    protected $fillable = [ 'injury_id','reporting_type','description','injury_document','is_active','provider_id','added_by','doc_type','is_new_document', 'is_sbr_document', 'bill_service_procedure_id' ];
 
     public function getReportType(){
         return $this->hasOne(ReportType::class,  'id','reporting_type',);

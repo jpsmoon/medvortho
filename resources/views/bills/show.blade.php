@@ -1,6 +1,4 @@
-@extends('layouts.home-app')
-
-
+@extends('layouts.home-new-app')
 @section('content')
 <style type="text/css">
 .activeTab{
@@ -250,7 +248,6 @@
         </table>
     </div>
 <script type="text/javascript">
-
     function show_content(step, nxt) {
         hideSteps();
         $('#div'+step).removeClass("inactiveTab");
@@ -267,7 +264,6 @@
             }
         });
     }
-
 </script>
 <script src="{{ asset('js/controller/bills.js') }}"></script>
 @endsection

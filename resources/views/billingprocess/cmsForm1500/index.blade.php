@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
     <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
@@ -11,7 +11,7 @@
   </style>  
     
     @if ($errors->any())
-        <div class="row mt-2 customBox">
+        <div class="row mt-1 customBox">
             <div align="center" class="col-12  align-self-center">
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -24,13 +24,13 @@
             </div>
         </div>
     @endif
-    <div class="row mt-2 ">
-        <div class="col-md-12 mt-4">
-            <div class="card row-background customBoxHeight">
+    <div class="row mt-0">
+        <div class="col-md-12 mt-0">
+            <div class="card row-background customBoxHeight5">
                 <!-- START: Breadcrumbs-->
                 <div class="row ">
                     <div class="col-12  align-self-center">
-                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                        <div class="sub-header py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
                             <div style="padding-top:10px" class="w-sm-100 mr-auto">
                                 <h2 class="heading">CMS 1500 Forms</h2>
                             </div>
@@ -47,9 +47,9 @@
                     <div class="card-content">
                             <div class="card-body2">
                             <form method="GET" action="{{ route('viewBillingCMS', $providerId) }}"  id="formView">
-                                    <div class="form-row col-md-12">
+                                    <div class="form-row">
                                         <div class="col-md-12">
-                                            <div class="form-row col-md-12">
+                                            <div class="form-row">
                                                 <div class="form-group col-md-3">
                                                     <label for="rendering_Id" class="paddingtop">Rendering Provider<span class="required">* </span></label>
                                                     <select name="rendering_Id" class="form-control" id="rendering_Id" data-validation-event="change" data-validation="required"
@@ -116,11 +116,11 @@
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="form-row col-md-12 ">
-                                                <div class="form-row col-md-12">
+                                                <div class="form-row">
                                                     <div class="form-group col-md-4">
                                                         <button type="submit" style="min-width: 120px" class="btn btn-primary ladda-button" data-style="expand-right">
-                                                            <span class="ladda-label buttonfont">Preview CMS1500</span><span class="ladda-spinner"></span></button>
+                                                            <span class="ladda-label buttonfont">Preview CMS1500</span><span class="ladda-spinner"></span>
+                                                         </button>
                                                     </div>
                                                 </div>
                                             </div> 

@@ -1,68 +1,68 @@
-<div class="col-12  col-md-12 mt-3">
+<style>
+    #nav-stats {
+    padding: 0px;
+    background: #fff;
+    margin:0px;
+}
+.tab-content{
+    min-height:auto;
+}
+</style>
+<div class="row">
+<div class="col-12 col-md-12 mt-1">
     <nav>
         <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
             <a class="nav-item nav-link active" id="nav-task-tab" data-toggle="tab" href="#nav-task" role="tab" aria-controls="nav-task" aria-selected="true"><i class="fa-solid fa-list-check"></i> Upload</a>
             @if ($docType == 'Bill' && count($providerGallary) > 0)
                 <a class="nav-item nav-link" id="nav-stats-tab" data-toggle="tab" href="#nav-stats" role="tab" aria-controls="nav-stats" aria-selected="false"><i class="fa-solid fa-signal"></i> Document Library</a>
             @endif
-
-            <!--<a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a>-->
-            <!--<a class="nav-item nav-link" id="nav-about-tab" data-toggle="tab" href="#nav-about" role="tab" aria-controls="nav-about" aria-selected="false">About</a>-->
         </div>
     </nav>
-    <div class="tab-content  " id="nav-tabContent">
+    <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-task" role="tabpanel" aria-labelledby="nav-task-tab">
             <div class="col-12">
-                @if ($docType != 'Bill')
-                    <div class="form-row">
-                        <div class="form-group col-md-5">
-                            <label for="description3"> Description <span
-                                    class="required">* </span> </label>
-                            <textarea data-validation-event="change" data-validation="required" data-validation-error-msg="" id="description3"
-                                class="form-control" name="description3">{{ $documents && $documents->description ? $documents->description : '' }}</textarea>
-                            @if ($errors->has('description3'))
-                                <span class="invalid-feedback"
-                                    style="display:block" role="alert">
-                                    <strong
-                                        class="invalid-feedback">{{ $errors->first('description3') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-                        <div class="form-group col-md-5">
-                            <label for="stateDD">Report Type </label>
-                            <select name="injury_reporting_type"
-                                class="form-control searcDrop"
-                                id="injury_reporting_type">
-                                <option value="" class="option">
-                                    Select</option>
-                                @foreach ($reportType as $report)
-                                    <option value="{{ $report['id'] }}"
-                                        {{ $documents && $documents->reporting_type == $report['id'] ? 'selected' : '' }}>
-                                        {{ $report['report_code'] }} -
-                                        {{ $report['report_name'] }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @if ($errors->has('injury_reporting_type'))
-                                <span class="invalid-feedback"
-                                    style="display:block" role="alert">
-                                    <strong
-                                        class="invalid-feedback">{{ $errors->first('injury_reporting_type') }}</strong>
-                                </span>
-                            @endif
-                        </div>
+                <div class="form-row">
+                    <div class="form-group col-md-5">
+                        <label for="description3"> Description <span class="required">* </span> </label>
+                        <textarea data-validation-event="change" data-validation="required" data-validation-error-msg="" id="description3"
+                            class="form-control" name="description3">{{ $documents && $documents->description ? $documents->description : '' }}</textarea>
+                        @if ($errors->has('description3'))
+                            <span class="invalid-feedback"
+                                style="display:block" role="alert">
+                                <strong
+                                    class="invalid-feedback">{{ $errors->first('description3') }}</strong>
+                            </span>
+                        @endif
                     </div>
-                @endif
+                    <div class="form-group col-md-5">
+                        <label for="stateDD">Report Type <span class="required">* </span></label>
+                        <select data-validation-event="change" data-validation="required" data-validation-error-msg="" name="injury_reporting_type"
+                            class="form-control searcDrop"
+                            id="injury_reporting_type">
+                            <option value="" class="option">
+                                Select</option>
+                            @foreach ($reportType as $report)
+                                <option value="{{ $report['id'] }}"
+                                    {{ $documents && $documents->reporting_type == $report['id'] ? 'selected' : '' }}>
+                                    {{ $report['report_code'] }} -
+                                    {{ $report['report_name'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @if ($errors->has('injury_reporting_type'))
+                            <span class="invalid-feedback"
+                                style="display:block" role="alert">
+                                <strong
+                                    class="invalid-feedback">{{ $errors->first('injury_reporting_type') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
                 @if ($documents && $documents->injury_document)
                     <div class="row">
                         <div class="col-md-12">
-                            <a href="{{ asset('/injury_document/' . $documents->injury_document) }}"
-                                target="_blank">
-                                <img src="{{ asset('new_assets/app-assets/images/pdf-icon.png') }}"
-                                    alt="{{ asset('/injury_document/' . $documents->injury_document) }}"
-                                    width="5%" />
-                                <br>
-                                {{ $documents->injury_document }}
+                            <a href="{{ asset('/injury_document/' . $documents->injury_document) }}" target="_blank">
+                                <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                             </a>
                         </div>
                     </div>
@@ -71,12 +71,10 @@
                     <div class="form-group col-md-12">
                         <div class="img-zone text-center" id="img-zone">
                             <div class="img-drop">
+                                <h2><i class="fa-solid fa-cloud-arrow-up"></i></h2>
                                 <h2><small>Drag &amp; Drop File
                                         Here</small></h2>
                                 <p><em>- or -</em></p>
-                                <h2><i
-                                        class="glyphicon glyphicon-camera"></i>
-                                </h2>
                                 <span class="btn btn-success btn-file">
                                     Click to Open File Browser<input
                                         type="file" name="myFile"
@@ -96,6 +94,8 @@
                 </div>
             </div>
         </div>
+        
+        
          @if ($docType == 'Bill' && count($providerGallary) > 0)
         <div class="tab-pane fade" id="nav-stats" role="tabpanel" aria-labelledby="nav-stats-tab">
             <div class="col-12">
@@ -133,4 +133,5 @@
         </div>
         @endif
     </div>
+</div>
 </div>

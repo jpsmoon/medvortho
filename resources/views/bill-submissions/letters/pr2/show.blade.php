@@ -1,294 +1,370 @@
-<!-- @extends('layouts.home-app')-->
+<!-- @extends('layouts.home-new-app')-->
+@section('content')
 <style>
-    .provider_heading_type {
-        color: #858585;
-        font-size: 14px;
-        font-weight: 300;
-        margin: -9px 0 10px;
-    }
+.Letter table tr td label {
+    border-bottom: 1px solid #1d1b1b;
+    width:78%;
+    padding: 4px 6px;
+}
 
-    .provider_heading {
-        align-items: center;
-        color: #3a3a3a;
-        display: flex;
-        font-size: 18px;
-        font-weight: 600;
-        line-height: normal;
-        margin: 0;
-        padding: 11px 0 9px;
+.Letter table tr td label.w80{
+    width:80%!important;
+}
+.Letter table tr td label.w90{
+    width:90%!important;
+}
+.Letter table tr td label.w30{
+    width:30%!important;
+}
+.Letter table tr td input[type="text"]{
+     border: 1px solid #1d1b1b;
+     padding:5px 6px;
+     width:85%;
+}
+.Letter table tr td span.title{
+    width:15%;
+    float:left;
+    font-family: 'Figtree', sans-serif!important;
+}
+.Letter table tr td label.bordernone{
+    border-bottom: 0px solid #1d1b1b;
+}
+ #full-view{
+        width:85%;
     }
-
-    .showImgaeInBack {
-        background-image: url('/new_assets/app-assets/images/form-1500.jpg');
-        background-size: auto 100%;
-        background-repeat: no-repeat;
-        background-position: left top;
-    }
-
-    #loadingForm {
-        height: 1492px;
-        width: 1153px;
-    }
-
-    #tdcontent td {
-        font: Arial, Helvetica, sans-serif;
-        font-size: 18px
-    }
+    
+ @media screen and (max-width:1620px) {
+    .Letter table tr td label.w90 {
+    width: 70%!important;
+}
+.Letter table tr td span.title {
+    width: 23%!important;
+}
+.Letter table tr td input[type="text"] {
+    width:77%!important;
+}  
+ }
+ @media print {
+      html, body {
+        page-break-before: avoid;
+        page-break-after: avoid;
+        background-color: #fff!important;
+       display: flex;
+       justify-content: center;
+       margin:0px;
+       padding:0px;
+      }
+      @page {
+        margin:0.5cm 0cm;
+        size: letter landscape;
+      }
+      .breakdown{
+          margin-top:100px;
+          page-break-before: always ;
+      }
+      #full-view{
+        width:100%!important;
+        flex: 0 0 100%;
+        max-width: 100%;
+       }
+       .p-2{
+           padding:0rem!important;
+       }
+        .mainSec {
+            padding: 0 0px!important;
+            width:100%!important;
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+        .print-none, footer{
+          display:none!important;
+        }
+       .row-background {
+    border:0px solid rgba(33,40,50,0)!important;
+    background-color: #fff;
+}
+.card {
+    -webkit-box-shadow: 0 3px 6px rgba(0,0,0,.0)!important;
+    box-shadow: 0 3px 6px rgba(0,0,0,.0)!important;
+}
+}
 </style>
 
-@section('content')
-    <div class="row">
-        <div class="col-1 mt-4"></div>
-        <div class="col-10 mt-4">
 
+
+    <div class="row mx-auto mt-2 mb-2">
+         <div class="col-10 mx-auto" id="full-view">
             <div class="card row-background">
                 <!-- START: Breadcrumbs-->
                 <div class="row">
-                    <div class="col-12  align-self-center">
-                        <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                     <div class="col-12  align-self-center print-none">
+                        <div class="sub-header py-3 px-2 align-self-center d-sm-flex w-100 rounded heading-background">
                             <div style="padding-top:10px" class="w-sm-100 mr-auto">
                                 <h2 class="heading"> Show Referring and Ordering Providers</h2>
                             </div>
+                            @if($pInjuries)
                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                                <li class="breadcrumb-item">
+                                    <a class="btn btn-primary" href="#" target="_blank"> PDF</a>
+                                </li>
+                                <li class="breadcrumb-item" onclick="saveDoc();">
+                                   <a class="btn btn-primary" href="#" target="_blank"> DOC</a>
+                                </li>
+                                <li class="breadcrumb-item" onClick="genratePrint();">
+                                   <a class="btn btn-primary" href="#" target="_blank"> PRINT</a>
+                                </li>
                                 <li class="breadcrumb-item">
                                     <a class="btn btn-primary" href="{{ url('/injury/view', $pInjuries->id) }}"> Back</a>
                                 </li>
                             </ol>
+                            @endIf
                         </div>
                     </div>
                 </div>
                 <!-- END: Breadcrumbs-->
-
-                <div style="border="1" bordercolor="#000000"" class="demand" align="justify" id="exportContent">
+                 <div class="demand Letter p-2" align="justify" id="exportContent">
                     <div align="center">
-
                         <span style="font-size:16px; font-family:Arial Black; font-weight:bold";> PRIMARY TREATING
                             PHYSICIAN'S PROGRESS REPORT ADDENDUM </span><br>
                         <span style="font-size:12px; font-family:Times New Roman";><i> Any Information not provided in this
                                 report, please refer to the last report submitted </i></span><br><br>
                     </div>
                     <form action="#" method="post" name="frm">
-                        <table align="center" width="900px" border="1" bordercolor="#000000"
-                            style="border-bottom-style:outset">
+                        <table class="table-bordered" id="full-view" align="center" >
                             <input type="hidden" name="pt_id" id="pt_id" value="Testing" />
                             <tr>
-                                <td colspan="2" style="padding-left:5px">
-                                    <input type="checkbox" style="width:16px; height:16px" name="yes" value="yes">
+                                <td colspan="2" class="p-1">
+                                    <input type="checkbox" class="cus_check" name="yes" value="yes">
                                     Prescription/Authorization Request for DME
-                                    <span style="padding-left:50px"><input type="checkbox" style="width:16px; height:16px"
-                                            name="yes" value="yes"> Prescription/Authorization Request for Treatment
-                                    </span><br>
-                                    <input type="checkbox" style="width:16px; height:16px" name="yes" value="yes">
+                                    <span style="padding-left:50px">
+                                        <input type="checkbox" class="cus_check" name="yes" value="yes"> 
+                                        Prescription/Authorization Request for Treatment
+                                    </span><br><br>
+                                    <input type="checkbox" class="cus_check" name="yes" value="yes">
                                     Other:
                                 </td>
                             </tr>
                         </table>
 
-                        <table align="center" width="900px">
-
-                            <br>
+                       <table class="table-borderless mt-2" align="center" id="full-view">
                             <tr>
-                                <td width="400px" style="padding-left:5px"> Patient :<label class="label"
-                                        name="patientname" style="margin-left:12px">
-                                        Testing
+                                <td width="40%" style="padding-left:5px"> Patient :
+                                    <label class="label" name="patientName" style="margin-left:12px">
+                                          {{ ($injuryBillInfo &&  $injuryBillInfo->getInjury &&  $injuryBillInfo->getInjury->patient && $injuryBillInfo->getInjury->patient->first_name) ? $injuryBillInfo->getInjury->patient->first_name : ''}}
+                                          {{ ($injuryBillInfo &&  $injuryBillInfo->getInjury &&  $injuryBillInfo->getInjury->patient && $injuryBillInfo->getInjury->patient->last_name) ? $injuryBillInfo->getInjury->patient->last_name : ''}}
                                     </label>
-                                    <hr style="margin-left:60px; margin-top:0; margin-bottom:5px" width="350px">
+                            
 
                                 </td>
 
-                                <td width="230px" style="padding-left:5px">Sex :<label class="label" name="patientname"
-                                        style="margin-left:8px">
-                                        Testing </label>
-                                    <hr style="margin-left:40px; margin-top:0; margin-bottom:5px" width="200px">
-                                </td>
-
-                                <td width="230px" style="padding-left:5px">DOB :<label class="label" name="patientname"
-                                        style="margin-left:5px">
-                                        Testing </label>
-                                    <hr style="margin-left:40px; margin-top:0; margin-bottom:5px;" width="160px">
-                                </td>
-
-                            </tr>
-
-                            <tr>
-                                <td width="400px" style="padding-left:5px">Address :<label class="label"
-                                        name="patientname" style="margin-left:5px">
-                                        Testing </label>
-                                    <hr style="margin-left:60px; margin-top:0; margin-bottom:5px" width="350px">
-                                </td>
-
-                                <td colspan="2" width="400px" style="padding-left:5px">SSN :<label class="label"
-                                        name="patientname" style="margin-left:5px">
-                                        Testing </label>
-                                    <hr style="margin-left:40px; margin-top:0; margin-bottom:5px" width="405px">
-                                </td>
-
-                            </tr>
-
-                            <tr>
-                                <td width="400px" style="padding-left:5px">City :<label class="label" name="patientname"
-                                        style="margin-left:25px">
-                                        Testing </label>
-                                    <hr style="margin-left:60px; margin-top:0; margin-bottom:5px" width="350px">
-                                </td>
-
-                                <td width="230px" style="padding-left:5px">State :<label class="label" name="patientname"
-                                        style="margin-left:5px">
-                                        Testing</label>
-                                    <hr style="margin-left:40px; margin-top:0; margin-bottom:5px" width="200px">
-                                </td>
-
-                                <td width="230px" style="padding-left:5px">Zip :<label class="label"
-                                        name="patientname" style="margin-left:5px">
-                                        Testing</label>
-                                    <hr style="margin-left:30px; margin-top:0; margin-bottom:5px" width="170px">
-                                </td>
-
-                            </tr>
-
-                            <tr>
-                                <td width="400px" style="padding-left:5px">HM :<label class="label" name="patientname"
-                                        style="margin-left:5px">
-                                        Testing </label>
-                                    <hr style="margin-left:60px; margin-top:0; margin-bottom:5px" width="350px">
-                                </td>
-
-                                <td colspan="2" width="400px" style="padding-left:5px"> WK # :<label class="label"
-                                        name="patientname" style="margin-left:5px">
+                                <td width="23%" style="padding-left:5px">Sex :
+                                    <label class="label" name="gendar" style="margin-left:8px">
+                                       {{ ($injuryBillInfo &&  $injuryBillInfo->getInjury &&  $injuryBillInfo->getInjury->patient && $injuryBillInfo->getInjury->patient->gender) ? $injuryBillInfo->getInjury->patient->gender : ''}}  
                                     </label>
-                                    <hr style="margin-left:40px; margin-top:0; margin-bottom:5px" width="405px">
+                                    
+                                </td>
+
+                                <td width="23%" style="padding-left:5px">DOB :
+                                    <label class="label" name="dob" style="margin-left:5px">
+                                        {{ ($injuryBillInfo &&  $injuryBillInfo->getInjury &&  $injuryBillInfo->getInjury->patient && $injuryBillInfo->getInjury->patient->dob) ? date('m-d-Y', strtotime($injuryBillInfo->getInjury->patient->dob)) : ''}} 
+                                    </label>
+                                   
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td width="40%" style="padding-left:5px">Address :
+                                    <label class="label" name="patientAddress" style="margin-left:5px">
+                                        {{ ($injuryBillInfo &&  $injuryBillInfo->getInjury &&  $injuryBillInfo->getInjury->patient && $injuryBillInfo->getInjury->patient->address_line1) ? $injuryBillInfo->getInjury->patient->address_line1 : ''}}
+                                          {{ ($injuryBillInfo &&  $injuryBillInfo->getInjury &&  $injuryBillInfo->getInjury->patient && $injuryBillInfo->getInjury->patient->address_line2) ? $injuryBillInfo->getInjury->patient->address_line2 : ''}}
+                                    </label>
+                                  
+                                </td>
+
+                                <td colspan="2" width="40%" style="padding-left:5px">SSN :
+                                    <label class="label w90"  name="claim_no" style="margin-left:5px">
+                                             {{ ($injuryBillInfo &&  $injuryBillInfo->getInjury &&  $injuryBillInfo->getInjury->patient && $injuryBillInfo->getInjury->patient->ssn_no) ? $injuryBillInfo->getInjury->patient->ssn_no : ''}}
+                                    </label>
+                                    
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td width="40%" style="padding-left:5px">City :
+                                    <label class="label w90" name="cityId">
+                                         {{ ($injuryBillInfo &&  $injuryBillInfo->getInjury &&  $injuryBillInfo->getInjury->patient && $injuryBillInfo->getInjury->patient->city_id) ? $injuryBillInfo->getInjury->patient->city_id : ''}} 
+                                    </label>
+                                    
+                                </td>
+
+                                <td width="23%" style="padding-left:5px">State :
+                                    <label class="label w80" name="stateId" style="margin-left:5px">
+                                        {{ ($injuryBillInfo &&  $injuryBillInfo->getInjury &&  $injuryBillInfo->getInjury->patient && $injuryBillInfo->getInjury->patient->state_id) ? $injuryBillInfo->getInjury->patient->state_id : ''}} 
+                                    </label>
+                                    
+                                </td>
+
+                                <td width="23%" style="padding-left:5px">Zip :
+                                    <label class="label w80"  name="zipCode" style="margin-left:5px">
+                                            {{ ($injuryBillInfo &&  $injuryBillInfo->getInjury &&  $injuryBillInfo->getInjury->patient && $injuryBillInfo->getInjury->patient->zipcode) ? $injuryBillInfo->getInjury->patient->zipcode : ''}} 
+                                    </label>
+                                    
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td width="40%" style="padding-left:5px">HM :<label class="label" name="patientname"
+                                        style="margin-left:5px">
+                                        Testing </label>
+                                    
+                                </td>
+
+                                <td colspan="2" width="40%" style="padding-left:5px"> WK # :<label class="label w90"
+                                        name="patientname" style="margin-left:5px">
+                                    &nbsp;
+                                    </label>
+                                   
                                 </td>
                             </tr>
 
                             <tr>
                                 <td colspan="3">
                                     <hr style="margin-top:10px; margin-bottom:10px; border:outset; border-color:#CCC !important";
-                                        width="900px">
+                                        width="100%">
                                 </td>
                             </tr>
 
                             <tr>
-                                <td colspan="3" width="900px" style="padding-left:5px"> Primary Ins. Co. <label
-                                        class="label" name="patientname" style="margin-left:5px">
-                                        Testing </label>
-                                    <hr style="margin-left:100px; margin-top:0; margin-bottom:5px" width="767px">
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td width="400px" style="padding-left:5px">Address :<label class="label"
-                                        name="patientname" style="margin-left:2px">
-                                        Testing</label>
-                                    <hr style="margin-left:60px; margin-top:0; margin-bottom:5px" width="350px">
-                                </td>
-
-                                <td width="230px" style="padding-left:5px">DOI :<label class="label"
-                                        name="patientname" style="margin-left:8px">
-                                        Testing </label>
-                                    <hr style="margin-left:30px; margin-top:0; margin-bottom:5px" width="210px">
-                                </td>
-
-                                <td width="230px" style="padding-left:5px"><label class="label" name="patientname"
-                                        style="margin-left:5px">
+                                <td colspan="3" width="100%" style="padding-left:5px"> Primary Ins. Co. 
+                                    <label class="label w90" name="financialClass" style="margin-left:5px">
+                                         {{ ($injuryBillInfo && $injuryBillInfo->getInjury && $injuryBillInfo->getInjury && $injuryBillInfo->getInjury && $injuryBillInfo->getInjury->financial_class && $injuryBillInfo->getInjury->financial_class == 1) ? 'Worker Comp' :
+                                         (($injuryBillInfo->getInjury->financial_class == 2) ? 'Private / Government' : 'Personal Injury' )}} 
                                     </label>
-                                    <hr style="margin-left:30px; margin-top:0; margin-bottom:5px" width="170px">
+                                   
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td width="40%" style="padding-left:5px">Address :
+                                    <label class="label" name="patientname" style="margin-left:2px">
+                                        {{ ($injuryBillInfo && $injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim &&  $injuryBillInfo->getInjury->getInjuryClaim->emp_address_line1) ?  $injuryBillInfo->getInjury->getInjuryClaim->emp_address_line1 : 'NA' }}
+                                        {{ ($injuryBillInfo && $injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim &&  $injuryBillInfo->getInjury->getInjuryClaim->emp_address_line2) ?  $injuryBillInfo->getInjury->getInjuryClaim->emp_address_line2 : 'NA' }}
+                                        </label>
+                                    
+                                </td>
+
+                                <td width="23%" style="padding-left:5px">DOI :
+                                    <label class="label w80" name="startDate" style="margin-left:8px">
+                                        {{ ($injuryBillInfo && $injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim &&  $injuryBillInfo->getInjury->getInjuryClaim->start_date) ? date('m-d-Y', strtotime($injuryBillInfo->getInjury->getInjuryClaim->start_date)) : 'NA' }}
+                                    </label>
+                                    
+                                </td>
+
+                                <td width="23%" style="padding-left:5px">
+                                    <label class="label  w90" name="patientname"
+                                        style="margin-left:5px">&nbsp;
+                                    </label>
+                                    
                                 </td>
 
                             </tr>
 
                             <tr>
-                                <td width="400px" style="padding-left:5px">City :<label class="label"
-                                        name="patientname" style="margin-left:25px">
-                                        Testing</label>
-                                    <hr style="margin-left:60px; margin-top:0; margin-bottom:5px" width="350px">
+                                <td width="40%" style="padding-left:5px">City :
+                                    <label class="label" name="empCityId" style="margin-left:25px">
+                                        {{ ($injuryBillInfo && $injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim &&  $injuryBillInfo->getInjury->getInjuryClaim->emp_city_id) ?  $injuryBillInfo->getInjury->getInjuryClaim->emp_city_id : 'NA' }}
+                                    </label>
+                                   
                                 </td>
 
-                                <td width="230px" style="padding-left:5px">State :<label class="label"
-                                        name="patientname" style="margin-left:5px">
-                                        Testing </label>
-                                    <hr style="margin-left:40px; margin-top:0; margin-bottom:5px" width="200px">
+                                <td width="23%" style="padding-left:5px">State :
+                                    <label class="label"  name="stateId" style="margin-left:5px">
+                                        {{ ($injuryBillInfo && $injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim &&  $injuryBillInfo->getInjury->getInjuryClaim->emp_state_id) ?  $injuryBillInfo->getInjury->getInjuryClaim->emp_state_id : 'NA' }} 
+                                    </label>
+                                   
                                 </td>
 
-                                <td width="230px" style="padding-left:5px">Zip :<label class="label"
-                                        name="patientname" style="margin-left:5px">
-                                        Testing </label>
-                                    <hr style="margin-left:30px; margin-top:0; margin-bottom:5px" width="170px">
+                                <td width="230px" style="padding-left:5px">Zip :
+                                    <label class="label" name="zipCode" style="margin-left:5px">
+                                        {{ ($injuryBillInfo && $injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim &&  $injuryBillInfo->getInjury->getInjuryClaim->emp_zipcode) ?  $injuryBillInfo->getInjury->getInjuryClaim->emp_zipcode : 'NA' }} 
+                                    </label>
+                                    
                                 </td>
 
                             </tr>
 
                             <tr>
-                                <td width="400px" style="padding-left:5px">Adjuster :<label class="label"
+                                <td width="40%" style="padding-left:5px">Adjuster :
+                                    <label class="label" name="adjuster" style="margin-left:0px">
+                                        Testing 
+                                    </label>
+                                    
+                                </td>
+
+                                <td colspan="2" width="40%" style="padding-left:5px">Phone #<label class="label w90"
                                         name="patientname" style="margin-left:0px">
-                                        Testing </label>
-                                    <hr style="margin-left:60px; margin-top:0; margin-bottom:5px" width="350px">
-                                </td>
-
-                                <td colspan="2" width="400px" style="padding-left:5px">Phone #<label class="label"
-                                        name="patientname" style="margin-left:0px">
                                         Testing</label>
-                                    <hr style="margin-left:40px; margin-top:0; margin-bottom:5px" width="405px">
+                                    
                                 </td>
 
                             </tr>
 
                             <tr>
-                                <td width="400px" style="padding-left:5px">Claim # : <label class="label"
-                                        name="patientname" style="margin-left:5px">
-                                        Testing </label>
-                                    <hr style="margin-left:60px; margin-top:0; margin-bottom:5px" width="350px">
+                                <td width="40%" style="padding-left:5px">Claim # : 
+                                    <label class="label" name="claimNumber" style="margin-left:5px">
+                                          {{ ($injuryBillInfo && $injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim &&  $injuryBillInfo->getInjury->getInjuryClaim->claim_no) ?  $injuryBillInfo->getInjury->getInjuryClaim->claim_no : 'NA' }} 
+                                    </label>
+                                   
                                 </td>
 
-                                <td colspan="2" width="400px" style="padding-left:5px">Fax # : <label class="label"
-                                        name="patientname" style="margin-left:5px">
-                                        Testing </label>
-                                    <hr style="margin-left:40px; margin-top:0; margin-bottom:5px" width="405px">
+                                <td colspan="2" width="40%" style="padding-left:5px">Fax # : 
+                                    <label class="label w90" name="faxNumber" style="margin-left:5px">
+                                            Testing
+                                     </label>
+                                    
                                 </td>
                             </tr>
 
                             <tr>
                                 <td colspan="3">
                                     <hr style="margin-top:10px; margin-bottom:10px; border:outset; border-color:#CCC !important";
-                                        width="900px">
+                                        width="100%">
                                 </td>
                             </tr>
 
                             <tr>
-                                <td width="400px" style="padding-left:5px">Employer : <b><input type="text"
-                                            name="employer" value="Testing"
-                                            style="width:339px; margin-left:1px; margin-bottom:3px;"></b>
-                                </td>
+                                <td width="50%" style="padding-left:5px"><span class="title">Employer :</span>
+                                    <input type="text" name="employer" placeholder="{{ ($injuryBillInfo && $injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim &&  $injuryBillInfo->getInjury->getInjuryClaim->employer_name) ?  $injuryBillInfo->getInjury->getInjuryClaim->employer_name : NULL }} " > </td>
 
-                                <td colspan="2" width="400px" style="padding-left:5px">Phone #: <b><input
-                                            type="text" name="emp_phone" value="Testing" style="width:392px"></b>
-
-                                </td>
-
-                            </tr><br><br>
-
-                            <tr>
-                                <td width="400px" style="padding-left:5px">Address : &nbsp;&nbsp;&nbsp;<b><input
-                                            type="text" name="emp_address"
-                                            value="Testing		
-                     "style="width:339px; margin-bottom:3px"></b>
+                                <td colspan="2" width="50%" style="padding-left:5px"><span class="title">Phone #:</span><input
+                                            type="text" name="emp_phone" placeholder="Testing">
 
                                 </td>
 
                             </tr>
 
                             <tr>
-                                <td width="400px" style="padding-left:5px">City : &nbsp;&nbsp; <b><input type="text"
-                                            name="emp_city" value="Testing" style="width:339px; margin-left:23px"></b>
+                                <td width="50%" style="padding-left:5px"><span class="title">Address :</span>
+                                    <input type="text" name="emp_address" placeholder="Testing">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td width="50%" style="padding-left:5px"><span class="title">City :</span><input type="text"
+                                            name="emp_city" placeholder="Testing">
 
                                 </td>
 
-                                <td width="230px" style="padding-left:5px">State : <b><input type="text"
-                                            name="emp_state" value="Testing" style="width:182px; margin-left:14px"></b>
+                                <td width="30%" style="padding-left:5px"><span class="title">State : </span><input type="text"
+                                            name="emp_state" placeholder="Testing" >
 
                                 </td>
 
-                                <td width="230px" style="padding-left:5px">Zip : <b><input type="text"
-                                            name="emp_zip" value="Testing" style="width:171px"></b>
+                                <td width="20%" style="padding-left:5px"><span class="title">Zip : </span><input type="text"
+                                            name="emp_zip" placeholder="Testing">
 
                                 </td>
                             </tr>
@@ -296,45 +372,45 @@
                             <tr>
                                 <td colspan="3">
                                     <hr style="margin-top:10px; margin-bottom:10px; border:outset; border-color:#CCC !important";
-                                        width="900px">
+                                        width="100%">
+                                </td>
+                            </tr>
+                            @if($injuryBillInfo->getInjury->financial_class && $injuryBillInfo->getInjury->financial_class == 1)
+                            <tr>
+                                <td width="40%" style="padding-left:5px"><span class="title">Attorney : </span>
+                                <input type="text" name="attorney" placeholder="{{ ($injuryBillInfo && $injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim &&  $injuryBillInfo->getInjury->getInjuryClaim->p_attorney_name) ?  $injuryBillInfo->getInjury->getInjuryClaim->p_attorney_name : null }} 
+                                ">
+
+                                </td>
+
+                                <td colspan="2" width="40%" style="padding-left:5px"><span class="title">Phone #: </span><input
+                                            type="text" name="phone" value="Testing" >
+
+                                </td>
+
+                            </tr>
+                            @endif
+
+                            <tr>
+                                <td width="40%" style="padding-left:5px"><span class="title">Address :</span><input type="text"
+                                            name="address" value="Testing">
+
                                 </td>
                             </tr>
 
                             <tr>
-                                <td width="400px" style="padding-left:5px">Attorney : <b><input type="text"
-                                            name="attorney" value="Testing"
-                                            style="width:339px; margin-left:7px; margin-bottom:3px"></b>
+                                <td width="40%" style="padding-left:5px"><span class="title">City :</span><input type="text"
+                                            name="city" value="Testing">
 
                                 </td>
 
-                                <td colspan="2" width="400px" style="padding-left:5px">Phone #: <b><input
-                                            type="text" name="phone" value="Testing" style="width:392px"></b>
+                                <td width="23%" style="padding-left:5px"><span class="title">State : </span><input type="text"
+                                            name="state" value="Testing">
 
                                 </td>
 
-                            </tr>
-
-                            <tr>
-                                <td width="400px" style="padding-left:5px">Address : &nbsp;<b><input type="text"
-                                            name="address" value="Testing"
-                                            style="width:339px; margin-left:7px; margin-bottom:3px"></b>
-
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td width="400px" style="padding-left:5px">City : &nbsp;<b><input type="text"
-                                            name="city" value="Testing" style="width:339px; margin-left:31px"></b>
-
-                                </td>
-
-                                <td width="230px" style="padding-left:5px">State : <b><input type="text"
-                                            name="state" value="Testing" style="width:182px; margin-left:14px"></b>
-
-                                </td>
-
-                                <td width="230px" style="padding-left:5px">Zip : <b><input type="text"
-                                            name="zip" value="Testing" style="width:171px"></b>
+                                <td width="23%" style="padding-left:5px">Zip : <b><input type="text"
+                                            name="zip" value="Testing"></b>
 
                                 </td>
                             </tr>
@@ -342,42 +418,42 @@
                             <tr>
                                 <td colspan="3">
                                     <hr style="margin-top:10px; margin-bottom:10px; border-top-width:4px; border-color:#000 !important";
-                                        width="900px">
+                                        width="100%">
                                 </td>
                             </tr>
                             <tr>
                                 <td align="left" style="font-family:Times New Roman; font-weight:bold; font-size:18px">
                                     DIAGNOSIS</td>
                             </tr>
-
+                            @if($injuryBillInfo->getInjury && $injuryBillInfo->getInjury->getInjuryClaim && $injuryBillInfo->getInjury->getInjuryClaim->getInjuryDianoses)
+                                @foreach($injuryBillInfo->getInjury->getInjuryClaim->getInjuryDianoses as $diagnos)
+                                <tr>
+                                    <td width="50%" style="padding-left:5px">1. <b>
+                                        <input type="text" name="diagnosis[]" placeholder="{{$diagnos && $diagnos->getDianoses &&  $diagnos->getDianoses->diagnosis_name}}">
+                                        
+                                    </td>
+    
+                                    <td colspan="2" width="25%" style="padding-left:5px">ICD-{{$diagnos && $diagnos->getDianoses &&  $diagnos->getDianoses->code_type}} :<label class="label w80"
+                                            name="icdType" style="margin-left:8px">
+                                        </label>
+                                        
+                                </tr>
+                                @endforeach
+                            @endif
                             <tr>
-                                <td width="400px" style="padding-left:5px">1. <b><input type="text"
-                                            name="diagnosis1" value="Testing" style="width:390px"></b>
-                                    <hr style="margin-left:15px; margin-top:0; margin-bottom:5px" width="390px">
+                                <td width="50%" style="padding-left:5px">2. <input type="text"
+                                            name="diagnosis2" placeholder="Testing">
                                 </td>
 
-                                <td colspan="2" width="230px" style="padding-left:5px">ICD-10 :<label class="label"
+                                <td colspan="2" width="23%" style="padding-left:5px">ICD-10 :<label class="label w80"
                                         name="patientname" style="margin-left:8px">
                                     </label>
-                                    <hr style="margin-left:50px; margin-top:0; margin-bottom:5px" width="390px">
-                            </tr>
-
-                            <tr>
-                                <td width="400px" style="padding-left:5px">2. <b><input type="text"
-                                            name="diagnosis2" value="Testing" style="width:390px"></b>
-                                    <hr style="margin-left:15px; margin-top:0; margin-bottom:5px" width="390px">
-                                </td>
-
-                                <td colspan="2" width="230px" style="padding-left:5px">ICD-10 :<label class="label"
-                                        name="patientname" style="margin-left:8px">
-                                    </label>
-                                    <hr style="margin-left:50px; margin-top:0; margin-bottom:5px" width="390px">
                             </tr>
 
                             <tr>
                                 <td colspan="3">
                                     <hr style="margin-top:10px; margin-bottom:10px; border-top-width:4px; border-color:#000 !important";
-                                        width="900px">
+                                        width="100%">
                                 </td>
                             </tr>
 
@@ -389,89 +465,91 @@
 
                             <tr>
                                 <td colspan="3" style="padding-left:5px">
-                                    <input type="checkbox" style="width:16px; height:16px;" name="1"
-                                        value="yes"> Patient is scheduled for surgery
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                    <input type="checkbox" style="width:16px; height:16px;" name="2"
-                                        value="yes"> Patient exhibits signs of swelling
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                    <input type="checkbox" style="width:16px; height:16px;" name="3"
-                                        value="yes"> Patient exhibits impaired Range of Motion
+                                    <table class="table-borderless" width="100%">
+                                        <tr>
+                                            <td width="30%"><input type="checkbox" class="cus_check" name="1"
+                                        value="yes"> Patient is scheduled for surgery</td>
+                                            <td width="30%"> <input type="checkbox" class="cus_check" name="2"
+                                        value="yes"> Patient exhibits signs of swelling</td>
+                                            <td width="30%"><input type="checkbox" class="cus_check" name="3"
+                                        value="yes"> Patient exhibits impaired Range of Motion</td>
+                                        </tr>
+                                    </table>
+ 
                                 </td>
                             </tr>
 
                             <tr>
                                 <td colspan="3" style="padding-left:5px">
-                                    <input type="checkbox" style="width:16px; height:16px;" name="1"
-                                        value="yes"> Patient exhibits loss of Strength
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                    <input type="checkbox" style="width:16px; height:16px;" name="2"
-                                        value="yes"> Patient complains of Pain
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                                    <input type="checkbox" style="width:16px; height:16px;" name="3"
-                                        value="yes">
-                                    <label class="label" name="patientname" style="margin-left:5px"> </label>
-                                    <hr style="margin-left:530px; margin-top:-5px; margin-bottom:5px" width="255px">
+                                    
+                                     <table class="table-borderless" width="100%">
+                                        <tr>
+                                            <td width="30%"><input type="checkbox" class="cus_check" name="1"
+                                        value="yes"> Patient exhibits loss of Strength  </td>
+                                        
+                                            <td width="30%"><input type="checkbox" class="cus_check"  name="2"
+                                        value="yes"> Patient complains of Pain</td>
+                                        
+                                            <td width="30%"><input type="checkbox" class="cus_check" name="3"
+                                        value="yes"><label class="label w80" name="patientname">&nbsp;</label>
+                                    </td>
+                                        </tr>
+                                    </table>
+                                    
                                 </td>
                             </tr>
 
                             <tr>
                                 <td colspan="3">
                                     <hr style="margin-top:10px; margin-bottom:10px; border-top-width:4px; border-color:#000 !important";
-                                        width="900px">
+                                        width="100%">
                                 </td>
                             </tr>
 
-                            <tr>
+                            <tr class="breakdown">
                                 <td colspan="3" align="left"
                                     style="font-family:Times New Roman; font-weight:bold; font-size:18px">TREATMENT PLAN
                                     AND AUTHORIZATION REQUEST (in addition to current treatment plan)</td>
                             </tr>
 
                             <tr>
-                                <td><input type="checkbox" style="width:16px; height:16px;" name="3"
+                                <td><input type="checkbox" class="cus_check" name="3"
                                         value="yes"> DO NOT SUBSTITUTE</td>
                             </tr>
 
-                            <table align="center" width="900px" border="1" bordercolor="#000000"
-                                style="border-bottom-style:outset">
+                            <table align="center" id="full-view">
 
                                 <tr>
                                     <td colspan="2" valign="top">
-                                        <textarea name="dme_des" rows="20" cols="111">Testing</textarea>
+                                        <textarea name="dme_des" class="p-1" rows="15" cols="111" style="width:100%; min-height:200px;" placeholder="Testing"></textarea>
                                     </td>
                                 </tr>
                             </table>
 
-                            <table align="center" width="900px">
+                            <table align="center" id="full-view">
                                 <tr>
                                     <td align="left"
                                         style="font-family:'Times New Roman', Times, serif; font-size:18px; font-weight:bold">
                                         TREATMENT GOALS :</td>
                                 </tr>
                                 <tr>
-                                    <td width="400px"> 1. To reduce or eliminate pain </td>
-                                    <td width="400px"> 4. Improve range of motion </td>
+                                    <td width="40%"> 1. To reduce or eliminate pain </td>
+                                    <td width="40%"> 4. Improve range of motion </td>
 
                                 </tr>
                                 <tr>
-                                    <td width="400px"> 2. To reduce or eliminate edema </td>
-                                    <td width="400px"> 5. Protect the surgical repair </td>
+                                    <td width="40%"> 2. To reduce or eliminate edema </td>
+                                    <td width="40%"> 5. Protect the surgical repair </td>
 
                                 </tr>
                                 <tr>
-                                    <td width="400px"> 3. Improve activities of daily living </td>
-                                    <td width="400px"> 6.
-                                        <hr style="margin-left:15px; margin-top:-4px; margin-bottom:15px" width="500px">
+                                    <td width="40%"> 3. Improve activities of daily living </td>
+                                    <td width="40%"> 6. <label class="label w90" name="patientname">&nbsp;</label>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2">
-                                        <p> <br> The treatment plan as described above is both reasonable and medically
+                                    <td colspan="2" class="pt-2 text-justify" style="line-height:1.5rem">
+                                        <p> The treatment plan as described above is both reasonable and medically
                                             necessary. Not using these devices can have traumatic results and diminish the
                                             likelihood of recovery. ACOEM and ODG support the use of medical devices at the
                                             home and state so in several chapters of both guidelines. ACOEM also
@@ -487,7 +565,7 @@
                                             obtain maximum results, the patient should be instructed on the proper use of
                                             these devices in a one on one setting by a manufacturers approved representative
                                             that speaks and understands the patient's primary language. It is also necessary
-                                            to provide follow up with the patient to ensure compliance. </p><br>
+                                            to provide follow up with the patient to ensure compliance. </p>
                                     </td>
 
                                 </tr><br>
@@ -507,69 +585,72 @@
                                         PRIMARY TREATING PHYSICIAN :</td>
                                 </tr>
                                 <tr>
-                                    <table align="center">
+                                    <table align="center" id="full-view" width="100%;">
                                         <tr>
-                                            <td width="300px">Address
-                                                <hr style="margin-left:55px; margin-top:0; margin-bottom:5px"
-                                                    width="250px">
+                                            <td width="40%">Address
+                                                <label class="label">&nbsp;</label>
                                             </td>
 
-                                            <td width="300px">City
-                                                <hr style="margin-left:30px; margin-top:0; margin-bottom:5px"
-                                                    width="250px">
+                                            <td width="20%">City
+                                                <label class="label">&nbsp;</label>
                                             </td>
-                                            <td width="150px">State
-                                                <hr style="margin-left:30px; margin-top:0; margin-bottom:5px"
-                                                    width="120px">
+                                            <td width="20%">State
+                                                <label class="label">&nbsp;</label>
                                             </td>
-                                            <td width="150px">Zip
-                                                <hr style="margin-left:30px; margin-top:0; margin-bottom:5px"
-                                                    width="100px">
+                                            <td width="20%">Zip
+                                                <label class="label">&nbsp;</label>
                                             </td>
 
                                         </tr>
 
                                         <tr>
-                                            <td width="300px">Phone
-                                                <hr style="margin-left:55px; margin-top:0; margin-bottom:5px"
-                                                    width="250px">
+                                            <td>Phone
+                                                <label class="label">&nbsp;</label>
                                             </td>
 
-                                            <td width="300px">Fax
-                                                <hr style="margin-left:30px; margin-top:0; margin-bottom:5px"
-                                                    width="250px">
+                                            <td>Fax
+                                                <label class="label w80">&nbsp;</label>
                                             </td>
+                                            <td colspan="2">&nbsp;</td>
 
                                         </tr>
-                                        <table align="center" width="900px" border="1" bordercolor="#000000"
-                                            style="border-bottom-style:outset">
+                                        <tr>
+                                            <td colspan="4">
+                                        <table align="center" class="table my-1">
                                             <tr>
-                                                <td style="padding-left:2px"> Name: <label class="label">Testing</label>
+                                                <td style="width:30%;">Name: <label class="label bordernone">Testing</label>
                                                 </td>
-                                                <td style="padding-left:2px"> Specialty: <label
-                                                        class="label">Testing</label> </td>
-                                                <td style="padding-left:2px"> Lic. # <label class="label">Testing</label>
+                                                <td style="width:40%;"> Specialty: <label class="label bordernone">Testing</label> 
+                                                 </td>
+                                                <td style="width:30%;">Lic. # <label class="label bordernone">Testing</label>
                                                 </td>
                                             </tr>
-                                        </table><br>
-                                        <table align="center">
+                                        </table>
+                                        </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="p-0">
+                                        <table align="center" width="100%">
                                             <tr>
-                                                <td>Signature
-                                                    <hr style="margin-left:55px; margin-top:-4px; margin-bottom:15px"
-                                                        width="630px">
+                                                <td style="width:60%;">
+                                                    Signature
+                                                    <label class="label">&nbsp;</label>
                                                 </td>
-                                                <td> Date
-                                                    <hr style="margin-left:15px; margin-top:-4px; margin-bottom:15px"
-                                                        width="190px">
+                                                <td style="width:40%;"> 
+                                                Date
+                                                <label class="label">&nbsp;</label>
                                                 </td>
                                             </tr>
 
-                                            <tr>
-                                                <td colspan="2" align="center"><input type="submit" name="btnSend"
-                                                        value="submit"></td>
+                                            <tr class="py-2">
+                                                <td colspan="2" align="center" >
+                                                    <input type="submit" name="btnSend" value="submit" class="btn btn-primary mt-2">
+                                                </td>
 
                                             </tr>
                                         </table>
+                                        </td>
+                                        </tr>
 
                                     </table>
 
@@ -581,6 +662,5 @@
 
             </div>
         </div>
-        <div class="col-1 mt-4"></div>
     </div>
 @endsection

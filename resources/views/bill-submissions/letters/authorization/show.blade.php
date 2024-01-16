@@ -1,4 +1,4 @@
-<!-- @extends('layouts.home-app')-->
+<!-- @extends('layouts.home-new-app')-->
 <style>
     .provider_heading_type {
         color: #858585;
@@ -42,11 +42,13 @@
                             <div style="padding-top:10px" class="w-sm-100 mr-auto">
                                 <h2 class="heading"> Show Referring and Ordering Providers</h2>
                             </div>
+                            @if($pInjuries)
                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                                 <li class="breadcrumb-item">
-                                    <a class="btn btn-primary" href="{{ url('/injury/view', $pInjuries->id) }}"> Back</a>
+                                    <a class="btn btn-primary" href="{{ url('/injury/view', $pInjuries['id']) }}"> Back</a>
                                 </li>
                             </ol>
+                           @endIf 
                         </div>
                     </div>
                 </div>

@@ -1,53 +1,63 @@
-@extends('layouts.home-app')
-
-
+@extends('layouts.home-new-app')
 @section('content')
-
-<!-- START: Breadcrumbs-->
-<div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mb-0">Holidays</h4></div>
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                    <li class="breadcrumb-item">
-                        @can('Patient-create')
-                        <a class="btn btn-primary text-white" id="myBtn" data-toggle="modal" data-target="#addModal"> Add Holiday </a>
-                        @endcan
-                    </li>
-                    <li class="breadcrumb-item">
-                         <a class="btn btn-primary" href="{{ url('/billing/providers/setting', $providerId) }}">Back </a>
-                    </li>
-                </ol> 
-            </div>
-        </div>
-    </div>
+    <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
-
-
-    @if ($message = Session::get('success'))
-    <div class="row">
-        <div class="col-12 mt-3">
-            <div class="alert alert-success">
-                <p> {{ $message }}</p>
+    
+  <style>
+      .dataTables_length
+        {
+          padding-top: 2%;  
+        }  
+  </style>  
+    
+    @if ($errors->any())
+        <div class="row mt-2 customBox">
+            <div align="center" class="col-12  align-self-center">
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
     @endif
-    @if(Session::has('message'))
-     <div class="row">
-        <div class="col-12 mt-3">
-            <div class="alert alert-success">
-            <p class="alert{{ Session::get('alert-class', 'alert-info') }}">{{Session::get('message') }}</p>
-            </div>
-        </div>
-    </div>
-    @endif
-<div class="row">
-    <div class="col-12 mt-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
+    <div class="row mt-0">
+        <div class="col-md-12 mt-0">
+            <div class="card row-background customBoxHeight5">
+                <!-- START: Breadcrumbs-->
+                <div class="row">
+                    <div class="col-12  align-self-center">
+                        <div class="sub-header py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div style="padding-top:5px" class="w-sm-100 mr-auto">
+                                <h2 class="heading">Holidays</h2>
+                            </div>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                             <li class="breadcrumb-item">
+                            
+                            <!--<a class="btn btn-primary"  href="#"> Add Holiday</a>-->
+                            
+                            <a class="btn btn-primary" id="myBtn"  data-toggle="modal" data-target="#addModal"> Add Holiday </a>
+                           
+                            </li>  
+                                 
+                            <li class="breadcrumb-item">
+                                <a class="btn btn-primary" href="{{ url('/billing/providers/setting', $providerId) }}"> Back</a>
+                            </li>
+                        </ol> 
+                        </div>
+                    </div>
+                </div>
+                <!-- END: Breadcrumbs-->
+                <div class="card-content">
+                    <div class="col-md-12 col-12">
+                        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                        <div class="table-responsive">
+                       <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
                         <thead class="thead-dark">
                             <tr class="jsgrid-header-row">
                                 <th scope="col">No</th>
@@ -179,14 +189,18 @@
                                     @endif
                             </tbody>
                     </table>
+                        </div>
                 </div>
             </div>
         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 mt-4"></div>
+        </div>
     </div>
-</div> 
-
-
-<!-- Modal content -->
+    
+    <!-- Modal content -->
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form action="{{ url('/billing/save/holiday') }}"  enctype="multipart/form-data" class="form-horizontal ladda-form'" method="POST">
@@ -268,13 +282,6 @@
 <!-- Modal content --> 
 
 @endsection
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<!-- START: Page Vendor JS-->
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js" defer=""></script> 
-<style type="text/css">
-    .ui-timepicker-container   { z-index:100000 !important;  }
-</style>
 
 <script>
      function deleteProviderHoliday(id, provider_id) { 
@@ -326,3 +333,9 @@
         });
     });
 </script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+<script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
+<script src="{{ asset('js/controller/master_for_all.js') }}"></script>
+<script></script>

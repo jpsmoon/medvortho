@@ -22,13 +22,13 @@ class CreateHealthProvidersTable extends Migration
             $table->string('last_name', 100)->nullable();
             $table->string('mi', 25)->nullable();
             $table->string('suffix', 15)->nullable();
-            $table->integer('taxonomy_code_id')->unsigned()->nullable();
+            $table->integer('taxonomy_code_id')->nullable();
             $table->enum('provider_type', array('Physician', 'Non-physician practitioner', 'Clinical social worker'));
             $table->string('signature', 155);            
             $table->enum('is_active', array('1', '0'))->default('1');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('taxonomy_code_id')->references('id')->on('taxonomy_codes');
+            //$table->foreign('taxonomy_code_id')->references('id')->on('taxonomy_codes');
         });
     }
 

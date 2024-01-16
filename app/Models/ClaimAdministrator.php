@@ -8,16 +8,25 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ClaimAdministrator extends Model
 {
-    use HasFactory, SoftDeletes;
-    protected $fillable = [ 'name', 'company_type_id' ];
+    use HasFactory, SoftDeletes; 
 
     public function company_type(){
-        return $this->belongsTo(company_type::class, 'company_type_id', 'id');
+        return $this->belongsTo(Company_type::class, 'company_type_id', 'id');
     }
-    public function claimReview(){
-        return $this->hasOne(ClaimBillReview::class, 'claim_admin_id', 'id');
-    }
+    
     public function claimAdminInjury(){
         return $this->hasMany(InjuryClaim::class, 'claim_admin_id', 'id');
+    }
+    public function getClaimReview(){
+        return $this->hasMany(ClaimBillReview::class, 'claim_admin_id', 'id');
+    }
+    public function getClaimAuthContact(){
+        return $this->hasMany(ClaimAuthContact::class, 'claim_admin_id', 'id');
+    }
+    public function getMailAddress(){
+        return $this->hasMany(ClaimMailAddress::class, 'claim_admin_id', 'id');
+    }
+    public function getCompanyType(){
+        return $this->belongsTo(Company_type::class, 'company_type_id', 'id');
     }
 }

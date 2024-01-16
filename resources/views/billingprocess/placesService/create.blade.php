@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
     <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
@@ -24,11 +24,11 @@
             </div>
         </div>
     @endif
-    <div class="row mt-2 ">
+    <div class="row mt-0 ">
         <div class="col-md-12 mt-4">
             <div class="card row-background customBoxHeight">
                 <!-- START: Breadcrumbs-->
-                <div class="row ">
+                <div class="row">
                     <div class="col-12  align-self-center">
                         <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
                             <div style="padding-top:10px" class="w-sm-100 mr-auto">
@@ -192,6 +192,7 @@
                                             <label>Status</label>
                                         </div>
                                         <div class="form-group col-md-2">
+                                            <label for="">Active </label><br>
                                             <input class="" type="radio" name="place_status" id="place_status1"
                                                 {{ $bPlaceService && $bPlaceService->is_active == 1 ? 'checked' : '' }}
                                                 value="1" />&nbsp;&nbsp;

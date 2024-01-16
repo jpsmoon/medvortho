@@ -17,6 +17,7 @@ class AddColumToInjuryClaims extends Migration
             //
             $table->string('is_employer_address_optional')->nullable();
             $table->string('practice_internal_id')->nullable();
+            $table->string('employer_phone_no')->nullable();
         });
     }
 

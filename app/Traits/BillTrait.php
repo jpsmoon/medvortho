@@ -1,8 +1,11 @@
 <?php
 namespace App\Traits; 
-use App\Models\{AppointmentReason, UserBillingProvider, BillDocument,BillInfo, BillInfoProvider, BillProcedureCode, InjuryBill, Patient, Patient_injury, InjuryBillService, BillDiagnosis, AllDocument, Task, UserTask, BillingProviderChargeProcedureCode, BillingProviderCharge, City, State, BillReferingOrderProvider, BillingProvider, BillPlaceService,PlaceOfServices, MasterPlaceOfService, RequestingPhysician, MasterSpecility, PractceLocation, PracticeContact, MasterProviderCharge, MasterBillChargeSheet};
+use App\Models\{BillPaymentMultipleClaimNumber, BillPaymentInformation, BillSecondSbr, TaskAssign, SentBill, Status, AppointmentReason, UserBillingProvider, BillDocument,BillInfo, BillInfoProvider, BillProcedureCode, InjuryBill, Patient, Patient_injury, InjuryBillService, BillDiagnosis, AllDocument, Task, UserTask, BillingProviderChargeProcedureCode, BillingProviderCharge, City, State, BillReferingOrderProvider, BillingProvider, BillPlaceService,PlaceOfServices, MasterPlaceOfService, RequestingPhysician, MasterSpecility, PractceLocation, PracticeContact, MasterProviderCharge, MasterBillChargeSheet, BillPaymentOther};
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\BillingPracticeChargeImport;
 
 
 ini_set('display_errors', 1);
@@ -370,7 +373,6 @@ trait BillTrait
         // print_r($request->all());exit;
         if(!$id){
             $billrefeningProvider = new BillReferingOrderProvider();
-
             $billrefeningProvider->referring_provider_npi = $request->rendering_provider_npi;
             $billrefeningProvider->billing_provider_id = $request->billingProviderId;
             $billrefeningProvider->type = ($request->pType) ? $request->pType : 1;
@@ -379,7 +381,9 @@ trait BillTrait
             $billrefeningProvider->referring_provider_middle_name = $request->mName;
             $billrefeningProvider->referring_provider_suffix = $request->suffix;
             $billrefeningProvider->referring_provider_license_number = $request->license_no;
-            $billrefeningProvider->	taxonomy_code = $request->taxonomy_code;
+            $billrefeningProvider->taxonomy_code = $request->taxonomy_code;
+            $billrefeningProvider->provider_type = $request->person_type;
+            $billrefeningProvider->provider_name_type = $request->provider_name_type; 
             $billrefeningProvider->save();
         }
         else{
@@ -393,8 +397,11 @@ trait BillTrait
                 'referring_provider_suffix' => $request->suffix,
                 'referring_provider_license_number' => $request->license_no,
                 'taxonomy_code' => $request->taxonomy_code,
-                'billing_provider_id' => $request->billingProviderId
-        );
+                'billing_provider_id' => $request->billingProviderId,
+                'is_active' => $request->rendering_status,
+                'provider_type' => $request->person_type,
+                'provider_name_type' => $request->provider_name_type,
+            );
         BillReferingOrderProvider::where("id", $id)->update($updateArr);
         }
     }
@@ -551,7 +558,8 @@ trait BillTrait
         // print_r($request->all());
         // exit;
         if(isset($request->chargeId) && $request->chargeId != null){
-            $checkPracticeName = BillingProviderCharge::where('id', $request->chargeId)->first();
+            $checkPracticeName = BillingProviderCharge::where('id', $request->chargeId)->where('provider_id', $request->billingProviderId)->first();
+            //dd($checkPracticeName);
             if($checkPracticeName){
                 $checkPracticeName->charge_id           = $request->practiceChargeId;
                 $checkPracticeName->practice_name       = $request->practice_charge_name;
@@ -559,7 +567,7 @@ trait BillTrait
                 $checkPracticeName->effective_dos       = $request->effective_dos;
                 $checkPracticeName->expiration_dos      = $request->expiration_dos;
                 $checkPracticeName->created_by          = Auth::user()->id;
-                $checkPracticeName->status              = $request->p_charge_status;
+                $checkPracticeName->status              = 1;
                 $checkPracticeName->ctype               = $request->ctype;
                 $checkPracticeName->update();
                 if($checkPracticeName->id){
@@ -589,8 +597,48 @@ trait BillTrait
                     } 
                 }
             }
+            else{
+                $newEntryForproviderChare = new BillingProviderCharge(); 
+                $newEntryForproviderChare->provider_id         = $request->billingProviderId;
+                $newEntryForproviderChare->charge_id           = $request->practiceChargeId;
+                $newEntryForproviderChare->ctype               = $request->ctype;
+                $newEntryForproviderChare->practice_name       = $request->practice_charge_name;
+                $newEntryForproviderChare->states_code         = (is_array($request->states_code)) ? implode(',',$request->states_code) : $request->states_code;
+                $newEntryForproviderChare->effective_dos       = $request->effective_dos;
+                $newEntryForproviderChare->expiration_dos      = $request->expiration_dos;
+                $newEntryForproviderChare->created_by          = Auth::user()->id;
+                $newEntryForproviderChare->status              = 1;
+                $newEntryForproviderChare->save(); 
+                if($newEntryForproviderChare->id){
+                    if(isset($request->procedure_code)){
+                        for ( $i=0; $i < count($request->procedure_code); $i++) {
+                            $checkModify = BillingProviderChargeProcedureCode::where('billing_provider_charge_id', $newEntryForproviderChare->id)->
+                            where('procedure_code', $request->procedure_code[$i])->first();
+                            if($checkModify){
+                             $checkModify->procedure_code             =   $request->procedure_code[$i];
+                             $checkModify->modifiers                  =   $request->bill_modifiers[$i];
+                             $checkModify->units                      =   $request->bill_units[$i];
+                             $checkModify->status                     =   1;
+                             $checkModify->ndc_number                 =   $request->ndc_number[$i];
+                             $checkModify->update();
+                             }
+                             else{
+                                 $chargeCode = new BillingProviderChargeProcedureCode();
+                                 $chargeCode->billing_provider_charge_id =   $newEntryForproviderChare->id;
+                                 $chargeCode->procedure_code             =   $request->procedure_code[$i];
+                                 $chargeCode->modifiers                  =   $request->bill_modifiers[$i];
+                                 $chargeCode->units                      =   $request->bill_units[$i];
+                                 $chargeCode->status                     =   1;
+                                 $chargeCode->ndc_number                 =   $request->ndc_number[$i];
+                                 $chargeCode->save();
+                             }
+                        }
+                    } 
+                }
+            }
         } 
         else{
+            
             $billingPracticeCharge =  new BillingProviderCharge();
             $billingPracticeCharge->provider_id         = $request->billingProviderId;
             $billingPracticeCharge->charge_id           = $request->practiceChargeId;
@@ -600,13 +648,12 @@ trait BillTrait
             $billingPracticeCharge->effective_dos       = $request->effective_dos;
             $billingPracticeCharge->expiration_dos      = $request->expiration_dos;
             $billingPracticeCharge->created_by          = Auth::user()->id;
-            $billingPracticeCharge->status          = 1;
+            $billingPracticeCharge->status              = 1;
             $billingPracticeCharge->save();
             if($billingPracticeCharge->id){
                 if(isset($request->procedure_code)){
                     for ( $i=0; $i < count($request->procedure_code); $i++) {
-                        $checkModify = BillingProviderChargeProcedureCode::where('billing_provider_charge_id', $billingPracticeCharge->id)->
-                        where('procedure_code', $request->procedure_code[$i])->first();
+                        $checkModify = BillingProviderChargeProcedureCode::where('billing_provider_charge_id', $billingPracticeCharge->id)->where('procedure_code', $request->procedure_code[$i])->first();
                         if($checkModify){
                          $checkModify->procedure_code             =   $request->procedure_code[$i];
                          $checkModify->modifiers                  =   $request->bill_modifiers[$i];
@@ -661,12 +708,7 @@ trait BillTrait
             }
         }
     }
-    public function inserUpdateTask($request, $statusForBill)
-    {
-        $job_type = null;
-        $job_type = ($statusForBill) ? ($statusForBill['slug'] == 'PATIENT_FAILED_REVIEW') ? 'patient'  : (($statusForBill['slug'] == 'INJURY_FAILED_REVIEW') ? 'injury' : 'bill') : null;
-        $this->storeJobAssign($job_type,$statusForBill);
-    }
+     
     public function removeTaskForBill($request, $statusForBill)
     {
         $this->removeJobAssign($request,$statusForBill);
@@ -735,125 +777,16 @@ trait BillTrait
     //     return array('bills'=>$bills, 'services'=>$billServices);
     // }
   
-    function addProcedureCode($request){
-        if($request->practiceProcedureCodeId){
-        $checkModify = BillingProviderChargeProcedureCode::where('id', $request->practiceProcedureCodeId)->first();
-        if($checkModify){
-            $checkModify->units                      =   $request->bill_units;
-            $checkModify->status                      =  $request->charge_status;
-            $checkModify->update();
-            } 
-        }
-        else{
-            for ( $i=0; $i < count($request->procedure_code); $i++) { 
-                $chargeCode = new BillingProviderChargeProcedureCode();
-                $chargeCode->billing_provider_charge_id =   $request->practiceChargeId;
-                $chargeCode->procedure_code             =   $request->procedure_code[$i];
-                $chargeCode->modifiers                  =   $request->bill_modifiers[$i];
-                $chargeCode->units                      =   $request->bill_units[$i];
-                $chargeCode->status                     =   1;
-                $chargeCode->save();
-            }
-        }
-    }
-    public function storeInjuryBillInfo($request, $id = false)
-    {
-        //InjuryBill,
-        //InjuryBillService
-        // echo "<pre>";
-        // print_r($request->all());exit;
-
-        $dosYear = null; $billAdmissionYear = null;  $dosEnd = null;
-        if(isset($request->work_dg_code_id)){
-            $diagnosisCode = implode(',', $request->work_dg_code_id);
-        }
-        else
-        {
-            $diagnosisCode = null;
-        }
-        
-        $bill_dos = '0000-00-00'; $bill_adminssion_date = null; $dos_end = null;
-        if(isset($request->bill_dos)){
-            $reqDob =  $request->bill_dos;
-            $exDate = explode('/', $reqDob);
-            if(count($exDate) > 0){
-                $newBreakDate = $exDate[2]."-".$exDate[0]."-".$exDate[1];
-                $bill_dos =  date('Y-m-d',strtotime($newBreakDate));
-                $dosYear = $exDate[2];
-            }
-        };
-        
-        if(isset($request->bill_adminssion_date)){
-            $reqDob =  $request->bill_adminssion_date;
-            $exDate = explode('/', $reqDob);
-            $newBreakDate = $exDate[2]."-".$exDate[0]."-".$exDate[1];
-            $bill_adminssion_date =  date('Y-m-d',strtotime($newBreakDate));
-            $billAdmissionYear = $exDate[2];
-        }
-        if(isset($request->dos_end)){
-            $reqDob =  $request->dos_end;
-            $exDate = explode('/', $reqDob);
-            $newBreakDate = $exDate[2]."-".$exDate[0]."-".$exDate[1];
-            $dos_end =  date('Y-m-d',strtotime($newBreakDate));
-            $dosEnd = $exDate[2];
-        }
-
-        if(isset($request->billId)){
-            $injuryBillInfo = InjuryBill::where('id', $request->billId)->first();
-            $injuryBillInfo->dos = $bill_dos;
-            $injuryBillInfo->bill_practice_bill_id = $request->bill_practice_bill_id;
-            $injuryBillInfo->bill_place_of_service = $request->bill_place_of_service;
-            $injuryBillInfo->bill_authorization_number = $request->bill_authorization_number;
-            $injuryBillInfo->bill_rendering_provider = $request->bill_rendering_provider;
-            $injuryBillInfo->bill_practice_bill_id = $request->bill_practice_bill_id;
-            $injuryBillInfo->bill_adminssion_date = $bill_adminssion_date;
-            $injuryBillInfo->bill_provider_type =  ($request->bill_provider_type) ? implode(',', array_filter($request->bill_provider_type)) : null;
-            $injuryBillInfo->bill_additiona_information_box = $request->bill_additiona_information_box;
-            $injuryBillInfo->diagnosis_code_type = $request->diagnosis_code_type;
-            $injuryBillInfo->work_dg_code_id = $diagnosisCode;
-            $injuryBillInfo->dos_end = $dos_end;
-            $injuryBillInfo->bill_provider_name = ($request->bill_provider_name) ? implode(',', array_filter($request->bill_provider_name)) : null; 
-            $injuryBillInfo->template_id = $request->bill_template;
-
-            $injuryBillInfo->update();
-            $this->storeInjuryBillServices($request, $injuryBillInfo->id, null,$dosYear); 
-            $this->addGlobalAllLog('INCOMPLETE','App\InjuryBill',"BILL_UPDATED", $injuryBillInfo->id);
-            $this->checkInsertUpdateTask($request, $injuryBillInfo->patient_id);
-            $injuryBillInfo->id;
-        }
-        else{
-            $bill_info = new InjuryBill();
-            $bill_info->injury_id = $request->injuryId;
-            $bill_info->patient_id = $request->patientId;
-            $bill_info->dos = $bill_dos;
-            $bill_info->bill_practice_bill_id = $request->bill_practice_bill_id;
-            $bill_info->bill_place_of_service = $request->bill_place_of_service;
-            $bill_info->bill_authorization_number = $request->bill_authorization_number;
-            $bill_info->bill_rendering_provider = $request->bill_rendering_provider;
-            $bill_info->bill_practice_bill_id = $request->bill_practice_bill_id;
-            $bill_info->bill_adminssion_date = $bill_adminssion_date;
-            $bill_info->bill_provider_type =  ($request->bill_provider_type) ? implode(',', array_filter($request->bill_provider_type)) : null;
-            $bill_info->bill_additiona_information_box = $request->bill_additiona_information_box;
-            $bill_info->diagnosis_code_type = $request->diagnosis_code_type;
-            $bill_info->work_dg_code_id = $diagnosisCode;
-            $bill_info->dos_end = $dos_end;
-            $bill_info->bill_provider_name = ($request->bill_provider_name) ? implode(',', array_filter($request->bill_provider_name)) : null; 
-            $bill_info->template_id = $request->bill_template;
-            $bill_info->save();
-            $this->storeInjuryBillServices($request, $bill_info->id, null,$dosYear);
-            $this->addGlobalAllLog('INCOMPLETE','App\InjuryBill',"BILL_CREATED", $bill_info->id);
-            $this->checkInsertUpdateTask($request, $request->patientId);
-            $bill_info->id;
-        }
-        }
-    public function storeInjuryBillServices($request, $dosYear, $bId = false, $id = false)
+    
+    
+    public function storeInjuryBillServices($request, $bId, $id, $dosYear  ) 
     {
         // echo "<pre>";
-        // print_r($request->all());
+        // echo $bId."<br>";
         // exit;
         $masterColumnName =  ($dosYear) ? 'procedure_year_'.$dosYear : null;
        // echo $masterColumnName."===";exit;
-            if(count($request->bill_procedure_code) > 0){
+            if(isset($request->bill_procedure_code) && count($request->bill_procedure_code) > 0){
                 $billServicesInfo = InjuryBillService::where('bill_id', $bId)->get();
                 if ($billServicesInfo->isNotEmpty()) {
                     $checkForDelete =  InjuryBillService::where('bill_id', $bId)->delete();
@@ -865,17 +798,20 @@ trait BillTrait
                      $this->addCPDCodesForBill($request, $bId);
                 }
             }
-        if(isset($request->work_dg_code_id) && count($request->work_dg_code_id) > 0){
+        if(isset($request->work_dg_code_id)){
             $billDignos = BillDiagnosis::where('bill_id', $bId)->get();
             if ($billDignos) {
                BillDiagnosis::where('bill_id', $bId)->delete();
             }
+            
             for ( $j=0; $j < count($request->work_dg_code_id); $j++) {
-                $billDiagnos = new BillDiagnosis();
-                $billDiagnos->bill_id = $bId;
-                $billDiagnos->diagnose_code_id = $request->work_dg_code_id[$j];
-                $billDiagnos->is_active = 1;
-                $billDiagnos->save();
+                if (!empty($request->work_dg_code_id[$j])) {
+                    $billDiagnos = new BillDiagnosis();
+                    $billDiagnos->bill_id = $bId;
+                    $billDiagnos->diagnose_code_id = $request->work_dg_code_id[$j];
+                    $billDiagnos->is_active = 1;
+                    $billDiagnos->save();
+                } 
             }
         }
     }
@@ -884,19 +820,19 @@ trait BillTrait
         // echo "<pre>";
         // print_r($request->all());
         // exit;
-        if(isset($request->bill_procedure_code)){
+        if( $request->bill_procedure_code != null && count($request->bill_procedure_code) > 0){
             for ( $i=0; $i < count($request->bill_procedure_code); $i++) {
                 if($request->bill_procedure_code[$i] != null){
                     $masterBillChargeId = null;  $taskId = null; $providerChargeId = null; $chargeVal = null; $expectedFeeSchedule = null; $calculatedBrReduction = null;
                     $bServices = new InjuryBillService();
                     $bServices->bill_id = $bId;
                     $bServices->bill_procedure_code                     = $request->bill_procedure_code[$i];
-                    $bServices->bill_modifiers                          = $request->bill_modifiers[$i];
-                    $bServices->bill_units                              = $request->bill_units[$i];
-                    $bServices->bill_diag_codes1                        = $request->bill_diag_codes1[$i];
-                    $bServices->bill_diag_codes2                        = $request->bill_diag_codes2[$i];
-                    $bServices->bill_diag_codes3                        = $request->bill_diag_codes3[$i];
-                    $bServices->bill_diag_code4                         = $request->bill_diag_codes4[$i];
+                    $bServices->bill_modifiers                          = ($request->bill_modifiers) ? $request->bill_modifiers[$i]: null;
+                    $bServices->bill_units                              = ($request->bill_units) ? $request->bill_units[$i] : null;
+                    $bServices->bill_diag_codes1                        = ($request->bill_diag_codes1 && count($request->bill_diag_codes1) > 0) ? $request->bill_diag_codes1[$i] : null;
+                    $bServices->bill_diag_codes2                        = ($request->bill_diag_codes2 && count($request->bill_diag_codes2) > 0) ? $request->bill_diag_codes2[$i]: null;
+                    $bServices->bill_diag_codes3                        = ($request->bill_diag_codes3 && count($request->bill_diag_codes3) > 0) ? $request->bill_diag_codes3[$i]: null;
+                    $bServices->bill_diag_code4                         = ($request->bill_diag_codes4 && count($request->bill_diag_codes4) > 0) ? $request->bill_diag_codes4[$i] : null;
                     $bServices->additional_information                  = $request->additional_information[$i];
                     $bServices->master_unit_amount                      = $request->master_charge[$i];
                     $bServices->master_procedure_code_charge_id         = $request->master_charge_id[$i];
@@ -1009,7 +945,322 @@ trait BillTrait
             return redirect()->back();
         }
     }
-     public function storeBillProviderProvider($request, $masterReasons){
+     
+    // public function checkTaskForAllBill($request, $billInfo){
+    //     $returnStatus = 0;
+    //     $billStatusInfo = Status::where('slug_name', 'INCOMPLETE_BILL')->first();
+    //     $processBillStatusInfo = Status::where('slug_name', 'PROCESS_BILL')->first();
+    //     $patient = Patient::with('getInjuries','getBillingProvider')->Where('id', $billInfo->patient_id)->first();
+    //     if($patient){
+    //         $statusForPatient =  $this->checkPatientForBillTask($patient);
+    //             if($statusForPatient){ 
+    //              if($statusForPatient['status'] == 0){
+    //                 $this->removeJobAssign($request, $statusForPatient);
+    //                 if($patient->getInjuries){
+    //                     foreach($patient->getInjuries as $injury){
+    //                         $statusForInjury = $this->checkInjuryForBillTask($injury);
+    //                         if($statusForInjury){ 
+    //                             if($statusForInjury['status'] == 0){
+    //                                 $this->removeJobAssign($request, $statusForInjury);
+    //                                 if($injury->getInjuryBills){
+    //                                     foreach($injury->getInjuryBills as $bill){
+    //                                         $statusForBill = $this->checkFiledsForBillTask($bill); 
+    //                                         if($statusForBill['status'] == 0){
+    //                                             $this->removeJobAssign($request, $statusForBill);
+    //                                             if(count($bill->getBillDocuments)== 0){
+    //                                                  $statusForBillDoc = $this->checkBillForDocumentRequiredTask($bill, $patient);
+    //                                                  if($statusForBillDoc['status'] == 0){
+    //                                                     $this->removeJobAssign($request, $statusForBillDoc);
+    //                                                     $returnStatus = 1; 
+    //                                                     $statusForSentBill = $this->checkFiledsForSentBillTask($bill); 
+    //                                                      if($statusForSentBill['status'] == 1){
+    //                                                         $billInfo->bill_status = $billStatusInfo->id;
+    //                                                         $billInfo->update();
+    //                                                         $this->inserUpdateTask($request, $statusForBillDoc); 
+    //                                                         $returnStatus = 0;                                                        
+    //                                                     } 
+    //                                                 }
+    //                                                 else{
+    //                                                     $billInfo->bill_status = $billStatusInfo->id;
+    //                                                     $billInfo->update();
+    //                                                     $this->inserUpdateTask($request, $statusForBillDoc); 
+    //                                                     $returnStatus = 0; 
+    //                                                 }
+    //                                             }
+    //                                         }
+    //                                         else{
+    //                                             $billInfo->bill_status = $billStatusInfo->id;
+    //                                             $billInfo->update();
+    //                                             $this->inserUpdateTask($request, $statusForBill);
+    //                                             $returnStatus = 0;
+    //                                         }
+    //                                     }
+    //                                 }
+    //                             }
+    //                         }
+    //                         else{
+    //                             $billInfo->bill_status = $billStatusInfo->id;
+    //                             $billInfo->update();
+    //                             $this->inserUpdateTask($request, $statusForInjury);
+    //                             $returnStatus = 0;
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //             else{
+    //                 $billInfo->bill_status = $billStatusInfo->id;
+    //                 $billInfo->update();
+    //                 $this->inserUpdateTask($request, $statusForPatient);
+    //                 $returnStatus = 0;
+    //             }
+    //         }
+    //     }
+    // }
+    public function inserUpdateTask($request, $statusForBill)
+    {
+        $job_type = null;
+         $job_type = ($statusForBill) ? ($statusForBill['slug'] == 'PATIENT_FAILED_REVIEW') ? 'patient'  : (($statusForBill['slug'] == 'INJURY_FAILED_REVIEW') ? 'injury' : 'bill') : null;
+         $this->storeJobAssign($job_type,$statusForBill);
+    }
+    
+    public function assignNewTaskToUser($userId, $task, $request){
+        $statusId =  $this->getStatusId('TASK_INCOMPLETE'); 
+        $billSlug  = ['status'=>1, 'slug'=>$task->slug,'description'=>$task->slug,'statusId'=>$statusId,'itemId'=>null];
+        $job_type = ($task->slug) ? ($task->slug == 'PATIENT_FAILED_REVIEW') ? 'patient'  : (($task->slug == 'INJURY_FAILED_REVIEW') ? 'injury' : 'bill') : null;
+        $job_no = $this->getJobNo();
+        $task_id = $this->getTaskId($job_type);
+        $step_id = $this->getStepId($job_type);
+
+        $checkTaskAssign = TaskAssign::where('task_id',$task_id)->where('step_id',$step_id)->where('user_id',$userId)->where('provider_id',$request->providerId)->where('task_step_id', null)->first();
+        if($checkTaskAssign){
+            $checkTaskAssign->status_id     = $statusId;
+            $checkTaskAssign->status_alias  = $task->slug;
+            $checkTaskAssign->update();
+        }else{
+            $taskAssign =  new TaskAssign();
+            $taskAssign->provider_id        = $request->providerId;
+            $taskAssign->job_no             = $job_no;
+            $taskAssign->user_id            = $userId;
+            $taskAssign->task_id            = $task_id;
+            $taskAssign->step_id            = $step_id;
+            //$taskAssign->task_step_id       = $insertArr['task_step_id'];
+            $taskAssign->status_id          = $statusId;
+            $taskAssign->status_alias       = $task->slug;
+            $taskAssign->assign_user_id     = Auth::user()->id;
+            $taskAssign->description        = $task->slug;
+            $taskAssign->assign_by_date     =  Carbon::now();;
+            $taskAssign->save();  
+        } 
+    }
+    public function storeBillSecondRevies($request){
+        //BillSecondSbr
+        $statusId =  $this->getStatusId('TASK_INCOMPLETE');
+        if($request->billSbrArray && count($request->billSbrArray) > 0){
+            foreach($request->billSbrArray as $array){ 
+                if($array['procesureCodeId'] != null){
+                    $chekSbr = BillSecondSbr::where('bill_id', $request['selectedBillId'])->where('bill_service_procedure_code_id', $array['procesureCodeId'])->first();
+                    if($chekSbr){
+                        $chekSbr->review_id = $array['billReviewDescr'];
+                        $chekSbr->review_text = $array['billReviewText'];
+                        $chekSbr->service_good = $array['serviceGood'];
+                        $chekSbr->attched_document = $array['newDocumenAtttched'];
+                        $chekSbr->sbr_status = $statusId;
+                        $chekSbr->update();
+                    }
+                    else{
+                        $newSbr = new BillSecondSbr();
+                        $newSbr->bill_id = $request->selectedBillId;
+                        $newSbr->bill_service_procedure_code_id = $array['procesureCodeId'];
+                        $newSbr->review_id                      = $array['billReviewDescr'];
+                        $newSbr->review_text                    = $array['billReviewText'];
+                        $newSbr->service_good                   = $array['serviceGood'];
+                        $newSbr->attched_document               = $array['newDocumenAtttched'];
+                        $newSbr->sbr_status                     = $statusId;
+                        $newSbr->save();
+                    }
+                } 
+            }
+        }
+    }
+    
+    public function storeProviderPracticeCharge($providerChargeId, $request){
+        if(isset($request->import_file)){  
+            $imported_CPT = (new BillingPracticeChargeImport)->toArray(request()->file('import_file'));
+            $fullArray = $imported_CPT[0];
+            foreach($fullArray as $chargeAmt){ 
+                 $checkProcedure = BillingProviderChargeProcedureCode::where('procedure_code', $chargeAmt[0])->where('billing_provider_charge_id', $providerChargeId)->first();
+                if($checkProcedure){
+                    $checkProcedure->modifiers                  =   $chargeAmt[1];
+                    $checkProcedure->description                =   $chargeAmt[2];
+                    $checkProcedure->units                      =   $chargeAmt[3];
+                    $checkProcedure->omfs_unit                  =   $chargeAmt[4];
+                    $checkProcedure->update();
+                }
+                else{
+                    $chargeCode = new BillingProviderChargeProcedureCode();
+                    $chargeCode->billing_provider_charge_id =   $providerChargeId;
+                    $chargeCode->procedure_code             =   $chargeAmt[0];
+                    $chargeCode->modifiers                  =   $chargeAmt[1];
+                    $chargeCode->description                =   $chargeAmt[2];
+                    $chargeCode->units                      =   $chargeAmt[3];
+                    $chargeCode->omfs_unit                  =   $chargeAmt[4];
+                    $chargeCode->status                     =   1;
+                    $chargeCode->save();
+                } 
+            }  
+        } 
+    } 
+    function addProcedureCode($request){
+        if($request->practiceProcedureCodeId){
+            $checkModify = BillingProviderChargeProcedureCode::where('id', $request->practiceProcedureCodeId)->first();
+            //dd($checkModify);
+            if($checkModify){
+                $checkModify->units                     =   $request->bill_units;
+                $checkModify->omfs_unit                 =   $request->bill_omfs;
+                $checkModify->status                    =  $request->charge_status;
+                $checkModify->description               =  $request->description;
+                $checkModify->update();
+            } 
+            else{
+                for ( $i=0; $i < count($request->procedure_code); $i++) { 
+                    $checkpc = BillingProviderChargeProcedureCode::where('procedure_code', $request->procedure_code[$i])->first();
+                    if($checkpc){
+                        $checkpc->units       =   $request->bill_units[$i];
+                        $checkpc->update();
+                    }
+                    else{
+                        $chargeCode = new BillingProviderChargeProcedureCode();
+                        $chargeCode->billing_provider_charge_id =   $request->practiceChargeId;
+                        $chargeCode->procedure_code             =   $request->procedure_code[$i];
+                        $chargeCode->modifiers                  =   $request->bill_modifiers[$i];
+                        $chargeCode->units                      =   $request->bill_units[$i];
+                        if(isset($request->bill_omfs)){
+                            $chargeCode->omfs_unit              =   $request->bill_omfs[$i];
+                        }
+                        if(isset($request->description)){
+                            $chargeCode->description            =  $request->description[$i];
+                        } 
+                        $chargeCode->status                     =   1;
+                        $chargeCode->save();
+                    } 
+                }
+            }
+        }
+        else{
+            for ( $i=0; $i < count($request->procedure_code); $i++) { 
+                $checkpc = BillingProviderChargeProcedureCode::where('procedure_code', $request->procedure_code[$i])->first();
+                if($checkpc){
+                    $checkpc->units       =   $request->bill_units[$i];
+                    $checkpc->update();
+                }
+                else{
+                    $chargeCode = new BillingProviderChargeProcedureCode();
+                    $chargeCode->billing_provider_charge_id =   $request->practiceChargeId;
+                    $chargeCode->procedure_code             =   $request->procedure_code[$i];
+                    $chargeCode->modifiers                  =   $request->bill_modifiers[$i];
+                    $chargeCode->units                      =   $request->bill_units[$i];
+                    if(isset($request->bill_omfs)){
+                        $chargeCode->omfs_unit              =   $request->bill_omfs[$i];
+                    }
+                    if(isset($request->description)){
+                        $chargeCode->description            =  $request->description[$i];
+                    } 
+                    $chargeCode->status                     =   1;
+                    $chargeCode->save();
+                } 
+            }
+        }
+    }
+    public function storeInjuryBillInfo($request, $id = false)
+    {
+        //InjuryBill,
+        //InjuryBillService
+        // echo "<pre>";
+        // print_r($request->all());exit;
+
+        $dosYear = null; $billAdmissionYear = null;  $dosEnd = null;
+        if(isset($request->work_dg_code_id)){
+            $diagnosisCode = implode(',', $request->work_dg_code_id);
+        }
+        else
+        {
+            $diagnosisCode = null;
+        }
+        
+        $bill_dos = '0000-00-00'; $bill_adminssion_date = null; $dos_end = null;
+        if(isset($request->bill_dos)){
+            $reqDob =  $request->bill_dos;
+            $exDate = explode('/', $reqDob);
+            if(count($exDate) > 0){
+                $newBreakDate = $exDate[2]."-".$exDate[0]."-".$exDate[1];
+                $bill_dos =  date('Y-m-d',strtotime($newBreakDate));
+                $dosYear = $exDate[2];
+            }
+        };
+        
+        if(isset($request->bill_adminssion_date)){
+            $reqDob =  $request->bill_adminssion_date;
+            $exDate = explode('/', $reqDob);
+            $newBreakDate = $exDate[2]."-".$exDate[0]."-".$exDate[1];
+            $bill_adminssion_date =  date('Y-m-d',strtotime($newBreakDate));
+            $billAdmissionYear = $exDate[2];
+        }
+        if(isset($request->dos_end)){
+            $reqDob =  $request->dos_end;
+            $exDate = explode('/', $reqDob);
+            $newBreakDate = $exDate[2]."-".$exDate[0]."-".$exDate[1];
+            $dos_end =  date('Y-m-d',strtotime($newBreakDate));
+            $dosEnd = $exDate[2];
+        }
+
+        if(isset($request->billId)){
+            $injuryBillInfo = InjuryBill::where('id', $request->billId)->first();
+            $injuryBillInfo->dos = $bill_dos;
+            $injuryBillInfo->bill_practice_bill_id = $request->bill_practice_bill_id;
+            $injuryBillInfo->bill_place_of_service = $request->bill_place_of_service;
+            $injuryBillInfo->bill_authorization_number = $request->bill_authorization_number;
+            $injuryBillInfo->bill_rendering_provider = $request->bill_rendering_provider;
+            $injuryBillInfo->bill_practice_bill_id = $request->bill_practice_bill_id;
+            $injuryBillInfo->bill_adminssion_date = $bill_adminssion_date;
+            $injuryBillInfo->bill_provider_type =  ($request->bill_provider_type) ? implode(',', array_filter($request->bill_provider_type)) : null;
+            $injuryBillInfo->bill_additiona_information_box = $request->bill_additiona_information_box;
+            $injuryBillInfo->diagnosis_code_type = $request->diagnosis_code_type;
+            $injuryBillInfo->work_dg_code_id = $diagnosisCode;
+            $injuryBillInfo->dos_end = $dos_end;
+            $injuryBillInfo->bill_provider_name = ($request->bill_provider_name) ? implode(',', array_filter($request->bill_provider_name)) : null; 
+            $injuryBillInfo->template_id = $request->bill_template;
+            $injuryBillInfo->update();
+            $this->storeInjuryBillServices($request, $injuryBillInfo->id, null,$dosYear); 
+            $this->addGlobalAllLog('INCOMPLETE','App\InjuryBill',"BILL_UPDATED", $injuryBillInfo->id);
+            $this->checkForSenButtonInBillPage($request, $injuryBillInfo);
+            return $injuryBillInfo->id;
+        }
+        else{
+            $bill_info = new InjuryBill();
+            $bill_info->injury_id = $request->injuryId;
+            $bill_info->patient_id = $request->patientId;
+            $bill_info->dos = $bill_dos;
+            $bill_info->bill_practice_bill_id = $request->bill_practice_bill_id;
+            $bill_info->bill_place_of_service = $request->bill_place_of_service;
+            $bill_info->bill_authorization_number = $request->bill_authorization_number;
+            $bill_info->bill_rendering_provider = $request->bill_rendering_provider;
+            $bill_info->bill_practice_bill_id = $request->bill_practice_bill_id;
+            $bill_info->bill_adminssion_date = $bill_adminssion_date;
+            $bill_info->bill_provider_type =  ($request->bill_provider_type) ? implode(',', array_filter($request->bill_provider_type)) : null;
+            $bill_info->bill_additiona_information_box = $request->bill_additiona_information_box;
+            $bill_info->diagnosis_code_type = $request->diagnosis_code_type;
+            $bill_info->work_dg_code_id = $diagnosisCode;
+            $bill_info->dos_end = $dos_end;
+            $bill_info->bill_provider_name = ($request->bill_provider_name) ? implode(',', array_filter($request->bill_provider_name)) : null; 
+            $bill_info->template_id = $request->bill_template;
+            $bill_info->save();
+            $this->storeInjuryBillServices($request, $bill_info->id, null,$dosYear);
+            $this->addGlobalAllLog('INCOMPLETE','App\InjuryBill',"BILL_CREATED", $bill_info->id);
+            $this->checkForSenButtonInBillPage($request, $bill_info);
+            return $bill_info->id;
+        }
+    }
+    public function storeBillProviderProvider($request, $masterReasons){
         // echo "<pre>";
         // print_r($request->all());exit;
         ini_set('max_input_vars', 3000);
@@ -1036,148 +1287,125 @@ trait BillTrait
             $institutionFile2 = null;
         }
 
-            if($id == null){
-                $checkProvider = BillingProvider::where('is_active',1);
+            if($id == null){ 
+                $billrefeningProvider = new BillingProvider();
+                $users = null;
+                $billrefeningProvider->injury_state_id = $request->injury_state_id;
+                $billrefeningProvider->bill_type = $request->bill_type;
+                if($request->professional_user_with_access != null){
+                    $users = implode(',',$request->professional_user_with_access);
+                }
                 if($request->bill_type == 'Professional'){
+                    $billrefeningProvider->provider_type = $request->provider_type;
                     if($request->provider_type == 'Organization'){
-                        $isFoundProvider = $checkProvider->where('professional_provider_name',$request->professional_provider_name);
-                    }else{
-                        $isFoundProvider = $checkProvider->where('billProvider_namebox_33_first_name',$request->billProvider_namebox_33_first_name);
-                        $isFoundProvider = $checkProvider->where('billProvider_namebox_33_last_name',$request->billProvider_namebox_33_last_name);
+                        $billrefeningProvider->tax_id = $request->professional_tax_id;
+                        $billrefeningProvider->professional_provider_name = $request->professional_provider_name;
+                        $billrefeningProvider->professional_nick_name = $request->professional_nick_name;
+                        $billrefeningProvider->professional_telephone = $request->professional_telephone;
+                        $billrefeningProvider->professional_addres1 = $request->professional_addres1;
+                        $billrefeningProvider->professional_addres2 = $request->professional_addres2;
+                        $billrefeningProvider->professional_city = $request->professional_city;
+                        $billrefeningProvider->professional_state = $request->professional_state;
+                        $billrefeningProvider->professional_zip = $request->professional_zip;
+                        $billrefeningProvider->professional_npi = $request->professional_npi;
+                        $billrefeningProvider->professional_address1 = $request->professional_address1;
+                        $billrefeningProvider->professional_address2 = $request->professional_address2;
+                        $billrefeningProvider->professional_city1 = $request->professional_city1;
+                        $billrefeningProvider->professional_state1 = $request->professional_state1;
+                        $billrefeningProvider->professional_zipcode1 = $request->professional_zipcode1;
+
                     }
+                    else{
+                        $billrefeningProvider->tax_id = $request->billProvider_box_25_tax_id; 
+                        $billrefeningProvider->billProvider_namebox_33_first_name = $request->billProvider_namebox_33_first_name;
+                        $billrefeningProvider->billProvider_namebox_33_last_name = $request->billProvider_namebox_33_last_name; 
+                        $billrefeningProvider->billProvider_namebox_33_mi = $request->billProvider_namebox_33_mi;
+                        $billrefeningProvider->billProvider_namebox_33_suffix = $request->billProvider_namebox_33_suffix;
+                        $billrefeningProvider->billProvider_namebox_33_telephone = $request->billProvider_namebox_33_telephone;
+                        $billrefeningProvider->billProvider_namebox_33_address1 = $request->billProvider_namebox_33_address1;
+                        $billrefeningProvider->billProvider_namebox_33_address2 = $request->billProvider_namebox_33_address2; 
+                        $billrefeningProvider->billProvider_namebox_33_city = $request->billProvider_namebox_33_city;
+                        $billrefeningProvider->billProvider_namebox_33_state = $request->billProvider_namebox_33_state;
+                        $billrefeningProvider->billProvider_namebox_33_zipCode = $request->billProvider_namebox_33_zipCode; 
+                        $billrefeningProvider->billProvider_namebox_33_npi = $request->billProvider_namebox_33_npi;
+                        $billrefeningProvider->professional_address1 = $request->billProvider_namebox_33_a_address1;
+                        $billrefeningProvider->professional_address2 = $request->billProvider_namebox_33_a_address2;
+                        $billrefeningProvider->professional_city1 = $request->billProvider_namebox_33_a_city;
+                        $billrefeningProvider->professional_state1 = $request->professional_state1;
+                        $billrefeningProvider->professional_zipcode1 = $request->billProvider_namebox_33_a_zipcode;
+                    }
+                    
+                    $billrefeningProvider->dol_provider_name = $request->dol_provider_name;
+                    $billrefeningProvider->professional_file = $personalFIle;
+                    //$billrefeningProvider->professional_user_with_access = $users;
+                    $billrefeningProvider->professional_fax_number = $request->professional_fax_number;
+
                 }
                 if($request->bill_type == 'Pharmacy'){
-                    $isFoundProvider = $checkProvider->where('professional_provider_name',$request->pharmacy_billing_provider_name);
-
+                    $billrefeningProvider->pharmacy_tax_id = $request->pharmacy_tax_id;
+                    $billrefeningProvider->tax_id = $request->pharmacy_tax_id;
+                    $billrefeningProvider->professional_provider_name = $request->pharmacy_billing_provider_name;
+                    $billrefeningProvider->professional_nick_name = $request->pharmacy_billing_nick_name;
+                    $billrefeningProvider->professional_addres1 = $request->pharmacy_address1;
+                    $billrefeningProvider->professional_addres2 = $request->pharmacy_address2;
+                    $billrefeningProvider->professional_city = $request->pharmacy_city;
+                    $billrefeningProvider->professional_state = $request->pharmacy_state;
+                    $billrefeningProvider->professional_zip = $request->pharmacy_zipcode;
+                    $billrefeningProvider->professional_telephone = $request->pharmacy_telephone;
+                    $billrefeningProvider->professional_file = $signature;
+                    $billrefeningProvider->pharmacy_npi = $request->pharmacy_npi;
+                    $billrefeningProvider->professional_address1 =  $request->pharmacy_billing_address1;
+                    $billrefeningProvider->professional_address2 = $request->pharmacy_billing_address2;
+                    $billrefeningProvider->professional_city1 = $request->pharmacy_billing_city;
+                    $billrefeningProvider->professional_state1 = $request->pharmacy_billing_state;
+                    $billrefeningProvider->professional_zipcode1 = $request->pharmacy_billing_zipcode;
+                    $billrefeningProvider->pharmacy_billing_file = $pharmacyFile;
+                    //$billrefeningProvider->professional_user_with_access = $users;
+                    $billrefeningProvider->professional_fax_number = $request->pharmacy_billing_fax_number;
                 }
                 if($request->bill_type == 'Institutional'){
-                    $isFoundProvider = $checkProvider->where('professional_provider_name',$request->institution_provider_name);
-
+                    $billrefeningProvider->tax_id = $request->institution_tax_id;
+                    $billrefeningProvider->professional_provider_name = $request->institution_provider_name;
+                    $billrefeningProvider->professional_nick_name = $request->institution_nick_name;
+                    $billrefeningProvider->professional_telephone = $request->institution_telephone;
+                    $billrefeningProvider->professional_addres1 = $request->institution_address1;
+                    $billrefeningProvider->professional_addres2 = $request->institution_address2;
+                    $billrefeningProvider->professional_city = $request->institution_city;
+                    $billrefeningProvider->professional_state = $request->institution_state;
+                    $billrefeningProvider->professional_zip = $request->institution_zipCode;
+                    $billrefeningProvider->professional_address1 =  $request->institution_address11;
+                    $billrefeningProvider->professional_address2 = $request->institution_address22;
+                    $billrefeningProvider->professional_city1 = $request->institution_city1;
+                    $billrefeningProvider->professional_state1 = $request->institution_state1;
+                    $billrefeningProvider->professional_zipcode1 = $request->institution_zipCode1;
+                    $billrefeningProvider->professional_file = $institutionFIle;
+                    $billrefeningProvider->pharmacy_npi = $request->institution_npi;
+                    $billrefeningProvider->institution_taxonomy = $request->institution_taxonomy;
+                    $billrefeningProvider->institution_county_name = $request->institution_county_name;
+                    $billrefeningProvider->institution_facility_type = $request->institution_facility_type;
+                    $billrefeningProvider->pharmacy_billing_file = $institutionFile2;
+                    //$billrefeningProvider->professional_user_with_access = $users;
+                    $billrefeningProvider->professional_fax_number = $request->institution_fax_number;
                 }
-                $isFoundProvider = $checkProvider->first();
-                //dd($isFoundProvider);
-                if($isFoundProvider){
-                    return 0;
+                $billrefeningProvider->tax_id_type  = $request->tax_id_type;
+                $billrefeningProvider->save();
+                if($billrefeningProvider){
+                    DB::table('user_billing_providers')->where('user_id', Auth::user()->id)->where('provider_id', $billrefeningProvider->id)->delete(); 
+                    UserBillingProvider::create([  'provider_id' => $billrefeningProvider->id,  'user_id' => Auth::user()->id ]); 
+                    if(count($masterReasons) > 0){ 
+                        $checkpReason = AppointmentReason::where('provider_id', $billrefeningProvider->id)->first(); 
+                            if(!$checkpReason){
+                            foreach($masterReasons as $reason){
+                                $pReasons =  new AppointmentReason();
+                                $pReasons->provider_id = $billrefeningProvider->id;
+                                $pReasons->name = $reason['name'];
+                                $pReasons->description = $reason['name'];
+                                $pReasons->save();
+                            } 
+                        }
+                    }
                 }
-                else{
-                        $billrefeningProvider = new BillingProvider();
-                        $users = null;
-                        $billrefeningProvider->injury_state_id = $request->injury_state_id;
-                        $billrefeningProvider->bill_type = $request->bill_type;
-                        if($request->professional_user_with_access != null){
-                            $users = implode(',',$request->professional_user_with_access);
-                        }
-                        if($request->bill_type == 'Professional'){
-                            $billrefeningProvider->provider_type = $request->provider_type;
-                            if($request->provider_type == 'Organization'){
-                                $billrefeningProvider->tax_id = $request->professional_tax_id;
-                                $billrefeningProvider->professional_provider_name = $request->professional_provider_name;
-                                $billrefeningProvider->professional_nick_name = $request->professional_nick_name;
-                                $billrefeningProvider->professional_telephone = $request->professional_telephone;
-                                $billrefeningProvider->professional_addres1 = $request->professional_addres1;
-                                $billrefeningProvider->professional_addres2 = $request->professional_addres2;
-                                $billrefeningProvider->professional_city = $request->professional_city;
-                                $billrefeningProvider->professional_state = $request->professional_state;
-                                $billrefeningProvider->professional_zip = $request->professional_zip;
-                                $billrefeningProvider->professional_npi = $request->professional_npi;
-                                $billrefeningProvider->professional_address1 = $request->professional_address1;
-                                $billrefeningProvider->professional_address2 = $request->professional_address2;
-                                $billrefeningProvider->professional_city1 = $request->professional_city1;
-                                $billrefeningProvider->professional_state1 = $request->professional_state1;
-                                $billrefeningProvider->professional_zipcode1 = $request->professional_zipcode1;
-        
-                            }
-                            else{
-                                $billrefeningProvider->tax_id = $request->billProvider_box_25_tax_id; 
-                                $billrefeningProvider->billProvider_namebox_33_first_name = $request->billProvider_namebox_33_first_name;
-                                $billrefeningProvider->billProvider_namebox_33_last_name = $request->billProvider_namebox_33_last_name; 
-                                $billrefeningProvider->billProvider_namebox_33_mi = $request->billProvider_namebox_33_mi;
-                                $billrefeningProvider->billProvider_namebox_33_suffix = $request->billProvider_namebox_33_suffix;
-                                $billrefeningProvider->billProvider_namebox_33_telephone = $request->billProvider_namebox_33_telephone;
-                                $billrefeningProvider->billProvider_namebox_33_address1 = $request->billProvider_namebox_33_address1;
-                                $billrefeningProvider->billProvider_namebox_33_address2 = $request->billProvider_namebox_33_address2; 
-                                $billrefeningProvider->billProvider_namebox_33_city = $request->billProvider_namebox_33_city;
-                                $billrefeningProvider->billProvider_namebox_33_state = $request->billProvider_namebox_33_state;
-                                $billrefeningProvider->billProvider_namebox_33_zipCode = $request->billProvider_namebox_33_zipCode; 
-                                $billrefeningProvider->billProvider_namebox_33_npi = $request->billProvider_namebox_33_npi;
-                                $billrefeningProvider->professional_address1 = $request->billProvider_namebox_33_a_address1;
-                                $billrefeningProvider->professional_address2 = $request->billProvider_namebox_33_a_address2;
-                                $billrefeningProvider->professional_city1 = $request->billProvider_namebox_33_a_city;
-                                $billrefeningProvider->professional_state1 = $request->professional_state1;
-                                $billrefeningProvider->professional_zipcode1 = $request->billProvider_namebox_33_a_zipcode;
-                            }
-                            
-                            $billrefeningProvider->dol_provider_name = $request->dol_provider_name;
-                            $billrefeningProvider->professional_file = $personalFIle;
-                            $billrefeningProvider->professional_user_with_access = $users;
-                            $billrefeningProvider->professional_fax_number = $request->professional_fax_number;
-        
-                        }
-                        if($request->bill_type == 'Pharmacy'){
-                            $billrefeningProvider->pharmacy_tax_id = $request->pharmacy_tax_id;
-                            $billrefeningProvider->tax_id = $request->pharmacy_tax_id;
-                            $billrefeningProvider->professional_provider_name = $request->pharmacy_billing_provider_name;
-                            $billrefeningProvider->professional_nick_name = $request->pharmacy_billing_nick_name;
-                            $billrefeningProvider->professional_addres1 = $request->pharmacy_address1;
-                            $billrefeningProvider->professional_addres2 = $request->pharmacy_address2;
-                            $billrefeningProvider->professional_city = $request->pharmacy_city;
-                            $billrefeningProvider->professional_state = $request->pharmacy_state;
-                            $billrefeningProvider->professional_zip = $request->pharmacy_zipcode;
-                            $billrefeningProvider->professional_telephone = $request->pharmacy_telephone;
-                            $billrefeningProvider->professional_file = $signature;
-                            $billrefeningProvider->pharmacy_npi = $request->pharmacy_npi;
-                            $billrefeningProvider->professional_address1 =  $request->pharmacy_billing_address1;
-                            $billrefeningProvider->professional_address2 = $request->pharmacy_billing_address2;
-                            $billrefeningProvider->professional_city1 = $request->pharmacy_billing_city;
-                            $billrefeningProvider->professional_state1 = $request->pharmacy_billing_state;
-                            $billrefeningProvider->professional_zipcode1 = $request->pharmacy_billing_zipcode;
-                            $billrefeningProvider->pharmacy_billing_file = $pharmacyFile;
-                            $billrefeningProvider->professional_user_with_access = $users;
-                            $billrefeningProvider->professional_fax_number = $request->pharmacy_billing_fax_number;
-                        }
-                        if($request->bill_type == 'Institutional'){
-                            $billrefeningProvider->tax_id = $request->institution_tax_id;
-                            $billrefeningProvider->professional_provider_name = $request->institution_provider_name;
-                            $billrefeningProvider->professional_nick_name = $request->institution_nick_name;
-                            $billrefeningProvider->professional_telephone = $request->institution_telephone;
-                            $billrefeningProvider->professional_addres1 = $request->institution_address1;
-                            $billrefeningProvider->professional_addres2 = $request->institution_address2;
-                            $billrefeningProvider->professional_city = $request->institution_city;
-                            $billrefeningProvider->professional_state = $request->institution_state;
-                            $billrefeningProvider->professional_zip = $request->institution_zipCode;
-                            $billrefeningProvider->professional_address1 =  $request->institution_address11;
-                            $billrefeningProvider->professional_address2 = $request->institution_address22;
-                            $billrefeningProvider->professional_city1 = $request->institution_city1;
-                            $billrefeningProvider->professional_state1 = $request->institution_state1;
-                            $billrefeningProvider->professional_zipcode1 = $request->institution_zipCode1;
-                            $billrefeningProvider->professional_file = $institutionFIle;
-                            $billrefeningProvider->pharmacy_npi = $request->institution_npi;
-                            $billrefeningProvider->institution_taxonomy = $request->institution_taxonomy;
-                            $billrefeningProvider->institution_county_name = $request->institution_county_name;
-                            $billrefeningProvider->institution_facility_type = $request->institution_facility_type;
-                            $billrefeningProvider->pharmacy_billing_file = $institutionFile2;
-                            $billrefeningProvider->professional_user_with_access = $users;
-                            $billrefeningProvider->professional_fax_number = $request->institution_fax_number;
-                        }
-                        $billrefeningProvider->save();
-                        if($billrefeningProvider){
-                            DB::table('user_billing_providers')->where('user_id', Auth::user()->id)->where('provider_id', $billrefeningProvider->id)->delete(); 
-                            UserBillingProvider::create([  'provider_id' => $billrefeningProvider->id,  'user_id' => Auth::user()->id ]); 
-                            if(count($masterReasons) > 0){ 
-                                $checkpReason = AppointmentReason::where('provider_id', $billrefeningProvider->id)->first(); 
-                                 if(!$checkpReason){
-                                    foreach($masterReasons as $reason){
-                                        $pReasons =  new AppointmentReason();
-                                        $pReasons->provider_id = $billrefeningProvider->id;
-                                        $pReasons->name = $reason['name'];
-                                        $pReasons->description = $reason['name'];
-                                        $pReasons->save();
-                                    } 
-                                }
-                            }
-                        }
-                    return 1;
-                }
+                return 1;
         }
         else{
             $billrefeningProviderUpdate =  BillingProvider::where('id',$id)->first();
@@ -1229,7 +1457,7 @@ trait BillTrait
                             $billrefeningProviderUpdate->professional_zipcode1 = $request->billProvider_namebox_33_a_zipcode;
                         }
                         $billrefeningProviderUpdate->dol_provider_name = $request->dol_provider_name;
-                        $billrefeningProviderUpdate->professional_user_with_access = $users;
+                        // $billrefeningProviderUpdate->professional_user_with_access = $users;
                         $billrefeningProviderUpdate->professional_fax_number = $request->professional_fax_number;
 
                     }
@@ -1252,7 +1480,7 @@ trait BillTrait
                         $billrefeningProviderUpdate->professional_state1 = $request->pharmacy_billing_state;
                         $billrefeningProviderUpdate->professional_zipcode1 = $request->pharmacy_billing_zipcode;
                         $billrefeningProviderUpdate->pharmacy_billing_file = $pharmacyFile;
-                        $billrefeningProviderUpdate->professional_user_with_access = $users;
+                        // $billrefeningProviderUpdate->professional_user_with_access = $users;
                         $billrefeningProviderUpdate->professional_fax_number = $request->pharmacy_billing_fax_number;
                     }
                     if($request->bill_type == 'Institutional'){
@@ -1276,18 +1504,449 @@ trait BillTrait
                         $billrefeningProviderUpdate->institution_county_name = $request->institution_county_name;
                         $billrefeningProviderUpdate->institution_facility_type = $request->institution_facility_type;
                         $billrefeningProviderUpdate->pharmacy_billing_file = $institutionFile2;
-                        $billrefeningProviderUpdate->professional_user_with_access = $users;
+                        // $billrefeningProviderUpdate->professional_user_with_access = $users;
                         $billrefeningProviderUpdate->professional_fax_number = $request->institution_fax_number;
                     }
                 $billrefeningProviderUpdate->is_active = $request->provider_status;
-
+                $billrefeningProviderUpdate->tax_id_type  = $request->tax_id_type;
                 $billrefeningProviderUpdate->update();
                 if($billrefeningProviderUpdate){
                     DB::table('user_billing_providers')->where('user_id', Auth::user()->id)->where('provider_id', $billrefeningProviderUpdate->id)->delete(); 
-                    UserBillingProvider::create([  'provider_id' => $billrefeningProviderUpdate->id,  'user_id' => Auth::user()->id ]); 
+                    UserBillingProvider::create([ 'is_active' =>$request->provider_status,   'provider_id' => $billrefeningProviderUpdate->id,  'user_id' => Auth::user()->id ]); 
                 }
                 return 1;
             } 
+        }
+    } 
+    public function checkForSenButtonInBillPage($request, $billInfo){
+       //dd($billInfo);
+        $returnStatus = 0;
+        $statusId =  $this->getStatusId('INCOMPLETE_BILL'); 
+        //$billStatusInfo = Status::where('slug_name', 'INCOMPLETE_BILL')->first();
+        //$processBillStatusInfo = Status::where('slug_name', 'PROCESS_BILL')->first();
+        //dd($billInfo->getStatus->slug_name);exit;
+
+        if($billInfo->getStatus && $billInfo->getStatus->slug_name && $billInfo->getStatus->slug_name == 'SENT_BILL' ){ 
+            $returnStatus = 0;
+        }
+        else{
+            if($billInfo->bill_status != null){
+                //dd($billInfo->getStatus->slug_name);
+                if($billInfo->getStatus && $billInfo->getStatus->slug_name && $billInfo->getStatus->slug_name == 'SEND_BILL'  || $billInfo->getStatus->slug_name == 'INCOMPLETE_BILL'  || $billInfo->getStatus->slug_name == 'PROCESS_BILL'){ 
+                    $statusForBill = $this->checkFiledsForBillTask($billInfo); 
+                   // dd($statusForBill);
+                    if($statusForBill['status'] == 0){
+                        $this->removeJobAssign($request, $statusForBill);
+                         if(count($billInfo->getBillDocuments)== 0){
+                            $statusForBillDoc = $this->checkBillForDocumentRequiredTask($billInfo);
+                            //dd($statusForBillDoc);
+                            if($statusForBillDoc['status'] == 0){
+                                $this->removeJobAssign($request, $statusForBillDoc);
+                                $injury = Patient_injury::Where('id', $billInfo->injury_id)->first();
+                                if($injury){
+                                    $statusForInjury = $this->checkInjuryForBillTask($injury);
+                                    if($statusForInjury){ 
+                                        if($statusForInjury['status'] == 0){
+                                            $this->removeJobAssign($request, $statusForInjury);
+                                            $patient = Patient::with('getInjuries','getBillingProvider')->Where('id', $billInfo->patient_id)->first();
+                                            if($patient){
+                                                $statusForPatient =  $this->checkPatientForBillTask($patient);
+                                                if($statusForPatient){ 
+                                                    if($statusForPatient['status'] == 0){
+                                                        $this->removeJobAssign($request, $statusForPatient);
+                                                        $statusForSentBill = $this->checkFiledsForSentBillTask($billInfo); 
+                                                        if($statusForSentBill['status'] == 1){
+                                                            $billInfo->bill_status = $statusId;
+                                                            $billInfo->bill_stage = $statusForSentBill['stageId'];
+                                                            $billInfo->update();
+                                                            $this->inserUpdateTask($request, $statusForSentBill); 
+                                                            $returnStatus = 0;                                                        
+                                                        }
+                                                    }
+                                                    else{
+                                                        $billInfo->bill_status = $statusId;
+                                                        $billInfo->bill_stage = $statusForPatient['stageId'];
+                                                        $billInfo->update();
+                                                        $this->inserUpdateTask($request, $statusForPatient);
+                                                        $returnStatus = 0;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else{
+                                            $billInfo->bill_status = $statusId;
+                                            $billInfo->bill_stage = $statusForInjury['stageId'];
+                                            $billInfo->update();
+                                            $this->inserUpdateTask($request, $statusForInjury);
+                                            $returnStatus = 0;
+                                        }
+                                    }
+                                } 
+                            }
+                            else{
+                                $billInfo->bill_status = $statusId;
+                                $billInfo->bill_stage = $statusForBillDoc['stageId'];
+                                $billInfo->update();
+                                $this->inserUpdateTask($request, $statusForBillDoc); 
+                                $returnStatus = 0; 
+                            }
+                        } 
+                        else{
+                                $statusForSentBill = $this->checkFiledsForSentBillTask($billInfo);
+                                if($statusForSentBill['status'] == 1){
+                                    $statusId =  $this->getStatusId($statusForSentBill['slug']); 
+                                    $billInfo->bill_status = $statusId;
+                                    $billInfo->bill_stage = $statusForSentBill['stageId'];
+                                    $billInfo->update();
+                                    $this->inserUpdateTask($request, $statusForSentBill); 
+                                    $returnStatus = 0;                                                        
+                                }
+                                else{
+                                    $billInfo->bill_status = $statusId;
+                                    $billInfo->bill_stage = $statusForBill['stageId'];
+                                    $billInfo->update();
+                                    $this->inserUpdateTask($request, $statusForBill);
+                                    $returnStatus = 0;
+                                }
+                            }
+                    }
+                    else{
+                        $billInfo->bill_status = $statusId;
+                        $billInfo->bill_stage = $statusForBill['stageId'];
+                        $billInfo->update();
+                        $this->inserUpdateTask($request, $statusForBill);
+                        $returnStatus = 0;
+                    }
+                }
+            }
+            else{
+                $billInfo->bill_status = 1;
+                $billInfo->bill_stage = 1;
+                $billInfo->update();
+
+            } 
+        }
+        
+    }
+    public function storeSentBillDetail($request, $downloadPdfName,$downloadPdfPath)
+    {
+        // echo "<pre>";
+        // print_r($request->all());exit;
+            $statusInfo = Status::where('slug_name', 'SENT_BILL')->first();
+            //$statusId =  $this->getStatusId('SENT_BILL'); 
+            $stageId =  $this->getStageId('SENT_BILL', 9); 
+
+            $checkBill = SentBill::where('bil_id', $request->bill_id)->first();
+            if($checkBill){
+                $injuryBills = InjuryBill::where('id' , $request->bill_id)->first();
+                 if($injuryBills){
+                    //$checkTaskAssign = TaskAssign::where('task_id',3)->where('task_step_id',$request->bill_id)->delete();
+                    $checkTaskAssign = TaskAssign::where('status_alias', 'SEND_BILL')->where('task_step_id', $request->bill_id)->first(); 
+                    if($checkTaskAssign){
+                        $checkTaskAssign->status_alias = $statusInfo->slug_name;
+                        $checkTaskAssign->status_id = $statusInfo->id;
+                        $checkTaskAssign->update();
+                    }
+
+                    $injuryBills->bill_status =$statusInfo->id;
+                    $injuryBills->bill_stage =$stageId;
+                    $injuryBills->update(); 
+                 }
+                $checkBill->bil_id = $request->bill_id; 
+                $checkBill->sent_by = Auth::user()->id;
+                $checkBill->sent_date = date('Y-m-d'); 
+                $checkBill->sent_type = $request->delivery_Method; 
+                
+                if($request->delivery_Method == 2){
+                    $checkBill->fax_type = $request->fax_type; 
+                    $checkBill->fax_number = $request->fax_number; 
+                    $checkBill->fax_attention = $request->fax_attention; 
+                }
+                if($request->delivery_Method == 3){
+                    $checkBill->pdf_claim_admin_id = $request->claimAdminDownloadPdf; 
+                    if($downloadPdfName != null){
+                        $checkBill->pdf_path = $downloadPdfPath;
+                        $checkBill->pdf_name = $downloadPdfName; 
+                    } 
+                } 
+                
+                $checkBill->status_id = $statusInfo->id; 
+                $checkBill->bill_type = 2; 
+                $checkBill->update();
+                $this->addBillLogs($request, $request->bill_id, 'Add Duplicate Sent Bill Information'); 
+                $this->addGlobalAllLog('DUPLICATE_SENT','App\SentBill',"BILL_SENT_AGAIN", $checkBill->id); 
+            }
+            else{
+                $billSent = new SentBill();
+                $billSent->bil_id = $request->bill_id; 
+                $billSent->sent_by = Auth::user()->id;
+                $billSent->sent_date = date('Y-m-d'); 
+                $billSent->sent_type = $request->delivery_Method; 
+                if($request->delivery_Method == 2){
+                    $billSent->fax_type = $request->fax_type; 
+                    $billSent->fax_number = $request->fax_number; 
+                    $billSent->fax_attention = $request->fax_attention; 
+                }
+                if($request->delivery_Method == 3){
+                    $billSent->pdf_claim_admin_id = $request->claimAdminDownloadPdf; 
+                    if($downloadPdfName != null){
+                        $checkBill->pdf_path = $downloadPdfPath;
+                        $checkBill->pdf_name = $downloadPdfName; 
+                    } 
+                } 
+                
+                $billSent->status_id = $statusInfo->id; 
+                $billSent->bill_type = 1; 
+                $billSent->save();
+                 $injuryBills = InjuryBill::where('id' , $request->bill_id)->first();
+                 if($injuryBills){
+                    //$checkTaskAssign = TaskAssign::where('task_id',3)->where('task_step_id',$request->bill_id)->delete();
+                    $checkTaskAssign = TaskAssign::where('status_alias', 'SEND_BILL')->where('task_step_id', $request->bill_id)->first(); 
+                    if($checkTaskAssign){
+                        $checkTaskAssign->status_alias = $statusInfo->slug_name;
+                        $checkTaskAssign->status_id = $statusInfo->id;
+                        $checkTaskAssign->update();
+                    }
+
+                    $injuryBills->bill_status =$statusInfo->id;
+                    $injuryBills->bill_stage =$stageId;
+                    $injuryBills->update(); 
+                 }
+                 $this->addBillLogs($request, $request->bill_id, 'Add Sent Bill Information'); 
+                 $this->addGlobalAllLog('SENT','App\SentBill',"BILL_SENT", $billSent->id); 
+            } 
+    }
+    public function storeBilPaymentInformation($request, $billId){ 
+        // echo "<pre>";
+        // print_r($request->all());exit;  
+        if(isset($request->paymentInId)){
+            $billPaymentUpdate = BillPaymentInformation::where('id', $request->paymentInId)->first();
+            if($billPaymentUpdate){
+                 $this->billPaymentPostingUpdate($request, $billPaymentUpdate);
+                 return $billPaymentUpdate->id;
+            }
+            else{
+                return  $this->billPaymentPostingAdd($request, $billId); 
+            }
+        }
+        else{
+            return  $this->billPaymentPostingAdd($request, $billId);
+        }
+    }
+    public function billPaymentPostingAdd($request, $billId){
+        $addNewBillInfo = new BillPaymentInformation();
+        $addNewBillInfo->bill_id                                = $billId;
+        $addNewBillInfo->payment_tab_id                         =  ($request->stepType == 1) ? 'first' : 'multiple';
+        $addNewBillInfo->payment_amount                         =  $request->bill_payment_amount;
+        $addNewBillInfo->refence_number                         =  $request->bill_payment_reference_number;
+        $addNewBillInfo->payment_effective_date                 =  $request->bill_paymeny_effective_date;
+        $addNewBillInfo->payment_from                           =  $request->bill_paymeny_from;
+        $addNewBillInfo->payment_deposite                       =  $request->bill_single_payment_deposit;
+        $addNewBillInfo->payment_deposit_date                   =  $request->bill_paymeny_deposite_date;
+        $addNewBillInfo->bill_close                             =  ($request->stepType == 1) ? $request->bill_payment_close_bill : 2;
+        $addNewBillInfo->payment_status                         =  ($request->stepType == 1) ? 1 : 2; //1 for post and 2 for pending 3 for deleted
+        //$addNewBillInfo->payer_claim_control_cumber             =  $request->bill_payment_claim_control_number;
+        $addNewBillInfo->save(); 
+        if($request->stepType == 1){
+            $this->storeBilServicesInfo($request, $billId);
+            $this->storeBilPaymentOtherInfo($request, $addNewBillInfo, $billId);
+        } 
+        return $addNewBillInfo->id;
+    }
+    public function billPaymentPostingUpdate($request, $billPaymentInfo){
+        $billPaymentInfo->payment_tab_id                   =  ($request->stepType == 1) ? 'first' : 'multiple';
+        $billPaymentInfo->payment_amount                   =  $request->bill_payment_amount;
+        $billPaymentInfo->refence_number                   =  $request->bill_payment_reference_number;
+        $billPaymentInfo->payment_effective_date           =  $request->bill_paymeny_effective_date;
+        $billPaymentInfo->payment_from                     =  $request->bill_paymeny_from;
+        $billPaymentInfo->payment_deposite                 =  $request->bill_single_payment_deposit;
+        $billPaymentInfo->payment_deposit_date             =  $request->bill_paymeny_deposite_date;
+        $billPaymentInfo->bill_close                       =  ($request->stepType == 1) ? $request->bill_payment_close_bill : 2;
+        $billPaymentInfo->payment_status                    =  2;//1 for post and 2 for pending 3 for deleted
+        //$billPaymentInfo->payer_claim_control_cumber       =  $request->bill_payment_claim_control_number; 
+        $billPaymentInfo->update();
+        if($request->stepType == 1){
+            $this->storeBilServicesInfo($request, $billId);
+            $this->storeBilPaymentOtherInfo($request, $billPaymentInfo, $billId); 
+        } 
+        return $billPaymentInfo->id; 
+    }
+    public function storeBilServicesInfo($request, $billId){
+        $checkBill = InjuryBill::where('id', $billId)->first(); 
+        if($checkBill){ 
+            if($request->bill_payment_close_bill == 1){
+                $statusId =  $this->getStatusId('CLOSED_BILL'); 
+                $stageId =  $this->getStageId('CLOSE_BILL',9);  
+                $checkBill->bill_provider_write_of_reason   = $request->bill_provider_write_of_reason;
+                $checkBill->write_of_reason_description     = $request->write_of_reason_description;
+                $checkBill->bill_status                     = $statusId;
+                $checkBill->bill_stage                      = $stageId; 
+                $checkBill->update(); 
+            } 
+            else{
+                $statusId =  $this->getStatusId('ACCEPTE_BILL'); 
+                $stageId =  $this->getStageId('BR_BILL',9);  
+                $checkBill->bill_status                     = $statusId;
+                $checkBill->bill_stage                      = $stageId; 
+                $checkBill->update(); 
+            }
+            if($request->bill_single_payment_deposit == 2){
+                $statusId2 =  $this->getStatusId('DEPOSIT_DATE_BILL'); 
+                $stageId2 =  $this->getStageId('EOR_BILL',9);  
+                $statusForBill  = ['status'=>1, 'slug'=>'BILL_FAILED_REVIEW','description'=>'Payment deposit date missing','statusId'=>$statusId2,'stageId'=>$stageId2,'itemId'=>$checkBill->id];
+                $this->storeJobAssign('bill',$statusForBill);
+                $checkBill->bill_status                     = $statusId2;
+                $checkBill->bill_stage                      = $stageId2; 
+                $checkBill->update(); 
+            }
+    
+        } 
+    }
+    public function storeBilPaymentOtherInfo($request, $paymentInfo, $billId){ 
+        // echo "<pre>";
+        // print_r($request->all());
+        // exit;
+        // dd($paymentInfo);exit; 
+        if(isset($request->postType)){
+             $checkBillOthrer = BillPaymentOther::where('id', $request->paymentInId)->first(); 
+            if($checkBillOthrer){ 
+                for ( $j=0; $j < count($request->procedure_code); $j++) { 
+                    $checkBillOthrer->bill_id                                            =   $billId;
+                    $checkBillOthrer->bill_payment_id                                    =   $paymentInfo->id;  
+                    $checkBillOthrer->procedure_charge                                   =   $request->procedure_charge[$j];
+                    $checkBillOthrer->expected_fee_amt                                   =   $request->expected_fee_amt[$j];
+                    $checkBillOthrer->calculated_br_amt                                  =   ($request->calculated_br_amt[$j] != null) ? $request->calculated_br_amt[$j] : 0;
+                    $checkBillOthrer->bill_payment_total_amt                             =   $request->procedure_payment_total[$j];
+                    $checkBillOthrer->original_submission_amt                            =   $request->original_submission_amt[$j];
+                    $checkBillOthrer->procedure_payment_total                            =   $request->procedure_payment_total[$j];
+                    $checkBillOthrer->due_balace_amt                                     =   $request->due_balace_amt[$j];
+                    $checkBillOthrer->expected_fee_percent                               =   $request->expected_fee_percent[$j]; 
+                    $checkBillOthrer->update(); 
+                    $checkBillService = InjuryBillService::where('id', $request->bill_service_id[$j])->where('bill_id', $billId)->first(); 
+                    if($checkBillService){
+                        $checkBillService->expected_fee_amt                =  $request->expected_fee_amt[$j]; 
+                        $checkBillService->calculated_br_amt               =  ($request->calculated_br_amt[$j] != null) ? $request->calculated_br_amt[$j] : 0;
+                        $checkBillService->original_submission_amt         =  $request->original_submission_amt[$j]; 
+                        $checkBillService->bill_payment_total_amt          =  $request->procedure_payment_total[$j]; 
+                        $checkBillService->due_balace_amt                  =  $request->due_balace_amt[$j]; 
+                        $checkBillService->expected_fee_percent            =  $request->expected_fee_percent[$j];
+                        $checkBillService->update(); 
+                    }
+                }
+            }
+        }
+        else{
+             $checkBillOthrer = BillPaymentOther::where('bill_payment_id', $paymentInfo->id)->where('bill_id', $billId)->first(); 
+            //dd($checkBillOthrer);
+            if($checkBillOthrer){ 
+                for ( $j=0; $j < count($request->procedure_code); $j++) { 
+                    $checkBillOthrer->bill_id                                            =   $billId;
+                    $checkBillOthrer->bill_payment_id                                    =   $paymentInfo->id; 
+                    $checkBillOthrer->procedure_code_master_id	                        =   $request->procedure_code_master_id[$j];
+                    $checkBillOthrer->bill_service_id                                    =   $request->bill_service_id[$j];  
+                    $checkBillOthrer->procedure_code                                     =   $request->procedure_code[$j];
+                    $checkBillOthrer->procedure_unit                                     =   $request->procedure_unit[$j];
+                    $checkBillOthrer->procedure_charge                                   =   $request->procedure_charge[$j];
+                    $checkBillOthrer->expected_fee_amt                                   =   $request->expected_fee_amt[$j];
+                    $checkBillOthrer->calculated_br_amt                                  =   ($request->calculated_br_amt[$j] != null) ? $request->calculated_br_amt[$j] : 0;
+                    $checkBillOthrer->bill_payment_total_amt                             =   $request->procedure_payment_total[$j];
+                    $checkBillOthrer->original_submission_amt                            =   $request->original_submission_amt[$j];
+                    $checkBillOthrer->procedure_payment_total                            =   $request->procedure_payment_total[$j];
+                    $checkBillOthrer->due_balace_amt                                     =   $request->due_balace_amt[$j];
+                    $checkBillOthrer->expected_fee_percent                               =   $request->expected_fee_percent[$j]; 
+                    $checkBillOthrer->update(); 
+                    $checkBillService = InjuryBillService::where('id', $request->bill_service_id[$j])->where('bill_id', $billId)->first(); 
+                    if($checkBillService){
+                        $checkBillService->expected_fee_amt                =  $request->expected_fee_amt[$j]; 
+                        $checkBillService->calculated_br_amt               =  ($request->calculated_br_amt[$j] != null) ? $request->calculated_br_amt[$j] : 0;
+                        $checkBillService->original_submission_amt         =  $request->original_submission_amt[$j]; 
+                        $checkBillService->bill_payment_total_amt          =  $request->procedure_payment_total[$j]; 
+                        $checkBillService->due_balace_amt                  =  $request->due_balace_amt[$j]; 
+                        $checkBillService->expected_fee_percent            =  $request->expected_fee_percent[$j];
+                        $checkBillService->update(); 
+                    }
+                }
+            }
+            else{
+                for ( $j=0; $j < count($request->procedure_code); $j++) { 
+                    $addNewPaymentOther = new BillPaymentOther();
+                    $addNewPaymentOther->bill_id                                            =   $billId;
+                    $addNewPaymentOther->bill_payment_id                                    =   $paymentInfo->id; 
+                    $addNewPaymentOther->procedure_code_master_id	                        =   $request->procedure_code_master_id[$j];
+                    $addNewPaymentOther->bill_service_id                                    =   $request->bill_service_id[$j];  
+                    $addNewPaymentOther->procedure_code                                     =   $request->procedure_code[$j];
+                    $addNewPaymentOther->procedure_unit                                     =   $request->procedure_unit[$j];
+                    $addNewPaymentOther->procedure_charge                                   =   $request->procedure_charge[$j];
+                    $addNewPaymentOther->expected_fee_amt                                   =   $request->expected_fee_amt[$j];
+                    $addNewPaymentOther->calculated_br_amt                                  =   ($request->calculated_br_amt[$j] != null) ? $request->calculated_br_amt[$j] : 0;
+                    $addNewPaymentOther->bill_payment_total_amt                             =   $request->procedure_payment_total[$j];
+                    $addNewPaymentOther->original_submission_amt                            =   $request->original_submission_amt[$j];
+                    $addNewPaymentOther->procedure_payment_total                            =   $request->procedure_payment_total[$j];
+                    $addNewPaymentOther->due_balace_amt                                     =   $request->due_balace_amt[$j];
+                    $addNewPaymentOther->expected_fee_percent                               =   $request->expected_fee_percent[$j]; 
+                    $addNewPaymentOther->save(); 
+                    $checkBillService = InjuryBillService::where('id', $request->bill_service_id[$j])->where('bill_id', $billId)->first(); 
+                    if($checkBillService){
+                        $checkBillService->expected_fee_amt                =  $request->expected_fee_amt[$j]; 
+                        $checkBillService->calculated_br_amt               =  $request->calculated_br_amt[$j];
+                        $checkBillService->original_submission_amt         =  $request->original_submission_amt[$j]; 
+                        $checkBillService->bill_payment_total_amt          =  $request->procedure_payment_total[$j]; 
+                        $checkBillService->due_balace_amt                  =  $request->due_balace_amt[$j]; 
+                        $checkBillService->expected_fee_percent            =  $request->expected_fee_percent[$j];
+                        $checkBillService->update(); 
+                    }
+                }
+            } 
+        } 
+        if(isset($request->bill_payment_claim_control_number)){ 
+            $checClaimNumber = BillPaymentMultipleClaimNumber::where('bill_payment_id', $paymentInfo->id)->where('bill_id', $billId)->first();
+            if($checClaimNumber){
+                $checClaimNumber->payer_claim_control_cumber = $request->bill_payment_claim_control_number;
+                $checClaimNumber->panality_or_interest_paid         = (isset($request->bill_single_payment_panalty_interest_paid) && $request->bill_single_payment_panalty_interest_paid == 1) ? 1  : 2;
+                $checClaimNumber->update();
+            }
+            else{
+                $newInfo = new BillPaymentMultipleClaimNumber();
+                $newInfo->bill_id                           = $billId;
+                $newInfo->bill_payment_id                   = $paymentInfo->id;
+                $newInfo->payer_claim_control_cumber        = $request->bill_payment_claim_control_number;
+                $newInfo->panality_or_interest_paid         = (isset($request->bill_single_payment_panalty_interest_paid) && $request->bill_single_payment_panalty_interest_paid == 1) ? 1  : 2;
+                $newInfo->save();
+            }
+        }
+    }
+    public function deleteAllPostingInTabChange($billPaymentInfo){
+        $isAllOtherDeleted = 0; $isAllClaimDeleted = 0; $isAllDocDeleted = 0;
+        if($billPaymentInfo){
+            $checkOtherPayment =  BillPaymentOther::where('bill_payment_id', $billPaymentInfo->id)->where('bill_id', $billPaymentInfo->bill_id)->get(); 
+            if($checkOtherPayment){
+                foreach($checkOtherPayment as $payment){
+                    $checkBillService = InjuryBillService::where('id', $payment->bill_service_id)->where('bill_id', $payment->bill_id)->first(); 
+                    if($checkBillService){
+                        $checkBillService->expected_fee_amt                =  0; 
+                        $checkBillService->calculated_br_amt               =  0;
+                        $checkBillService->original_submission_amt         =  0; 
+                        $checkBillService->bill_payment_total_amt          =  0; 
+                        $checkBillService->due_balace_amt                  =  0; 
+                        $checkBillService->expected_fee_percent            =  0;
+                        if($checkBillService->update()){
+                            $payment->delete();
+                            $isAllOtherDeleted = 1;
+                        } 
+                    } 
+                }
+            }
+            $checkClaimNumber =  BillPaymentMultipleClaimNumber::where('bill_payment_id', $billPaymentInfo->id)->where('bill_id', $billPaymentInfo->bill_id)->first(); 
+            if($checkClaimNumber){
+                $checkClaimNumber->delete();
+                $isAllClaimDeleted = 1;
+            } 
+        }
+        if($isAllOtherDeleted == 0 && $isAllClaimDeleted == 0 && $isAllDocDeleted == 0){
+            return 1;
+        }
+        else{
+            return 2;
         }
     }
 }

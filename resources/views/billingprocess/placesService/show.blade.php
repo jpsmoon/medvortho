@@ -1,4 +1,4 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
     <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
@@ -24,7 +24,7 @@
             </div>
         </div>
     @endif
-    <div class="row mt-2 ">
+    <div class="row mt-0">
         <div class="col-md-12 mt-4">
             <div class="card row-background customBoxHeight">
                 <!-- START: Breadcrumbs-->
@@ -94,10 +94,13 @@
                     <div class="row" style="padding-left:10px"> 
                         <div class="col-md-4">
                             <label class="bold" for="signature_img">Address :-</label><br>
-                            <span>{{ $placeOfService ? $placeOfService->address_line1 : '-' }}
-                                        {{ $placeOfService ? $placeOfService->city_id : '-' }}
-                                        {{ $placeOfService ? $placeOfService->state_id : '-' }}
-                                        {{ $placeOfService ? $placeOfService->zipcode : '-' }}</span>
+                            <span>
+                            {{ ($placeOfService->address_line1) ? $placeOfService->address_line1 : ''}}
+                            {{ ($placeOfService->address_line2) ? ', '.$placeOfService->address_line2 : '' }}
+                            {{ ($placeOfService->city_id) ? ', '.$placeOfService->city_id : ''}}
+                            {{ ($placeOfService->state_id) ? ', '.strtoupper( substr( $placeOfService->state_id, 0, 2 )) : ''}} 
+                            {{ $placeOfService->zipcode }}
+                            </span>
                         </div>
                         
                         <div class="col-md-4">

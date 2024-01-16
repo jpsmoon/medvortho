@@ -1,6 +1,4 @@
-@extends('layouts.home-app')
-
-
+@extends('layouts.home-new-app')
 @section('content')
 <!-- START: Breadcrumbs-->
 <div class="row ">
@@ -19,7 +17,7 @@
     <!-- END: Breadcrumbs-->
 
 <div class="row">
-            <div class="col-12 mt-3">
+            <div class="col-12 mt-4">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -34,7 +32,7 @@
                                 <div class="form-group">
                                     @if(!empty($rolePermissions))
                                         @foreach($rolePermissions as $v)
-                                            <label class="col-md-3 label label-success " style="float:left;">{{ $v->name }},</label>
+                                        <label class="col-md-3 label label-success " style="float:left;">{{ $v->name }},</label>
                                         @endforeach
                                     @endif
                                 </div>

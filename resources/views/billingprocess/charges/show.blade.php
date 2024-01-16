@@ -1,34 +1,67 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
+    <!-- START: Breadcrumbs-->
+    <!-- END: Breadcrumbs-->
+    
 <style>
-.showPointer {cursor: :pointer !important;}
-</style>
-    <div class="row">
-        <div class="col-1 mt-4"></div>
-        <div class="col-10 mt-4">
+#myDIV 
+{
+  width: 100%;
+  padding: 10px 0;
+  
+}
 
+/*.select2-container {*/
+/*    box-sizing: border-box;*/
+    /* display: inline-block; */
+/*    margin: 0;*/
+/*    position: relative;*/
+/*    vertical-align: middle;*/
+/*}*/
+
+</style> 
+    
+    @if ($errors->any())
+        <div class="row mt-2 customBox">
+            <div align="center" class="col-12  align-self-center">
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+    @endif
+    <div class="row mt-0">
+        <div class="col-md-12 mt-4">
             <div class="card row-background">
                 <!-- START: Breadcrumbs-->
-                <div class="row">
+                <div class="row ">
                     <div class="col-12  align-self-center">
-                        <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
+                        <div class="sub-header py-3 px-3 align-self-center d-sm-flex w-100 rounded heading-background">
                             <div style="padding-top:10px" class="w-sm-100 mr-auto">
                                 <h2 class="heading"> $ {{ $checkMasterCharge->practice_name }}</h2>
                                 <span class="text-muted">{{ ($checkMasterCharge  && $checkMasterCharge->ctype == 2) ? 'Expected Reimbursement' : 'Practice Charge'}}</span>
                             </div>
-                            <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                                <li class="breadcrumb-item"> <a class="btn btn-primary" href="javascript:void(0)" data-toggle="modal" data-target="#editProviderCharge"> Edit</a> </li>
-                                <li class="breadcrumb-item">
-                                    <a class="btn btn-primary"
-                                        href="{{ url('setting/billing/provider/charge/add', $checkMasterCharge->provider_id) }}">
-                                        Back</a>
-                                </li>
-                            </ol>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                             
+                            <li class="breadcrumb-item"> <a class="btn btn-primary" href="javascript:void(0)" data-toggle="modal" data-target="#editProviderCharge"> Edit</a> </li>    
+                            <li class="breadcrumb-item"> <a class="btn btn-primary" href="javascript:void(0)" data-toggle="modal" data-target="#exampleModal"> Add Procedure
+                            Code</a> </li>  
+                            <li class="breadcrumb-item"> <a class="btn btn-primary" href="javascript:void(0)" data-toggle="modal" data-target="#exampleModalImport"> Import Procedure
+                            Code</a> </li>   
+                            <li class="breadcrumb-item">
+                            <a class="btn btn-primary" href="{{ url('setting/billing/provider/charge/add', $checkMasterCharge->provider_id) }}"> Back</a>
+                            </li>
+                        </ol> 
                         </div>
                     </div>
                 </div>
                 <!-- END: Breadcrumbs-->
-
+                
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
@@ -101,11 +134,7 @@
                     <div class="row">
                         <div class="form-group col-md-4">
                             <h4>Procedure Code</h4>
-                        </div>
-                        <div class="form-group col-md-8" style="text-align:right">
-                            <span class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"> Add Procedure
-                                Code </span>
-                        </div>
+                        </div> 
                         <div class="col-12">
                             <div class="table-responsive">
                                 <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
@@ -113,8 +142,10 @@
                                         <tr role="row">
                                             <th scope="col">Procedure Code</th>
                                             <th scope="col">Modifier</th>
+                                            <th scope="col">Description</th>
                                             <th scope="col">NDC Number</th>
                                             <th scope="col">Charge</th>
+                                            <th scope="col">OMFS</th>
                                             <th scope="col">Active</th>
                                             <th scope="col">Actions</th>
                                         </tr>
@@ -123,11 +154,13 @@
                                         @if ($checkMasterCharge->getChargesProcedureCode && count($checkMasterCharge->getChargesProcedureCode) > 0)
                                        @php $chargeMasterLog = [];  @endphp
                                             @foreach ($checkMasterCharge->getChargesProcedureCode as $code)
-                                                <tr>
+                                             <tr>
                                                     <td>{{ $code->procedure_code }}</td>
                                                     <td>{{ $code->getChargeModifyer && $code->getChargeModifyer->name ? $code->getChargeModifyer->name : 'NA' }}</td>
+                                                     <td>{{ $code->description }}</td>
                                                     <td>{{ $code->ndc_number }}</td>
-                                                    <td>${{ $code->units }}</td>
+                                                    <td>{{ $code->units }}</td>
+                                                    <td>{{ $code->omfs_unit }}</td>
                                                     <td>{{ $code->status == 1 ? 'Yes' : 'No' }}</td>
                                                     <td>
                                                     <i class="icon-pencil  showPointer" data-toggle="modal" data-target="#procedureCodeModal_{{$code->id}}" /></i>
@@ -148,7 +181,7 @@
                                                             <div class="col-12 mt-4">
                                                                 <form action="{{ route('saveProcedureCode') }}" method="POST" enctype="multipart/form-data">
                                                                     @csrf
-                                                                    <input type="text" name="practiceProcedureCodeId" id="practiceProcedureCodeId" value="{{ $code->id }}">
+                                                                    <input type="hidden" name="practiceProcedureCodeId" id="practiceProcedureCodeId" value="{{ $code->id }}">
                                                                     <div class="row">
                                                                         <div class="form-group col-md-3">
                                                                             <label for=""> Procedure Code<span class="required">* </span> </label>
@@ -182,6 +215,26 @@
                                                                             @if ($errors->has('bill_units'))
                                                                                 <span class="invalid-feedback" style="display:block" role="alert">
                                                                                     <strong class="invalid-feedback">{{ $errors->first('bill_units') }}</strong>
+                                                                                </span>
+                                                                            @endif
+                                                                        </div>
+                                                                        <div class="form-group col-md-3">
+                                                                            <label for="bill_omfs"> OMFS </label>
+                                                                            <input autocomplete="off" id="bill_omfs" type="text" name="bill_omfs"
+                                                                                value="{{$code->omfs_unit}}" class="form-control" maxlength="10">
+                                                                            @if ($errors->has('bill_omfs'))
+                                                                                <span class="invalid-feedback" style="display:block" role="alert">
+                                                                                    <strong class="invalid-feedback">{{ $errors->first('bill_omfs') }}</strong>
+                                                                                </span>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="form-group col-md-12">
+                                                                            <textarea name="description" class="form-control">{{ ($code) ? $code->description : null}}</textarea>
+                                                                            @if ($errors->has('description'))
+                                                                                <span class="invalid-feedback" style="display:block" role="alert">
+                                                                                    <strong class="invalid-feedback">{{ $errors->first('description') }}</strong>
                                                                                 </span>
                                                                             @endif
                                                                         </div>
@@ -229,13 +282,11 @@
                      </div>
                     
                 </div>
+
             </div>
+            <div class="col-1 mt-4"></div>
         </div>
-        <div class="col-1 mt-4"></div>
-    </div>
-@endsection
-
-
+    </div> 
 @if($checkMasterCharge)
 <div class="modal fade" id="editProviderCharge" tabindex="-1" role="dialog" aria-labelledby="editProviderChargeLabel"
     aria-hidden="true">
@@ -385,8 +436,7 @@
                         <div class="row">
                             <div class="form-row col-md-12">
                                 <div class="form-group col-md-4">
-                                    <button type="submit" style="min-width: 120px"
-                                        class="btn btn-primary ladda-button">
+                                    <button type="submit" style="min-width: 120px" class="btn btn-primary ladda-button">
                                         <span class="ladda-label buttonfont">Add</span></button>
                                 </div>
                             </div>
@@ -396,14 +446,75 @@
             </div>
         </div>
     </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
-<script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
-<script src="{{ asset('js/controller/master_for_all.js') }}"></script>
-<!-- MDB -->
-<link rel="stylesheet" type="text/css" href="{{ url('new_assets/app-assets/css/jquery.multiselect.css') }}">
-<script src="{{ asset('new_assets/app-assets/js/jquery.multiselect.js') }}"></script>
+</div> 
+<div class="modal fade" id="exampleModalImport" tabindex="-1" role="dialog" aria-labelledby="exampleModalImportLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="SubmitFormImportProcedure" method="POST" action="{{ url('/import/procedure/code') }}"  enctype="multipart/form-data" >
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modelChargeLabel">Import Charge</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="chargeType" id="chargeType" value="{{$checkMasterCharge->ctype}}">
+                    <input type="hidden" name="masterChargeId" id="masterChargeId" value="{{$checkMasterCharge->id}}">
+                        <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for=""> Practice Charge Name<span class="required">* </span> </label>
+                            <input readonly value="{{$checkMasterCharge->practice_name}}" type="text"  data-validation-event="change" data-validation="required" data-validation-error-msg="" id="practice_charge_name_import" name="practice_charge_name_import" class="form-control ">
+                            @if($errors->has('practice_charge_name'))
+                            <span class="invalid-feedback" style="display:block" role="alert">
+                                <strong>{{ $errors->first('practice_charge_name') }}</strong>
+                            </span>
+                            @endif
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label for=""> Effective DOS<span class="required">* </span> </label>
+                            <input readonly value="{{$checkMasterCharge->effective_dos}}" type="text" id="effective_dos_import"  data-validation-event="change" data-validation="required"data-validation-error-msg="" name="effective_dos_import" class="form-control">
+                            @if($errors->has('effective_dos_import'))
+                            <span class="invalid-feedback" style="display:block" role="alert">
+                                <strong>{{ $errors->first('effective_dos_import') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for=""> Expiration DOS<span class="required">* </span> </label>
+                            <input readonly value="{{$checkMasterCharge->expiration_dos}}" type="text" data-validation-event="change" data-validation="required" data-validation-error-msg="" id="expiration_dos_import" name="expiration_dos_import" class="form-control">
+                            @if($errors->has('expiration_dos_import'))
+                            <span class="invalid-feedback" style="display:block" role="alert">
+                                <strong>{{ $errors->first('expiration_dos_import') }}</strong>
+                            </span>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <strong>Import File:</strong>
+                                <input type="file" name="import_file" id="import_file"  class="form-control" placeholder="Upload file">
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Import</button>
+                </div>
+            </div>
+        </form>      
+    </div>
+</div> 
+@endsection
+<!--<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>-->
+<!--<script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>-->
+<script src="{{ asset('public/js/bootstrap-inputmask.js') }}"></script>
+<script src="{{ asset('public/js/controller/master_for_all.js') }}"></script>
 <script>
 function deleteCPDCode(id) { 
     console.log('checking function calling');

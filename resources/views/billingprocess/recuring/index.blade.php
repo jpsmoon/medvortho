@@ -1,51 +1,60 @@
-@extends('layouts.home-app')
-
-
+@extends('layouts.home-new-app')
 @section('content')
-
-<!-- START: Breadcrumbs-->
-<div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mb-0">Appointment Recurrenes</h4></div>
-
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                    <li class="breadcrumb-item">
-                    @can('CompanyType-create')
-                        <a class="btn btn-success text-white" id="myBtn"   data-toggle="modal" data-target="#addModal"> Add Recurrene </a>
-                    @endcan
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div>
+    <!-- START: Breadcrumbs-->
     <!-- END: Breadcrumbs-->
-
-
-    @if ($message = Session::get('success'))
-    <div class="row">
-        <div class="col-12 mt-3">
-            <div class="alert alert-success">
-                <p> {{ $message }}</p>
+    
+  <style>
+      .dataTables_length
+        {
+          padding-top: 2%;  
+        }  
+  </style>  
+    
+    @if ($errors->any())
+        <div class="row mt-2 customBox">
+            <div align="center" class="col-12  align-self-center">
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
     @endif
-    @if(Session::has('message'))
-     <div class="row">
-        <div class="col-12 mt-3">
-            <div class="alert alert-success">
-            <p class="alert{{ Session::get('alert-class', 'alert-info') }}">{{Session::get('message') }}</p>
-            </div>
-        </div>
-    </div>
-    @endif
-<div class="row">
-    <div class="col-12 mt-3">
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
+    <div class="row mt-0">
+        <div class="col-md-12 mt-0">
+            <div class="card row-background customBoxHeight5">
+                <!-- START: Breadcrumbs-->
+                <div class="row ">
+                    <div class="col-12  align-self-center">
+                        <div class="sub-header py-3 px-1 align-self-center d-sm-flex w-100 rounded heading-background">
+                            <div style="padding-top:5px" class="w-sm-100 mr-auto">
+                                <h2 class="heading">Appointment Recurrenes</h2>
+                            </div>
+                             <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+                             
+                             <li class="breadcrumb-item">
+                                <a class="btn btn-primary" id="myBtn" data-toggle="modal" data-target="#addModal"> Add Recurrene </a>
+                            </li>
+                             
+                            <li class="breadcrumb-item">
+                                <a class="btn btn-primary" href="{{ url('/billing/providers/setting', $providerId) }}"> Back</a>
+                            </li>
+                        </ol> 
+                        </div>
+                    </div>
+                </div>
+                <!-- END: Breadcrumbs-->
+                <div class="card-content">
+                    <div class="col-md-12 col-12">
+                        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                        <div class="table-responsive">
+                        <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
                         <thead class="thead-dark">
                             <tr class="jsgrid-header-row">
                                 <th scope="col">No</th>
@@ -125,14 +134,18 @@
                                     @endif
                             </tbody>
                     </table>
+                        </div>
                 </div>
             </div>
         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1 mt-4"></div>
+        </div>
     </div>
-</div> 
-
-
-<!-- Modal content -->
+    
+    <!-- Modal content -->
 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form action="{{ url('/billing/save/recurence') }}"  enctype="multipart/form-data" class="form-horizontal ladda-form'" method="POST">
@@ -171,53 +184,7 @@
 
 @endsection
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script>
-     function deleteReason(id, provider_id) { 
-    swal.fire({
-        title: 'Are you sure you want to delete?',
-        text: "You won't be able to revert this!",
-        showCancelButton: true,
-        confirmButtonColor: '#3085D6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, Delete it!',
-        customClass: {
-            confirmButton: "btn btn-primary",
-            cancelButton: "btn btn-danger",
-            popup: 'swal-wide',
-        }
-    }).then((result) => { // Use .then() to handle the user's response
-        if (result.isConfirmed) { // Only proceed if the user clicked the confirm button
-            let _url     = `/billing/delete/recurence`;
-            $.ajax({
-                url: _url,
-                type: 'POST',
-                data: {
-                    _token: token,
-                    id: id,
-                     provider_id: provider_id
-                },
-                success: function(response) {
-                    swal.fire({
-                        title: 'Recurrence has been deleted', 
-                        customClass: {
-                            successButton: "btn btn-primary",
-                            popup: 'swal-wide',
-                        }
-                    });
-                    location.reload();
-                },
-                error: function(response) {
-                    swal.fire(response.responseJSON.message, '', 'error');
-                }
-            });
-        }
-    });
-}
-// $(document).ready(function() { 
-//     $('#recurrence_date').datepicker({
-//         dateFormat: 'mm/dd/yy',
-//          changeMonth: true, changeYear: true,
-//         })
-// })
-
-</script>
+<script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>
+<script src="{{ asset('js/bootstrap-inputmask.js') }}"></script>
+<script src="{{ asset('js/controller/master_for_all.js') }}"></script>
+<script></script>

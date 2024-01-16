@@ -1,20 +1,25 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
-<!-- START: Breadcrumbs-->
-    <div class="row ">
-        <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto"><h4 class="mb-0">Edit Profile</h4></div>
 
-                <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
+<!-- START: Breadcrumbs-->
+    <div class="row mt-0">
+         <div class="col-12  align-self-center">
+            <div class="sub-header mt-0 py-3 px-2 align-self-center d-sm-flex w-100 rounded heading-background">
+                <div class="w-sm-100 mr-auto margin07">
+                   <h2 class="heading"><i class="fa-solid fa-file-pen"></i> Edit Profile</h2>
+                </div>
+                <div align="right" class="w-sm-100 ">
+                    <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
                     <li class="breadcrumb-item">
-                        <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
+                     <a class="btn btn-primary" href="javascript:history.back()"> Back</a>
                     </li>
                 </ol>
+                </div>
             </div>
         </div>
+        
     </div>
-    <!-- END: Breadcrumbs-->
+    <!-- END: Breadcrumbs--> 
 
     @if ($message = Session::get('flash_success_message'))
     <div class="alert alert-success alert-block">
@@ -31,10 +36,10 @@
 @endif
 
     <div class="row">
-        <div class="col-9 mt-4">
-            <div class="card row-background">
+        <div class="col-9">
+            <div class="card row-background customBoxHeight p-1">
                 <div class="card-content">
-                    <div class="card-body">
+                    <div class="card-body2">
                          @if($user) 
                         {!! Form::model($user, ['id'=>'update_profile','url' =>['updateUserProfile', $user->id]  ,  'class' => 'form-horizontal ladda-form', 'method' => 'post','enctype'=>'multipart/form-data']) !!}
                         
@@ -98,7 +103,7 @@
                                     <div class="col-xs-6 col-sm-6 col-md-6">
                                         <div class="form-group">
                                             <strong>Profile Image:</strong>
-                                            {!! Form::file('profile_image',  array('placeholder' => 'Profile Image','class' => 'form-control' , 'data-validation-event' =>"change",  "data-validation" => "mime size",
+                                            {!! Form::file('profile_image',  array('placeholder' => 'Profile Image','class' => 'form-control fileControl' , 'data-validation-event' =>"change",  "data-validation" => "mime size",
                                                 'data-validation-allowing' =>"jpg, jpeg, png", "data-validation-max-size" => "2M")) !!}
                                             @if ($errors->has('profile_image'))
                                             <span class="invalid-feedback" style="display:block" role="alert">
@@ -138,7 +143,7 @@
                                         <div class="col-xs-6 col-sm-6 col-md-6">
                                             <div class="form-group">
                                             <strong>Billing Provider:</strong>
-                                            <select name="billingProviders[]" id="billingProvidersId" multiple="multiple" class="form-control 4col formcls" , data-validation-event="change" data-validation="required">
+                                            <select name="billingProviders[]" id="billingProvidersId" class="form-control 4col formcls" , data-validation-event="change" data-validation="required">
                                                 @foreach ($billingProvidersArray as $bp)
                                                     <option value="{{$bp->id}}"> {{$bp->professional_provider_name}}</option>
                                                 @endforeach
@@ -155,7 +160,7 @@
                                             <strong>Role:</strong>
                                             <select name="roles[]" id="roles"  class="form-control 4col formcls" , data-validation-event="change" data-validation="required">
                                                 @foreach ($roles as $role)
-                                                    <option value="{{$role->id}}"> {{$role->name}}</option>
+                                                    <option value="{{$role->id}}" {{($userRole && $userRole->role_id == $role->id) ? 'selected' : ''}}> {{$role->name}}</option>
                                                 @endforeach
                                                 </select>
                                                 @if ($errors->has('roles'))
@@ -169,7 +174,7 @@
                                 @endif
                             </div>
                             <div class="row">
-                                <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                                <div class="col-xs-12 col-sm-12 col-md-12 text-left">
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </div>
                             </div>
@@ -177,12 +182,13 @@
                         @endif
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-3 mt-4 rightside">
+         </div>
+          <div class="col-3 rightside">
             <div id="billingInfoDiv"></div>
         </div>
     </div>
+    
+    
 @endsection 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://code.jquery.com/jquery-migrate-1.2.1.js"></script>

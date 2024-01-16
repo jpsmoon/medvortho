@@ -9,7 +9,7 @@
 <div class="form-row col-12 mt-4">
     <div class="form-group col-md-12">
         <label for="billing_provider_ids"> Select Billing Provider <span class="required">* </span></label>
-        <select  id="billing_provider_id" onchange="getBillingInfoForView(this.value,'billingInfoDiv');"
+        <select  id="billing_provider_id" onchange="getBillingInfoForView(this.value,'billingInfoDiv', 'billingInfobydefault');"
             name="add_billing_provider_id" class="form-control" data-validation-event="change" data-validation="required" data-validation-error-msg="">
             <option value="">Please Select</option>
             @foreach ($billingproviders as $billingprovider)
@@ -59,8 +59,7 @@
     <div class="form-group col-md-4">
         <label for="dob"> DOB <span class="required">* </span> </label>
         <input value="{{($patient && $patient->dob) ? date('m/d/Y', strtotime($patient->dob)) : NULL }}" type="text" name="dob" id="dobId" autocomplete="off" class="form-control" value=""
-            data-validation-event="change" 
-            data-validation="required" data-validation-error-msg="" placeholder="">
+            data-validation-event="change" data-validation="required" data-mask="99/99/9999" data-validation-error-msg="Please Enter DOB in this formate mm/dd/yyyy" placeholder="">
         @if ($errors->has('dob'))
             <span class="invalid-feedback" style="display:block" role="alert">
                 <strong>{{ $errors->first('dob') }}</strong>
@@ -70,7 +69,7 @@
 
     <div class="form-group col-md-4">
         <label for="ssn_no"> SSN </label>
-        <input  type="text" value="{{($patient && $patient->ssn_no) ? $patient->ssn_no : NULL }}" name="ssn_no" id="ssn_noId" value="" data-mask="999-99-9999" class="form-control"
+        <input  type="text" value="{{($patient && $patient->ssn_no) ? $patient->ssn_no : NULL }}" name="ssn_no" id="ssn_noId" value="" data-mask="999-99-9999" data-validation-error-msg="Please Enter the 9 Digit SSN Number" class="form-control"
             maxlength="15">
         @if ($errors->has('ssn_no'))
             <span class="invalid-feedback" style="display:block" role="alert">
@@ -82,7 +81,7 @@
     <div class="form-group col-md-4">
         <label for="gender">Gender<span class="required">* </span> </label>
         <select name="gender" class="form-control" data-validation-event="change" data-validation="required" data-validation-error-msg="">
-            <option value="" class="option">Select2</option>
+            <option value="" class="option">Select</option>
             <option value="Male" {{($patient && $patient->gender == 'Male') ? 'selected' : '' }}> Male</option>
             <option value="Female" {{($patient && $patient->gender == 'Female') ? 'selected' : ''}}> Female</option>
         </select>
@@ -110,9 +109,9 @@
 
     <div class="form-group col-md-4">
         <label for="zipcode">Zip code</label>
-        <input value="{{($patient && $patient->zipcode) ? $patient->zipcode : NULL }}" type="text" name="zipcode" class="form-control" onKeyUp="getStatesByZipCode(this.value);"
-            data-validation-event="change" data-validation="number length" data-validation-length="1-10" data-validation-optional="true"
-            data-validation-error-msg="" maxlength="10">
+        <input value="{{($patient && $patient->zipcode) ? $patient->zipcode : NULL }}" onFocus="this.selectionStart = this.selectionEnd = this.value.length;"  type="text" id="zipcode" name="zipcode" class="form-control" onKeyUp="getStatesByZipCode(this.value ,'cityDD', 'stateDD');"
+            data-validation-event="change" autocomplete="off" data-validation="number length" data-mask="99999" data-validation-error-msg="Please Enter the 5 Digit Zip code Number" data-validation-length="1-10" data-validation-optional="true"
+            data-validation-error-msg="" maxlength="5">
         @if ($errors->has('zipcode'))
             <span class="invalid-feedback" style="display:block" role="alert">
                 <strong>{{ $errors->first('zipcode') }}</strong>
@@ -130,7 +129,7 @@
             data-validation-error-msg="">
             <option value="" class="option">Select</option>
             @foreach ($states as $state)
-                <option value="{{ $state['state_name'] }}" {{($patient && $patient->state_id == $state["state_name"]) ? "selected" : ""}}> {{ $state['state_name'] }}</option>
+                <option value="{{ $state['state_name'] }}" {{($patient && $patient->state_id == $state["state_name"]) ? "selected" : (($state["state_name"] == 'California') ? 'selected' : '')}}> {{ $state['state_name'] }}</option>
             @endforeach
         </select>
 
@@ -142,13 +141,14 @@
     </div>
 
     <div class="form-group col-md-4">
-        <label for="mobile_no"> Mobile No. </label>
-        <input value="{{($patient && $patient->contact_no) ? $patient->contact_no : NULL }}" data-mask="(999) 999-9999" type="text" name="mobile_no" class="form-control" maxlength="15" data-validation-optional="true" data-validation-event="change" data-validation="length" data-validation-length="1-15"
-            data-validation-optional="true" data-validation-error-msg="">
+        <label for="mobile_no"> Mobile</label>
+        <input value="{{($patient && $patient->contact_no) ? $patient->contact_no : NULL }}" onFocus="this.selectionStart = this.selectionEnd = this.value.length;"  type="text" name="mobile_no" class="form-control"  
+        data-validation-optional="true" data-validation-event="change" data-mask="9999999999"  data-validation="custom"  data-validation-regexp="^[0-9]{10}$" maxLength="10"
+            data-validation-optional="true" data-validation-error-msg="Please Enter the 10 Digit Mobile Number">
     </div>
     <div class="form-group col-md-4">
-        <label for="contact_no"> Landline No.</label>
-        <input value="{{($patient && $patient->landline_no) ? $patient->landline_no : NULL }}" type="text" name="landline_no" data-mask="(999) 999-9999" class="form-control" maxlength="15">
+        <label for="contact_no">Telephone</label>
+        <input value="{{($patient && $patient->landline_no) ? $patient->landline_no : NULL }}" type="text" name="landline_no" data-mask="(999) 999-9999" class="form-control" maxlength="12" data-validation-error-msg="Please Enter the 10 Digit Telephone Number">
     </div>
 
     <div class="form-group col-md-4">

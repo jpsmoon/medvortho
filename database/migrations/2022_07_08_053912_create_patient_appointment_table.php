@@ -15,25 +15,25 @@ class CreatePatientAppointmentTable extends Migration
     {
         Schema::create('patient_appointments', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('patient_id')->unsigned()->nullable();
-            $table->foreign('patient_id')->references('id')->on('patients');
-            $table->integer('billing_provider_id');
-            $table->date('appointment_date');
-            $table->string('appointment_time');
+            $table->integer('patient_id')->nullable();
+            //$table->foreign('patient_id')->references('id')->on('patients');
+            $table->integer('billing_provider_id')->nullable();
+            $table->date('appointment_date')->nullable();
+            $table->string('appointment_time')->nullable();
             $table->integer('location')->nullable();
-            $table->string('resource', 200)->nullable();
-            $table->string('recurrene', 200)->nullable();
-            $table->integer('appointment_reason', 200)->nullable();
-            $table->integer('meeting_type', 200)->nullable();
-            $table->string('duration', 200)->nullable();
-            $table->string('status', 200)->nullable();
-            $table->string('arrival_time', 200)->nullable();
-            $table->string('notes', 200)->nullable();
-            $table->string('last_edited_by_id', 200)->nullable();
-            $table->string('created_by', 200)->nullable();
+            $table->string('resource')->nullable();
+            $table->string('recurrene')->nullable();
+            $table->integer('appointment_reason')->nullable();
+            $table->integer('meeting_type')->nullable();
+            $table->string('duration')->nullable();
+            $table->string('status')->nullable();
+            $table->string('arrival_time')->nullable();
+            $table->string('notes')->nullable();
+            $table->string('last_edited_by_id')->nullable();
+            $table->string('created_by')->nullable();
             $table->string('authorised')->nullable();
             $table->integer('case_id')->nullable();
-            $table->integer('rendering_provider_id');
+            $table->integer('rendering_provider_id')->nullable();
             $table->string('appointment_addition_info')->nullable();
             $table->string('is_interpreter')->nullable();
 

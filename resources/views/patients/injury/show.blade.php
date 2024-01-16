@@ -1,105 +1,56 @@
-@extends('layouts.home-app')
+@extends('layouts.home-new-app')
 @section('content')
-    <style type="text/css"> 
-        .hiddenContent {
-            display: none;
-        }
-
-        .flag-wrapper:after {
-            padding-top: 0% !important;
-        }
-
-        .setTpPaddeing {
-            top: 75px !important;
-        }
-
-        .input-icons i {
-            position: absolute;
-        }
-
-        .input-icons input {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .card {
-            position: relative;
-            display: -ms-flexbox;
-            display: flex;
-            -ms-flex-direction: column;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 1px solid rgba(0, 0, 0, .125);
-            border-radius: .25rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .card-header:first-child {
-            border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
-        }
-
-        .card-header {
-            padding: .75rem 1.25rem;
-            margin-bottom: 0;
-            background-color: rgba(0, 0, 0, .03);
-            border-bottom: 1px solid rgba(0, 0, 0, .125);
-        }
-
-        .card-body {
-            -ms-flex: 1 1 auto;
-            flex: 1 1 auto;
-            padding: 1.25rem;
-        }
-
-        .diagCode .card-header {
-            background-color: #FFFFFF !important;
-        }
-
-        .modal {
-            pointer-events: none;
-        }
-
-        .modal-dialog {
-            pointer-events: all;
-        }
-        
-        .list-group-item
-        {
-        position: relative;
-        display: block;
-        padding: 0rem; 
-        margin-bottom: -1px;
-        background-color: #FFF;
-        border: 1px solid #E4E7ED;
-        }
-    </style>
+<?php $fullAddress = 'NA'; ?>
+    
     <!-- START: Modal popup css-->
     <link rel="stylesheet" type="text/css" href="{{ url('new_assets/app-assets/css/modal-popup.css') }}">
+    <style>
+  .rightside{
+    padding-left:7px!important;
+   }
+   .scroll-new{
+   height:90vh;
+   overflow-y:scroll;
+   scrollbar-width: thin;
+   scrollbar-color: #cccccc3c #c1c1c1;
+   position:relative;
+   padding-right:5px;
+   overflow-x:hidden;
+}
+.scroll-new::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 3px;
+}
+.scroll-new::-webkit-scrollbar-track {
+  background-color: #cccccc3c;
+}
+.scroll-new::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+}
+    </style>
+    
     <!-- END: Modal popup css-->
     @inject('testPatientClass', 'App\Http\Controllers\PatientController')
-    <!-- START: Breadcrumbs-->
-    <div clas s="row ">
+
+<div class="row">
+   <div class="col-xl-12 col-lg-12 bg-white mb-1">
+    <div class="row">
+        <div class="col-9 mt-1 mb-1 scroll-new">
+        <div class="row mt-0">
         <div class="col-12  align-self-center">
-            <div class="sub-header mt-3 py-3 px-3 align-self-center d-sm-flex w-100 rounded">
-                <div class="w-sm-100 mr-auto col-9">
-                    <ol class="breadcrumb bg-transparent align-self-center m-0 p-0">
-                        <li class="breadcrumb-item">
-                            <h2><svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" viewBox="0 0 34 34"
-                                    class="left">
-                                    <title>icon_patient</title>
-                                    <path
-                                        d="M20.983 16.793L19.32 23.2h-1.857c-.825.017-1.48.654-1.463 1.425l.005.21c.017.758.682 1.365 1.495 1.365h5.147c.977 0 1.829-.617 2.07-1.5l.269-.977a.392.392 0 0 0 .014-.104c0-.231-.2-.418-.448-.418h-.753l-1.085-6.853c.258.077.501.185.73.324.517.314.933.72 1.248 1.216.314.497.573 1.094.777 1.791.203.698.343 1.39.418 2.079.075.688.113 1.42.113 2.194 0 .993-.277 1.846-.83 2.557-.553.71-1.22 1.066-1.999 1.066H11.83c-.78 0-1.446-.355-1.999-1.066-.553-.711-.83-1.564-.83-2.557 0-.775.038-1.506.113-2.194.075-.689.215-1.381.418-2.079.204-.697.463-1.294.777-1.79.315-.497.73-.903 1.249-1.217.518-.315 1.113-.472 1.786-.472 1.16 1.167 2.546 1.75 4.157 1.75 1.31 0 2.472-.386 3.483-1.157zm-.58 6.623l1.423-5.602.791 5.602h-2.213zM22.5 12c0 1.38-.488 2.559-1.465 3.535C20.06 16.512 18.88 17 17.5 17c-1.38 0-2.559-.488-3.535-1.465C12.988 14.56 12.5 13.38 12.5 12c0-1.38.488-2.559 1.465-3.535C14.94 7.488 16.12 7 17.5 7c1.38 0 2.559.488 3.535 1.465C22.012 9.44 22.5 10.62 22.5 12z"
-                                        fill="#3A3A3A" fill-rule="evenodd"></path>
-                                </svg>
-                                Injury Information</h2>
-                        </li>
-                    </ol>
+            <div class="sub-header align-self-center d-sm-flex w-100 rounded heading-background">
+                <div class="w-sm-100 mr-auto margin05">
+                   <h2><i class="fa-solid fa-hand-holding-medical"></i> Injury Information</h2>
                 </div>
-                <div align="right" class="w-sm-100 mr-auto col-3">
-                    <ul class="list-inline">
+                <div align="right" class="w-sm-100 ">
+                    <ol class="list-inline breadcrumb bg-transparent align-self-center m-0 p-0">
+                        @if($pInjuries && $pInjuries->getInjuryBills && count($pInjuries->getInjuryBills) == 0)  
+                            <li class="list-inline-item">
+                                <a href="javascript:void(0)" class="btn btn-primary" onclick="deleteInjury({{$injuryId}}, {{$patientId}})">
+                                    <i class="fa-solid fa-trash-can"></i> Delete
+                                </a> 
+                            </li>
+                        @endif
                         <li class="list-inline-item">
                             <i class=""></i>
                             <a class="btn btn-primary" href="{{ url('/edit/patients/injury/') }}/{{ $injuryId }}">
@@ -108,17 +59,14 @@
                         <li class="list-inline-item">
                             <a class="btn btn-primary" href="{{ url('/patients/view', $patientId) }}"> Back</a>
                         </li>
-                    </ul>
+                    </ol>
                 </div>
             </div>
         </div>
     </div>
-    <!-- END: Breadcrumbs-->
-
-    <div class="row font">
-        <div class="col-9 mt-4" style="padding-right: 0px;">
-            <div class="card">
-                <div class="card-body">
+            <div class="card row-background2">
+                <div class="card-content">
+                    <div class="card-body">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12" id="patient_info">
                             <ul class="sub-menu list-inline chat-menu">
@@ -196,11 +144,11 @@
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class="card">
-                                        <div class="card-header">
-                                            <h4 class="card-title">Injury Information - Required</h4>
+                                        <div class="card-header sub-title p-1">
+                                            <h2 class="sub-title">Injury Information - Required</h2>
                                         </div>
-                                        @if (isset($pInjuries->getInjuryClaim))
-                                            <table class="table font">
+                                        @if ($pInjuries && $pInjuries->getInjuryClaim)
+                                            <table class="table">
                                                 <tr>
                                                     <td width="50%"><b>Employer</b></td>
                                                     <td width="50%">
@@ -209,7 +157,7 @@
                                                 </tr>
                                                 @if (isset($pInjuries->getInjuryClaim->emp_address_line1))
                                                     <tr>
-                                                        <td width="50%"><b>Employer Address #{{ $fullAddress }}#</b>
+                                                        <td width="50%"><b>Employer Address </b>
                                                         </td>
                                                         <td width="50%">
                                                             {{ $pInjuries->getInjuryClaim->emp_address_line1 ? $pInjuries->getInjuryClaim->emp_address_line1 : '' }}
@@ -218,10 +166,10 @@
                                                     </tr>
                                                 @endif
                                                 <tr>
-                                                    <td width="50%"><b>DOI</b></td>
+                                                    <td width="50%"><b>DOI </b></td>
                                                     <td width="50%">
-                                                        {{ $pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->start_date && $pInjuries->getInjuryClaim->start_date != ' ' ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->start_date)) : '' }}
-                                                        {{ $pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->end_date && $pInjuries->getInjuryClaim->end_date != ' ' ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->end_date)) : '' }}
+                                                        {{ ($pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->start_date && $pInjuries->getInjuryClaim->start_date != ' ' && $pInjuries->getInjuryClaim->start_date != '1970-01-01' ) ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->start_date)) : '' }}
+                                                        {{ ($pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->end_date && $pInjuries->getInjuryClaim->end_date != ' ' && $pInjuries->getInjuryClaim->end_date != '1970-01-01') ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->end_date)) : '' }}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -245,12 +193,7 @@
                                                 </tr>
                                                 
 
-                                                <!--<tr>-->
-                                                <!--    <td width="50%"><b>Claim Status Date</b></td>-->
-                                                <!--    <td width="50%">-->
-                                                <!--        {{ $pInjuries->getInjuryClaim->claim_status_date ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->claim_status_date)) : 'NA' }}-->
-                                                <!--    </td>-->
-                                                <!--</tr>-->
+                                               
                                                 <tr>
                                                     <td width="50%"><b>Injury State</b></td>
                                                     <td width="50%">  {{ ($pInjuries->injury_state_id) ? strtoupper( substr( $pInjuries->injury_state_id, 0, 2 ) ) : 'NA' }}
@@ -262,11 +205,10 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="card">
-                                        <div class="card-header">
-                                            <h4 class="card-title">Injury Information - Optional</h4>
+                                        <div class="card-header sub-title p-1">
+                                            <h2 class="sub-title">Injury Information - Optional</h2>
                                         </div>
-                                        @if (isset($pInjuries->getInjuryClaim))
-                                            <?php $fullAddress = 'NA'; ?>
+                                        @if ($pInjuries && $pInjuries->getInjuryClaim) 
                                             @if (isset($pInjuries->getInjuryClaim->emp_address_line1))
                                                 <?php $fullAddress = $pInjuries->getInjuryClaim->emp_address_line1; ?>
                                             @endif
@@ -283,31 +225,31 @@
                                                 <tr>
                                                     <td width="50%"><b>Claim Status</b></td>
                                                     <td width="50%">
-                                                        {{ $pInjuries->getInjuryClaim ? $pInjuries->getInjuryClaim->claim_status_id : 'NA' }}
+                                                        {{ ($pInjuries && $pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->getClaimStatus && $pInjuries->getInjuryClaim->getClaimStatus->claim_status) ?   $pInjuries->getInjuryClaim->getClaimStatus->claim_status: ' ' }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td width="50%"><b>Claim Status Date</b></td>
                                                     <td width="50%">
-                                                        {{ $pInjuries->getInjuryClaim->claim_status_date ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->claim_status_date)) : 'NA' }}
+                                                        {{ ($pInjuries->getInjuryClaim->claim_status_date && $pInjuries->getInjuryClaim->claim_status_date != '1970-01-01' ) ? date('m/d/Y', strtotime($pInjuries->getInjuryClaim->claim_status_date)) : ' ' }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td width="50%"><b>ADJ Number</b></td>
                                                     <td width="50%">
-                                                        {{ $pInjuries->getInjuryClaim->adj_no ? $pInjuries->getInjuryClaim->adj_no : 'NA' }}
+                                                        {{ $pInjuries->getInjuryClaim->adj_no ? $pInjuries->getInjuryClaim->adj_no : ' ' }}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td width="50%"><b>Medical Provider Network</b></td>
                                                     <td width="50%">
-                                                        {{ $pInjuries->getInjuryClaim->getMedicalProvider ? $pInjuries->getInjuryClaim->getMedicalProvider->applicant_name : 'NA' }}
+                                                        {{ $pInjuries->getInjuryClaim->getMedicalProvider ? $pInjuries->getInjuryClaim->getMedicalProvider->applicant_name : ' ' }}
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td width="50%"><b>Practice Internal ID</b></td>
+                                                    <td width="50%"><b>Injury Practice Internal ID</b></td>
                                                     <td width="50%">
-                                                        {{ $pInjuries->getInjuryClaim->newInjuryClaim ? $pInjuries->getInjuryClaim->newInjuryClaim : 'NA' }}
+                                                        {{ $pInjuries->getInjuryClaim->newInjuryClaim ? $pInjuries->getInjuryClaim->newInjuryClaim : ' ' }}
                                                     </td>
                                                 </tr>
 
@@ -318,21 +260,25 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    @if ($pInjuries->getInjuryClaim)
+                                    @if ($pInjuries && $pInjuries->getInjuryClaim)
                                         <div class="card">
-                                            <div class="card-header">Diagnosis Codes</div>
+                                            <div class="card-header p-1">
+                                                <h2 class="sub-title">
+                                                Diagnosis Codes
+                                                </h2>
+                                                </div>
                                             <div class="card-body">
                                                 <div class="row">
                                                     @foreach ($pInjuries->getInjuryClaim->getInjuryDianoses as $diagCode)
                                                         <div class="col-sm-4">
                                                             @if ($diagCode->getDianoses)
                                                                 <div class="card diagCode">
-                                                                    <div class="card-header">
+                                                                    <div class="card-header p-1">
                                                                         <div class="row">
                                                                             <div class="col-sm-10">
-                                                                                {{ $diagCode->getDianoses->diagnosis_code }}
+                                                                               <h4 class="sub-title"> {{ $diagCode->getDianoses->diagnosis_code }}</h4>
                                                                             </div>
-                                                                            <div class="col-sm-2">
+                                                                            <div class="col-sm-2 text-right">
                                                                                 <a href="javascript:void(0)"
                                                                                     onclick="passSelectedDignosisCOde({{ $diagCode->getDianoses }})"
                                                                                     data-toggle="modal"
@@ -420,14 +366,14 @@
                             <div class="row">
                                 <div class="col-sm-12"> 
                                         <div class="card">
-                                            <div class="card-header">
+                                            <div class="card-header sub-title p-1">
                                                 <div class="row">
                                                     <div class="col-sm-6">
-                                                        Notes
+                                                       Notes
                                                         ({{ ($pInjuries && $pInjuries->getInjuryNotes && count($pInjuries->getInjuryNotes) > 0 )  ? count($pInjuries->getInjuryNotes) : 0 }})
                                                     </div>
                                                     <div class="col-sm-6">
-                                                        <a class="bold" href="javascript:void(0)" data-toggle="modal"
+                                                       <a class="bold" href="javascript:void(0)" data-toggle="modal"
                                                             data-target="#injurynotes"
                                                             onclick="updateInjuryNote(null)">Add Note</a>
                                                     </div>
@@ -451,7 +397,7 @@
                                                                 @if (count($pInjuries->getInjuryNotes))
                                                                     @foreach ($pInjuries->getInjuryNotes as $note)
                                                                         <tr>
-                                                                            <td>{{ $note->created_at ? date('m-d-Y', strtotime($note->created_at)) : 'NA' }}
+                                                                            <td>{{ ($note->created_at && $note->created_at != '1970-01-01' ) ? date('m/d/Y', strtotime($note->created_at)) : 'NA' }}
                                                                             </td>
                                                                             <td>{{ $note->getUser ? $note->getUser->name : 'NA' }}
                                                                             </td>
@@ -486,7 +432,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="card">
-                                        <div class="card-header">
+                                        <div class="card-header sub-title p-1">
                                             <div class="row">
                                                 <div class="col-sm-6">
                                                     Documents
@@ -500,7 +446,7 @@
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            @if (count($pInjuries->getInjuryDocuments))
+                                            @if ($pInjuries && count($pInjuries->getInjuryDocuments))
                                             <div class="table-responsive">
                                                 <table id="example" class="table layout-secondary dataTable table-striped table-bordered">
                                                         <thead class="thead-dark">
@@ -547,9 +493,9 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-12">
-                                    @if ($pInjuries->getInjuryContacts)
+                                    @if ($pInjuries && $pInjuries->getInjuryContacts)
                                         <div class="card">
-                                            <div class="card-header">
+                                            <div class="card-header sub-title p-1">
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         Contacts
@@ -557,7 +503,7 @@
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <a class="bold" href="javascript:void(0)" data-toggle="modal"
-                                                            data-target="#injuryContactDiv">Add Contact</a>
+                                                            data-target="#injuryContactInViewDiv">Add Contact</a>
                                                     </div>
                                                 </div>
 
@@ -582,7 +528,7 @@
                                                                                 <a class="bold"
                                                                                     href="javascript:void(0)"
                                                                                     data-toggle="modal"
-                                                                                    data-target="#injuryContactDiv"
+                                                                                    data-target="#injuryContactInViewDiv"
                                                                                     onclick="updateContact({{ $contact }});"><i
                                                                                         class="icon-pencil  showPointer" /></i></a>
                                                                                 <a href="javascript:void(0)" onclick="deleteInjuryContact({{ $contact->id }}, {{ $injuryId }}, 'CONTACT')"><i class="icon-trash showPointer" /></i></a>
@@ -652,17 +598,12 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-sm-12"> 
+                                <div class="col-sm-12 sub-header"> 
                                     @if ($pInjuries && $pInjuries->getInjuryHistory && count($pInjuries->getInjuryHistory))
                                         <div class="card">
-                                            <div class="card-header">
-                                            <h2 onclick="myFunction()">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px"
-                                                    viewBox="0 0 34 34" class="left">
-                                                    <title>icon_patient</title>
-                                                    <path d="M20.983 16.793L19.32 23.2h-1.857c-.825.017-1.48.654-1.463 1.425l.005.21c.017.758.682 1.365 1.495 1.365h5.147c.977 0 1.829-.617 2.07-1.5l.269-.977a.392.392 0 0 0 .014-.104c0-.231-.2-.418-.448-.418h-.753l-1.085-6.853c.258.077.501.185.73.324.517.314.933.72 1.248 1.216.314.497.573 1.094.777 1.791.203.698.343 1.39.418 2.079.075.688.113 1.42.113 2.194 0 .993-.277 1.846-.83 2.557-.553.71-1.22 1.066-1.999 1.066H11.83c-.78 0-1.446-.355-1.999-1.066-.553-.711-.83-1.564-.83-2.557 0-.775.038-1.506.113-2.194.075-.689.215-1.381.418-2.079.204-.697.463-1.294.777-1.79.315-.497.73-.903 1.249-1.217.518-.315 1.113-.472 1.786-.472 1.16 1.167 2.546 1.75 4.157 1.75 1.31 0 2.472-.386 3.483-1.157zm-.58 6.623l1.423-5.602.791 5.602h-2.213zM22.5 12c0 1.38-.488 2.559-1.465 3.535C20.06 16.512 18.88 17 17.5 17c-1.38 0-2.559-.488-3.535-1.465C12.988 14.56 12.5 13.38 12.5 12c0-1.38.488-2.559 1.465-3.535C14.94 7.488 16.12 7 17.5 7c1.38 0 2.559.488 3.535 1.465C22.012 9.44 22.5 10.62 22.5 12z"
-                                                        fill="#3A3A3A" fill-rule="evenodd"></path>
-                                                </svg>History 
+                                            <div class="card-header sub-title p-1 m05">
+                                            <h2 onclick="myFunction()" class="text-white">
+                                                <i class="fa-solid fa-clock-rotate-left"></i> History 
                                             </h2>
                                             </div>
                                             <div class="card-body" style="display:none" id="myDIV">
@@ -696,16 +637,18 @@
                         </div>
 
                     </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-3 mt-4" style="z-index: 0; padding-left: 0;padding-right: 0;">
+        <div class="col-3 mt-1 rightside sticky" style="padding-left:4px!important; padding-right:4px!important; top:70px">
             <div class="card">
                 @include('patients.show-patient-info')
             </div>
         </div>
     </div>
-
+  </div>
+</div>
     <!-- START: Injury Notes Modal Popup -->
     <div id="injurynotes" class="modal fade" role="dialog" style="padding-top:150px !important">
         <div class="modal-dialog">
@@ -875,244 +818,255 @@
     </div>
 
     <!-- START: Contact Modal Popup -->
-    <div id="injuryContactDiv" class="modal fade" role="dialog" style="padding-top:50px !important">
-        <form method="post" action="{{ url('/patientinjuries/contact/create') }}" enctype="multipart/form-data"
-            id="patientInjuryContactFrm">
-            <div class="modal-dialog" role="document">
+    <div id="injuryContactInViewDiv" class="modal fade" role="dialog" style="padding-top:150px !important">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div id="injuryDiv" class="modal-content" style="width:584px; height:262px;">
                 <div class="modal-header text-center">
                     <div>
                         <h4 class="modal-title">
                             <center id="addTitleForContact">New Contact</center>
                         </h4>
                     </div>
-                    <div><button type="button" onclick="refeshFormData();" style="color:#FFFFFF" class="close"
-                            data-dismiss="modal">&times;</button>
-                    </div>
+                    <div><button type="button" style="color:#FFFFFF" class="close"
+                            data-dismiss="modal">&times;</button></div>
                 </div>
                 <div class="modal-body">
-                    @csrf
-                    <input type="hidden" name="injuryId" id="injuryId" value="{{ $injuryId }}">
-                    <input type="hidden" name="injuryContactId" id="injuryContactId" value="">
-                    <div class="col-md-12" id="">
-                        <div class="card" id="cardDivd1">
-                            <div class="card-header" id="cardHeadId1">Contacts - Optional </div>
-                            <div class="card-body" style="height: 150px; overflow-y: scroll; ">
-                                <input type="hidden" class="contactRoleName" name="contactRoleName[]"
-                                    id="contactRoleName_1" value="">
-                                <div class="form-row" id="cloneContactRoleSelect1">
-                                    <div class="form-group col-md-6">
-                                        <label for="claim_admin_id"> Contact Role </label>
-                                        <select name="contact_role[]" onChange="showcontactInfoBox(event,this.value);"
-                                            class="form-control contactRole" id="contactRole_1">
-                                            <option value="">-Select-</option>
-                                            @foreach ($contactRoles as $c_role)
-                                                <option value="{{ $c_role['id'] }}">
-                                                    {{ $c_role['name'] }}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('contact_role'))
-                                            <span class="invalid-feedback" style="display:block" role="alert">
-                                                <strong
-                                                    class="invalid-feedback">{{ $errors->first('contact_role') }}</strong>
-                                            </span>
-                                        @endif
+                    <div class="container-fluid">
+                        <section class="section">
+                            <div class="row">
+                                <!--Grid column-->
+                                <div class="col-md-11 col-xl-11" style="margin-left:5%">
+                                   <form method="post" action="{{ url('/patientinjuries/contact/create') }}" enctype="multipart/form-data" id="patientInjuryContactFrm">
+                                    @csrf
+                                    <input type="hidden" name="injuryId" id="injuryId" value="{{ $injuryId }}">
+                                    <input type="hidden" name="injuryContactId" id="injuryContactId" value="">
+                                    <div class="col-md-12" id="">
+                                        <div class="card" id="cardDivd1">
+                                            <div class="card-header" id="cardHeadId1">Contacts - Optional </div>
+                                            <div class="card-body" style="height: 150px; overflow-y: scroll; ">
+                                                <input type="hidden" class="contactRoleName" name="contactRoleName[]"
+                                                    id="contactRoleName_1" value="">
+                                                <div class="form-row" id="cloneContactRoleSelect1">
+                                                    <div class="form-group col-md-6">
+                                                        <label for="claim_admin_id"> Contact Role </label>
+                                                        <select name="contact_role[]" onChange="showcontactInfoBox(event,this.value);"
+                                                            class="form-control" id="contactRole_1">
+                                                            <option value="">-Select-</option>
+                                                            @foreach ($contactRoles as $c_role)
+                                                                <option value="{{ $c_role['id'] }}">
+                                                                    {{ $c_role['name'] }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        @if ($errors->has('contact_role'))
+                                                            <span class="invalid-feedback" style="display:block" role="alert">
+                                                                <strong
+                                                                    class="invalid-feedback">{{ $errors->first('contact_role') }}</strong>
+                                                            </span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="form-row d-none showSelectedNameDiv" id="showIdSelected_1">
+                                                    <div class="form-group col-md-12">
+                                                        <div class="form-row d-none showfirstLastName" id="showfirstLastName_1">
+                                                            <div class="form-group col-md-6">
+                                                                <label for="injury-end-date">First Name
+                                                                </label>
+                                                                <input data-validation-event="change" data-validation="custom"
+                                                                    data-validation-regexp="^[a-zA-Z]+(\s+[a-zA-Z]+)*$"
+                                                                    data-validation-optional="true" data-validation-error-msg=""
+                                                                    autocomplete="off" type="text" id="contact_first_name"
+                                                                    name="contact_first_name[]" value="" class="form-control"
+                                                                    maxlength="100">
+                                                                @if ($errors->has('contact_first_name'))
+                                                                    <span class="invalid-feedback" style="display:block" role="alert">
+                                                                        <strong
+                                                                            class="invalid-feedback">{{ $errors->first('contact_first_name') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="injury-end-date">Last
+                                                                    Name</label>
+                                                                <input data-validation-event="change" data-validation="custom"
+                                                                    data-validation-regexp="^[a-zA-Z]+(\s+[a-zA-Z]+)*$"
+                                                                    data-validation-optional="true" data-validation-error-msg=""
+                                                                    autocomplete="off" type="text" id="contact_last_name"
+                                                                    name="contact_last_name[]" value="" class="form-control"
+                                                                    maxlength="100">
+                                                                @if ($errors->has('contact_last_name'))
+                                                                    <span class="invalid-feedback" style="display:block" role="alert">
+                                                                        <strong
+                                                                            class="invalid-feedback">{{ $errors->first('contact_last_name') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-12">
+                                                                <label for="injury-end-date">Company
+                                                                </label>
+                                                                <input data-validation-optional="true" data-validation-event="change"
+                                                                    data-validation="required, alphanumeric"
+                                                                    data-validation-allowing="-_ " autocomplete="off" type="text"
+                                                                    id="contact_company_name" name="contact_company_name[]"
+                                                                    value="" class="form-control" maxlength="100">
+                                                                @if ($errors->has('contact_company_name'))
+                                                                    <span class="invalid-feedback" style="display:block" role="alert">
+                                                                        <strong
+                                                                            class="invalid-feedback">{{ $errors->first('contact_company_name') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-12">
+                                                                <label for="injury-end-date">Email </label>
+                                                                <input data-validation-event="change" data-validation-optional="true"
+                                                                    data-validation-error-msg="" data-validation="required, email"
+                                                                    autocomplete="off" type="email" id="contact_email_name"
+                                                                    name="contact_email_name[]" value="" class="form-control"
+                                                                    maxlength="100">
+                                                                @if ($errors->has('contact_email_name'))
+                                                                    <span class="invalid-feedback" style="display:block" role="alert">
+                                                                        <strong
+                                                                            class="invalid-feedback">{{ $errors->first('contact_email_name') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-6">
+                                                                <label for="injury-end-date">Phone Number
+                                                                </label>
+                                                                <input autocomplete="off" data-mask="(999) 999-9999 x9999999"
+                                                                    type="text" id="contact_phone_name" name="contact_phone_name[]"
+                                                                    value="" class="form-control" maxlength="100">
+                                                                @if ($errors->has('contact_phone_name'))
+                                                                    <span class="invalid-feedback" style="display:block" role="alert">
+                                                                        <strong
+                                                                            class="invalid-feedback">{{ $errors->first('contact_phone_name') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="injury-end-date">Fax </label>
+                                                                <input autocomplete="off" data-mask="999-999-9999" type="text"
+                                                                    id="contact_fax_name" name="contact_fax_name[]" value=""
+                                                                    class="form-control" maxlength="100">
+                                                                @if ($errors->has('contact_fax_name'))
+                                                                    <span class="invalid-feedback" style="display:block" role="alert">
+                                                                        <strong
+                                                                            class="invalid-feedback">{{ $errors->first('contact_fax_name') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-6">
+                                                                <label for="injury-end-date">Address Line 1
+                                                                </label>
+                                                                <input data-validation-optional="true" autocomplete="off" type="text"
+                                                                    id="contact_address1_name" name="contact_address1_name[]"
+                                                                    value="" class="form-control" maxlength="100">
+                                                                @if ($errors->has('contact_address1_name'))
+                                                                    <span class="invalid-feedback" style="display:block" role="alert">
+                                                                        <strong
+                                                                            class="invalid-feedback">{{ $errors->first('contact_address1_name') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                            <div class="form-group col-md-6">
+                                                                <label for="injury-end-date">Address Line 2
+                                                                </label>
+                                                                <input autocomplete="off" type="text" id="contact_address2_name"
+                                                                    name="contact_address2_name[]" value="" class="form-control"
+                                                                    maxlength="100">
+                                                                @if ($errors->has('contact_address2_name'))
+                                                                    <span class="invalid-feedback" style="display:block" role="alert">
+                                                                        <strong
+                                                                            class="invalid-feedback">{{ $errors->first('contact_address2_name') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-row">
+                                                            <div class="form-group col-md-4">
+                                                                <label for="contact_zip_name"> Zip code
+                                                                </label>
+                                                                <input autocomplete="off" type="text" id="contact_zip_name_1"
+                                                                    name="contact_zip_name[]" class="form-control zipCodeDop"
+                                                                    value="">
+                                                                @if ($errors->has('contact_zip_name'))
+                                                                    <span class="invalid-feedback" style="display:block" role="alert">
+                                                                        <strong>{{ $errors->first('contact_zip_name') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="contact_state_name">
+                                                                    State</label>
+                                                                <select name="contact_state_name[]" class="form-control stateDD stateName"
+                                                                    id="contact_state_name_1">
+                                                                    <option value="" class="option">
+                                                                        Select
+                                                                    </option>
+                                                                    @foreach ($states as $state)
+                                                                        <option value="{{ $state['state_name'] }}">
+                                                                            {{ $state['state_name'] }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                                @if ($errors->has('contact_state_name'))
+                                                                    <span class="invalid-feedback" style="display:block" role="alert">
+                                                                        <strong>{{ $errors->first('contact_state_name') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                            </div>
+                                                            <div class="form-group col-md-4">
+                                                                <label for="contact_city_name"> City
+                                                                </label>
+                                                                <input type="text" name="contact_city_name[]" id="contact_city_name_1"
+                                                                    class="form-control cityDD cityNameInput" value=""
+                                                                    maxlength="55">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-row d-none showSelectedNameDiv" id="showIdSelected_1">
-                                    <div class="form-group col-md-12">
-                                        <div class="form-row d-none showfirstLastName" id="showfirstLastName_1">
-                                            <div class="form-group col-md-6">
-                                                <label for="injury-end-date">First Name
-                                                </label>
-                                                <input data-validation-event="change" data-validation="custom"
-                                                    data-validation-regexp="^[a-zA-Z]+(\s+[a-zA-Z]+)*$"
-                                                    data-validation-optional="true" data-validation-error-msg=""
-                                                    autocomplete="off" type="text" id="contact_first_name"
-                                                    name="contact_first_name[]" value="" class="form-control"
-                                                    maxlength="100">
-                                                @if ($errors->has('contact_first_name'))
-                                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                                        <strong
-                                                            class="invalid-feedback">{{ $errors->first('contact_first_name') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="injury-end-date">Last
-                                                    Name</label>
-                                                <input data-validation-event="change" data-validation="custom"
-                                                    data-validation-regexp="^[a-zA-Z]+(\s+[a-zA-Z]+)*$"
-                                                    data-validation-optional="true" data-validation-error-msg=""
-                                                    autocomplete="off" type="text" id="contact_last_name"
-                                                    name="contact_last_name[]" value="" class="form-control"
-                                                    maxlength="100">
-                                                @if ($errors->has('contact_last_name'))
-                                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                                        <strong
-                                                            class="invalid-feedback">{{ $errors->first('contact_last_name') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="injury-end-date">Company
-                                                </label>
-                                                <input data-validation-optional="true" data-validation-event="change"
-                                                    data-validation="required, alphanumeric"
-                                                    data-validation-allowing="-_ " autocomplete="off" type="text"
-                                                    id="contact_company_name" name="contact_company_name[]"
-                                                    value="" class="form-control" maxlength="100">
-                                                @if ($errors->has('contact_company_name'))
-                                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                                        <strong
-                                                            class="invalid-feedback">{{ $errors->first('contact_company_name') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-12">
-                                                <label for="injury-end-date">Email </label>
-                                                <input data-validation-event="change" data-validation-optional="true"
-                                                    data-validation-error-msg="" data-validation="required, email"
-                                                    autocomplete="off" type="email" id="contact_email_name"
-                                                    name="contact_email_name[]" value="" class="form-control"
-                                                    maxlength="100">
-                                                @if ($errors->has('contact_email_name'))
-                                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                                        <strong
-                                                            class="invalid-feedback">{{ $errors->first('contact_email_name') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-6">
-                                                <label for="injury-end-date">Phone Number
-                                                </label>
-                                                <input autocomplete="off" data-mask="(999) 999-9999 x9999999"
-                                                    type="text" id="contact_phone_name" name="contact_phone_name[]"
-                                                    value="" class="form-control" maxlength="100">
-                                                @if ($errors->has('contact_phone_name'))
-                                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                                        <strong
-                                                            class="invalid-feedback">{{ $errors->first('contact_phone_name') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="injury-end-date">Fax </label>
-                                                <input autocomplete="off" data-mask="999-999-9999" type="text"
-                                                    id="contact_fax_name" name="contact_fax_name[]" value=""
-                                                    class="form-control" maxlength="100">
-                                                @if ($errors->has('contact_fax_name'))
-                                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                                        <strong
-                                                            class="invalid-feedback">{{ $errors->first('contact_fax_name') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-6">
-                                                <label for="injury-end-date">Address Line 1
-                                                </label>
-                                                <input data-validation-optional="true" autocomplete="off" type="text"
-                                                    id="contact_address1_name" name="contact_address1_name[]"
-                                                    value="" class="form-control" maxlength="100">
-                                                @if ($errors->has('contact_address1_name'))
-                                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                                        <strong
-                                                            class="invalid-feedback">{{ $errors->first('contact_address1_name') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <label for="injury-end-date">Address Line 2
-                                                </label>
-                                                <input autocomplete="off" type="text" id="contact_address2_name"
-                                                    name="contact_address2_name[]" value="" class="form-control"
-                                                    maxlength="100">
-                                                @if ($errors->has('contact_address2_name'))
-                                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                                        <strong
-                                                            class="invalid-feedback">{{ $errors->first('contact_address2_name') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-4">
-                                                <label for="contact_zip_name"> Zip code
-                                                </label>
-                                                <input autocomplete="off" type="text" id="contact_zip_name_1"
-                                                    name="contact_zip_name[]" class="form-control zipCodeDop"
-                                                    value="">
-                                                @if ($errors->has('contact_zip_name'))
-                                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                                        <strong>{{ $errors->first('contact_zip_name') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                            <div class="form-group col-md-4">
-                                                <label for="contact_state_name">
-                                                    State</label>
-                                                <select name="contact_state_name[]" class="form-control stateDD stateName"
-                                                    id="contact_state_name_1">
-                                                    <option value="" class="option">
-                                                        Select
-                                                    </option>
-                                                    @foreach ($states as $state)
-                                                        <option value="{{ $state['state_name'] }}">
-                                                            {{ $state['state_name'] }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                @if ($errors->has('contact_state_name'))
-                                                    <span class="invalid-feedback" style="display:block" role="alert">
-                                                        <strong>{{ $errors->first('contact_state_name') }}</strong>
-                                                    </span>
-                                                @endif
-                                            </div>
-                                            <div class="form-group col-md-4">
-                                                <label for="contact_city_name"> City
-                                                </label>
-                                                <input type="text" name="contact_city_name[]" id="contact_city_name_1"
-                                                    class="form-control cityDD cityNameInput" value=""
-                                                    maxlength="55">
-                                            </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary ladda-button"><span
+                                                    class="ladda-label">Submit</span></button>
                                         </div>
                                     </div>
+                                </form>  
                                 </div>
+                                <!--Grid column-->
                             </div>
-                        </div>
+                        </section>
                     </div>
-                    <div class="col-md-12">
-                        <div class="form-group col-md-4">
-                            <button type="submit" class="btn btn-primary ladda-button"><span
-                                    class="ladda-label">Submit</span></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
+                </div> 
+            </div> 
+        </div>
     </div>
     <!-- END: Contact Modal Popup-->
     
     
      <!-- START: Claim Administrator  Modal Popup -->
-        <div id="claimAdministratorModalId" class="modal fade bd-example-modal-lg" role="dialog" style="padding-top:150px !important">
-            <div class="modal-dialog modal-lg">
+        <div id="claimAdministratorModalId" class="modal fade bd-example-modal-lg " role="dialog" style="padding-top:150px !important">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
                 <!-- Modal content-->
                 <div id="injuryDiv" class="modal-content">
                     <div class="modal-header text-center">
                         <div>
                             <h4 class="modal-title">
-                                <center id="injuryNoteTitle">{{ ($pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->getClaimAdmin) ? $pInjuries->getInjuryClaim->getClaimAdmin->name : ''}}</center>
+                                <center id="injuryNoteTitle">{{ ($pInjuries && $pInjuries->getInjuryClaim && $pInjuries->getInjuryClaim->getClaimAdmin) ? $pInjuries->getInjuryClaim->getClaimAdmin->name : ''}}</center>
                             </h4>
                         </div>
-                        <div><button type="button" style="color:#FFFFFF" class="close"
+                        <div><button type="button" class="close"
                                 data-dismiss="modal">&times;</button></div>
                     </div>
                     <div class="modal-body"> 
@@ -1123,8 +1077,8 @@
         </div>
     <!-- END: Claim Administrator  Modal Popup-->
 
-    <script src="{{ asset('public/js/controller/patient_injury.js') }}"></script>
-    <script src="{{ asset('public/js/helper.js') }}"></script>
+    <script src="{{ asset('js/controller/patient_injury.js') }}"></script>
+    <script src="{{ asset('js/helper.js') }}"></script>
     <script>
         function updateInjuryNote(note) {
             if (note != null) {
@@ -1328,6 +1282,39 @@
                 strVal += str[chr].substring(0, 1).toUpperCase() + str[chr].substring(1, str[chr].length) + ' '
             }
             return strVal
+        }
+        function deleteInjury(injuryId,patientId){
+            swal.fire({
+                title: 'Are you sure you want to delete?',
+                text: "You won't be able to revert this!",
+                showCancelButton: true,
+                confirmButtonColor: '#3085D6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete it!',
+                customClass: {
+                    confirmButton: "btn btn-primary",
+                    cancelButton: "btn btn-danger",
+                    popup: 'swal-wide',
+                }
+            }).then((result) => { // Use .then() to handle the user's response
+                if (result.isConfirmed) { // Only proceed if the user clicked the confirm button
+                   let _url = '/patient/injury/delete'; 
+                    $.ajax({
+                        url: _url,
+                        type: 'POST',
+                        data: {
+                            _token: token,
+                            id: injuryId 
+                        },
+                        success: function(response) {
+                          window.location.replace("/patients/view/" + patientId);
+                        },
+                        error: function(response) {
+                            swal.fire(response.responseJSON.message, '', 'error');
+                        }
+                    }); 
+                }
+            });
         }
     </script>
 @endsection

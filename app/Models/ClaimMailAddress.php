@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ClaimMailAddress extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
     protected $fillable = [ 'claim_admin_id', 'address_line1' ];
 
     // public function claim_mail_submission(){

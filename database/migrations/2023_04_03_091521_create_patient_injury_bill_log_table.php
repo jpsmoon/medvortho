@@ -16,8 +16,11 @@ class CreatePatientInjuryBillLogTable extends Migration
         Schema::create('patient_injury_bills_log', function (Blueprint $table) {
             $table->id();
             $table->integer('assign_task_id')->nullable();
+            $table->integer('bill_id')->nullable();
+            $table->integer('bill_status')->nullable();
             $table->string('type')->nullable();
             $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
             $table->string('description')->nullable();
             $table->string('due_date')->nullable();
             $table->string('complete_date')->nullable();

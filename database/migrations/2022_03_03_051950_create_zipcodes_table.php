@@ -15,6 +15,12 @@ class CreateZipcodesTable extends Migration
     {
         Schema::create('zipcodes', function (Blueprint $table) {
             $table->id();
+            $table->string('zip_code')->nullable();
+            $table->string('city_name')->nullable();
+            $table->string('state_code')->nullable();
+            $table->string('state_name')->nullable();
+            $table->string('country_name')->nullable();
+            $table->enum('is_active', array('1', '0'))->default('1');
             $table->timestamps();
         });
     }
